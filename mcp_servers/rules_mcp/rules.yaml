@@ -1,0 +1,121 @@
+version: "1.0.0"
+jurisdiction: "India"
+last_updated: "2026-11-24"
+statutory_frameworks:
+  - id: "CPA_2019"
+    name: "Consumer Protection Act, 2019"
+    gazette_ref: "Act No. 35 of 2019"
+    effective_date: "2020-07-20"
+    source_url: "https://consumeraffairs.nic.in/acts-and-rules/consumer-protection"
+  - id: "ECOMMERCE_RULES_2020"
+    name: "Consumer Protection (E-Commerce) Rules, 2020"
+    gazette_ref: "G.S.R. 462(E)"
+    effective_date: "2020-07-23"
+    source_url: "https://consumeraffairs.nic.in/acts-and-rules/e-commerce-rules"
+
+rules:
+  - id: "IN_ECOM_DEFECT_NO_REFUSAL"
+    category: "electronics_and_appliances"
+    trigger_condition: "inherent_defect_reported"
+    statutory_ref: "Consumer Protection (E-Commerce) Rules, 2020, Rule 6(3)(a) read with Rule 7(4)"
+    summary: "Marketplace sellers and inventory e-commerce entities cannot refuse to take back goods or refuse refunds if goods are defective, deficient, or spurious, regardless of advertised 'no-return' or expired 7-day platform window."
+    statutory_text: "No seller shall refuse to take back goods, or withdraw or discontinue services provided, or refuse to refund consideration paid, if such goods or services are defective, deficient or spurious, or if the goods or services are not of the characteristics or features as agreed or if they are delivered late."
+    primary_route: "SELLER_AND_MARKETPLACE"
+    legal_deadline_days: 30
+    acknowledgment_sla_hours: 48
+    evidence_required:
+      - "Original invoice or order confirmation record"
+      - "Photographic or video evidence of the defect"
+      - "Log of delivery date and defect manifestation date"
+      - "Written communication log with platform support"
+
+  - id: "IN_CPA_PRODUCT_LIABILITY_MFR"
+    category: "consumer_electronics"
+    trigger_condition: "manufacturing_defect_in_warranty"
+    statutory_ref: "Consumer Protection Act, 2019, Section 84"
+    summary: "A product manufacturer is strictly liable in product liability action for manufacturing defects, design defects, deviation from specifications, or failure to conform to express warranty."
+    statutory_text: "A product manufacturer shall be liable in a product liability action, if the product contains a manufacturing defect, or is defective in design, or there is a deviation from manufacturing specifications, or the product does not conform to the express warranty."
+    primary_route: "BRAND_SERVICE_CENTER"
+    fallback_route: "SELLER_PRODUCT_LIABILITY"
+    legal_deadline_days: 30
+    evidence_required:
+      - "Tax Invoice with serial/IMEI number"
+      - "Manufacturer warranty card or registered e-warranty"
+      - "Service Job Sheet / Inspection Report from authorized service centre"
+      - "Denial reason or unfulfilled repair job sheet (>14 days in service centre)"
+
+  - id: "IN_CPA_PRODUCT_LIABILITY_SELLER"
+    category: "consumer_electronics"
+    trigger_condition: "service_center_refusal_or_unreachable_mfr"
+    statutory_ref: "Consumer Protection Act, 2019, Section 86"
+    summary: "A product seller is liable in product liability if the manufacturer cannot be identified, or seller failed to pass express warranty, or seller altered/modified the product."
+    statutory_text: "A product seller who is not a product manufacturer shall be liable in a product liability action if he exercised substantial control over designing, testing, manufacturing, packaging or labelling of a product, or if the identity of product manufacturer is not known, or seller failed to conform to express warranty."
+    primary_route: "SELLER_PRODUCT_LIABILITY"
+    legal_deadline_days: 30
+    evidence_required:
+      - "Platform tax invoice identifying seller GSTIN and entity"
+      - "Proof of authorized service centre refusal or inability to repair/supply parts"
+      - "Notice to seller requesting remedy"
+
+  - id: "IN_ECOM_GRIEVANCE_TIMELINE"
+    category: "all_ecommerce"
+    trigger_condition: "platform_support_unresponsive_or_bouncing"
+    statutory_ref: "Consumer Protection (E-Commerce) Rules, 2020, Rule 4(5)"
+    summary: "E-commerce entity must designate a Grievance Officer, acknowledge receipt of any consumer complaint within forty-eight hours, and redress the complaint within one month from receipt date."
+    statutory_text: "Every e-commerce entity shall establish an adequate grievance redressal mechanism and appoint a grievance officer... who shall acknowledge the receipt of any consumer complaint within forty-eight hours and redress the complaint within one month from the date of receipt."
+    primary_route: "MARKETPLACE_GRIEVANCE_OFFICER"
+    acknowledgment_sla_hours: 48
+    resolution_sla_days: 30
+    evidence_required:
+      - "Ticket ID / Grievance escalation reference"
+      - "Timestamps of customer service interactions exceeding 48h without acknowledgement or 30 days without redress"
+
+  - id: "IN_CPA_UNFAIR_TRADE_PRACTICE"
+    category: "misleading_claims_and_support_bouncing"
+    trigger_condition: "false_warranty_or_refusal_to_honor"
+    statutory_ref: "Consumer Protection Act, 2019, Section 2(47)"
+    summary: "Falsely representing that goods have warranty, performance, or service benefits, or arbitrarily refusing to accept returns of defective goods within reasonable time constitutes Unfair Trade Practice."
+    statutory_text: "Unfair trade practice means a trade practice which, for the purpose of promoting the sale, use or supply of any goods or for the provision of any service, adopts any unfair method or unfair or deceptive practice... including making false or misleading representations or refusing to take back defective goods."
+    primary_route: "NCH_CONSUMER_COMMISSION"
+    evidence_required:
+      - "Advertised warranty specification at time of purchase"
+      - "Written statement from brand/seller refusing coverage contrary to terms"
+
+  - id: "IN_DEFECT_AFTER_REPAIR_FAILURE"
+    category: "repeated_failure"
+    trigger_condition: "defect_reoccurs_after_multiple_repairs"
+    statutory_ref: "Consumer Protection Act, 2019, Section 2(10) read with Section 84"
+    summary: "If a product fails repeatedly after multiple repair attempts during warranty, the product suffers from an inherent manufacturing defect, entitling the consumer to full replacement or refund."
+    statutory_text: "Defect means any fault, imperfection or shortcoming in the quality, quantity, potency, purity or standard which is required to be maintained by or under any law... repeated failure of essential components constitutes established inherent defect."
+    primary_route: "BRAND_HEAD_OFFICE_LEGAL"
+    evidence_required:
+      - "Multiple Service Job Sheets showing repeat complaints for identical fault"
+      - "Timeline proving cumulatively excessive downtime"
+
+  - id: "IN_NCH_PRE_LITIGATION_ESCALATION"
+    category: "statutory_escalation"
+    trigger_condition: "all_informal_merchant_escalations_exhausted"
+    statutory_ref: "Department of Consumer Affairs, National Consumer Helpline Operational Guidelines"
+    summary: "Pre-litigation dispute filing through National Consumer Helpline (consumerhelpline.gov.in / 1915 / e-Jagriti) before approaching District Consumer Commission."
+    primary_route: "NCH_PORTAL_SUBMISSION"
+    cost: 0
+    statutory_portal: "https://consumerhelpline.gov.in"
+    evidence_required:
+      - "Complete chronological docket with invoice, defect photos, service sheets, and grievance rejection logs"
+
+abstention_triggers:
+  - condition: "perishable_food_or_grocery_expired_past_consumption_window"
+    reason: "Perishable items cannot be claimed under manufacturing product liability weeks after receipt without immediate unboxing/spoilage proof."
+    abstain_action: "ABSTAIN_POINT_TO_NCH_OR_PLATFORM_SUPPORT"
+
+  - condition: "buyer_inflicted_accidental_liquid_physical_damage_without_adp"
+    reason: "User physical breakage, screen drops, or water immersion are explicitly excluded from statutory manufacturing defects under Section 84 of CPA 2019 unless Accidental Damage Protection was purchased."
+    abstain_action: "ABSTAIN_NO_STATUTORY_RIGHT"
+
+  - condition: "unauthorized_third_party_repair_or_seal_tamper"
+    reason: "Unauthorized modification or broken factory warranty seal voids statutory manufacturer liability under Section 87 of CPA 2019."
+    abstain_action: "ABSTAIN_WARRANTY_VOID_BY_TAMPER"
+
+  - condition: "pure_change_of_mind_post_return_window"
+    reason: "Statutory product liability applies to defects, deficiencies, and non-conformities; there is no statutory right to return a non-defective product after the contractual return window has elapsed."
+    abstain_action: "ABSTAIN_NO_DEFECT_ASSERTED"

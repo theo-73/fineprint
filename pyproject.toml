@@ -1,0 +1,26 @@
+[project]
+name = "fineprint"
+version = "1.0.0"
+description = "MCP-powered consumer protection advocate for Indian e-commerce under CPA 2019 and E-Commerce Rules 2020"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "pydantic>=2.9.0",
+    "reportlab>=4.2.0",
+    "pdfplumber>=0.11.0",
+    "pyyaml>=6.0.0",
+    "mcp>=1.0.0",
+    "anyio>=4.6.0",
+    "python-multipart>=0.0.12",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
