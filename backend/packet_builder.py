@@ -160,7 +160,7 @@ class PacketBuilder:
             [Paragraph("<b>Order / Invoice ID</b>", bold_body), Paragraph(case_data.get("order_id", "ORD-N/A"), body_style)],
             [Paragraph("<b>Purchase Date</b>", bold_body), Paragraph(case_data.get("purchase_date", "N/A"), body_style)],
             [Paragraph("<b>Serial / IMEI Number</b>", bold_body), Paragraph(case_data.get("serial_number") or "Documented on invoice", body_style)],
-            [Paragraph("<b>Total Consideration Paid</b>", bold_body), Paragraph(f"₹{float(case_data.get('amount_inr', 0.0)):,.2f}", body_style)],
+            [Paragraph("<b>Total Consideration Paid</b>", bold_body), Paragraph(f"Rs. {float(case_data.get('amount_inr', 0.0)):,.2f}", body_style)],
             [Paragraph("<b>Statutory Warranty Period</b>", bold_body), Paragraph(f"{case_data.get('warranty_months', 12)} Months Standard Warranty", body_style)]
         ]
         prod_table = Table(prod_data, colWidths=[180, 340])
@@ -209,7 +209,7 @@ class PacketBuilder:
         story.append(Paragraph(
             f"The complainant hereby demands:<br/>"
             f"• <b>Immediate free repair / replacement</b> with an identical non-defective unit, OR<br/>"
-            f"• <b>Full refund of ₹{float(case_data.get('amount_inr', 0.0)):,.2f}</b> to the original payment source.<br/>"
+            f"• <b>Full refund of Rs. {float(case_data.get('amount_inr', 0.0)):,.2f}</b> to the original payment source.<br/>"
             f"• Statutory written acknowledgment within <b>48 hours</b>.<br/>"
             f"Failure to redress this defect within the statutory 30-day window will result in formal escalation to the "
             f"<b>National Consumer Helpline (NCH 1915 / consumerhelpline.gov.in)</b> and filing of a formal complaint "

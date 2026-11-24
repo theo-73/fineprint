@@ -11,9 +11,13 @@ from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 
-from backend.models import CaseCreateRequest, CaseResponse, ChatRequest, ChatResponse
+from backend.models import (
+    CaseCreateRequest, CaseResponse, ChatRequest, ChatResponse,
+    ExtractOrderRequest, ExtractOrderResponse
+)
 from backend.orchestrator import FinePrintOrchestrator
 from backend.database import get_case, list_cases, log_audit_event, get_audit_logs, get_evidence_by_case, insert_evidence
+from backend.mcp_client import FinePrintMCPClient
 from mcp_servers.receipt_mcp.gmail_connector import MOCK_INDIAN_RECEIPTS
 from mcp_servers.receipt_mcp.pdf_parser import PDFInvoiceParser
 
@@ -55,9 +59,21 @@ def get_mock_mailbox():
     """Returns curated Indian e-commerce order receipts for offline demo intake."""
     return {"receipts": MOCK_INDIAN_RECEIPTS}
 
+@app.post("/api/extract-text", response_model=ExtractOrderResponse)
+def extract_text(req: ExtractOrderRequest):
+    """Extracts structured facts from raw receipt text or email body using receipt-mcp."""
+    try:
+        extracted = FinePrintMCPClient.extract_order_from_text(req.raw_text)
+        return ExtractOrderResponse(order=extracted, status="success")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to extract order facts from text: {str(e)}")
+
 @app.post("/api/upload-invoice")
 async def upload_invoice(file: UploadFile = File(...)):
     """Uploads a PDF invoice safely and extracts structured facts using receipt-mcp."""
+    if not file.filename or not file.filename.lower().endswith(".pdf"):
+        raise HTTPException(status_code=400, detail="Only valid .pdf files are accepted.")
+
     raw_name = os.path.basename(file.filename or "invoice.pdf")
     safe_name = f"{uuid.uuid4().hex[:8]}_{raw_name}"
     file_path = os.path.join(UPLOAD_DIR, safe_name)
@@ -66,19 +82,20 @@ async def upload_invoice(file: UploadFile = File(...)):
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
-        extracted = PDFInvoiceParser.parse_invoice(file_path)
-        log_audit_event("2_FIND", "User uploaded PDF invoice parsed", {
+        # Call receipt-mcp via FinePrintMCPClient
+        extracted_dict = FinePrintMCPClient.parse_invoice_pdf(file_path)
+        log_audit_event("2_FIND", "User uploaded PDF invoice parsed via receipt-mcp", {
             "filename": raw_name,
             "safe_path": file_path,
-            "order_id": extracted.order_id,
-            "product_name": extracted.product_name,
-            "amount_inr": extracted.amount_inr
+            "order_id": extracted_dict.get("order_id"),
+            "product_name": extracted_dict.get("product_name"),
+            "amount_inr": extracted_dict.get("amount_inr")
         })
         return {
             "status": "success",
             "file_path": file_path,
             "filename": raw_name,
-            "extracted_order": extracted.model_dump()
+            "extracted_order": extracted_dict
         }
     except Exception as e:
         if os.path.exists(file_path):
@@ -166,6 +183,7 @@ def create_case(req: CaseCreateRequest):
     case_record = orchestrator.process_claim_pipeline(
         problem_description=req.problem_description,
         invoice_text=req.invoice_text,
+        invoice_pdf_path=req.invoice_pdf_path,
         order_override=order_override,
         complainant_name=req.complainant_name or "Consumer"
     )
@@ -191,6 +209,7 @@ def create_case(req: CaseCreateRequest):
         validation_passed=case_record["validation_passed"],
         validation_errors=case_record["validation_errors"],
         validation_warnings=case_record["validation_warnings"],
+        evidence_checklist=case_record.get("evidence_checklist", []),
         whatsapp_text=case_record.get("whatsapp_text"),
         nch_text=case_record.get("nch_text"),
         pdf_download_url=pdf_download_url
@@ -225,6 +244,12 @@ def get_all_cases():
             validation_passed=c["validation_passed"],
             validation_errors=c["validation_errors"],
             validation_warnings=c["validation_warnings"],
+            evidence_checklist=c.get("evidence_checklist", [
+                "Original Tax Invoice & GSTIN Record",
+                "Serial / IMEI Proof Attached",
+                "Defect Documentation Log",
+                "Notice Reference Sent (48h Mandate)"
+            ]),
             whatsapp_text=c.get("whatsapp_text"),
             nch_text=c.get("nch_text"),
             pdf_download_url=pdf_url

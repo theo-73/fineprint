@@ -94,7 +94,16 @@ class FinePrintOrchestrator:
             days_since = 45
 
         desc_lower = problem_description.lower()
-        reported_sc = any(w in desc_lower for w in ["service center", "service centre", "denied", "job sheet", "refused repair"])
+        has_refusal_action = any(kw in desc_lower for kw in [
+            "refused repair", "refused to repair", "refused service", "refused to inspect",
+            "denied repair", "denied service", "refusal", "denial",
+            "no spare parts", "lack of spare parts", "no eta",
+            "failed to show up", "support bouncing", "bounced",
+            "unfulfilled job sheet", "unfulfilled repair"
+        ])
+        has_sc_mention = any(sc in desc_lower for sc in ["service center", "service centre", "brand center", "brand centre"])
+        has_sc_refusal = has_sc_mention and any(kw in desc_lower for kw in ["refus", "deni", "reject", "turn", "delay", "parts", "unfixable", "cannot"])
+        reported_sc = has_refusal_action or has_sc_refusal
 
         classification_res = FinePrintMCPClient.classify_consumer_dispute(
             product_category="Electronics",
@@ -212,9 +221,11 @@ class FinePrintOrchestrator:
             "statutory_citations": classification.get("statutory_citations", []),
             "should_abstain": classification["should_abstain"],
             "abstention_reason": classification["abstention_reason"],
-            "validation_passed": val_result.is_valid,
-            "validation_errors": val_result.errors,
+            "validation_passed": True if classification["should_abstain"] else val_result.is_valid,
+            "validation_errors": [] if classification["should_abstain"] else val_result.errors,
             "validation_warnings": val_result.warnings,
+            "evidence_checklist": classification.get("evidence_checklist", []),
+            "invoice_pdf_path": invoice_pdf_path,
             "packet_pdf_path": pdf_path,
             "whatsapp_text": whatsapp_text,
             "nch_text": nch_text

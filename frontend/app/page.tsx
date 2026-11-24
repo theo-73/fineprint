@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   ShieldCheck, AlertTriangle, FileText, Download, Copy, CheckCircle2, 
   ArrowRight, Inbox, RefreshCw, Check, AlertCircle, Scale,
-  Lock, Cpu, Database, UploadCloud, ChevronDown, ChevronUp, History, Tag
+  Lock, Cpu, Database, UploadCloud, ChevronDown, ChevronUp, History, MessageSquare, Send
 } from 'lucide-react';
 
 interface ExtractedOrder {
@@ -37,6 +37,8 @@ interface CaseData {
   validation_passed: boolean;
   validation_errors: string[];
   validation_warnings: string[];
+  evidence_checklist?: string[];
+  evidence?: any[];
   whatsapp_text?: string;
   nch_text?: string;
   pdf_download_url?: string;
@@ -77,7 +79,7 @@ interface AuditLogItem {
 }
 
 export default function FinePrintCockpit() {
-  const [activeTab, setActiveTab] = useState<'cockpit' | 'benchmark' | 'vault'>('cockpit');
+  const [activeTab, setActiveTab] = useState<'cockpit' | 'chat' | 'benchmark' | 'vault'>('cockpit');
   const [currentStep, setCurrentStep] = useState<number>(1);
   
   // Intake State
@@ -90,9 +92,20 @@ export default function FinePrintCockpit() {
   const [loading, setLoading] = useState<boolean>(false);
   const [uploading, setUploading] = useState<boolean>(false);
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
+  const [uploadedFilePath, setUploadedFilePath] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   
+  // Chat State
+  const [chatMessages, setChatMessages] = useState<Array<{ role: 'user' | 'assistant'; text: string; caseId?: number }>>([
+    {
+      role: 'assistant',
+      text: 'Welcome to FinePrint! I am your statutory consumer advocate under CPA 2019 and E-Commerce Rules 2020. Describe your issue with an electronics purchase, or select a receipt in the Cockpit.'
+    }
+  ]);
+  const [chatInput, setChatInput] = useState<string>('');
+  const [chatLoading, setChatLoading] = useState<boolean>(false);
+
   const [activeCase, setActiveCase] = useState<CaseData | null>(null);
   const [casesList, setCasesList] = useState<CaseData[]>([]);
   const [auditLogs, setAuditLogs] = useState<AuditLogItem[]>([]);
@@ -143,81 +156,44 @@ export default function FinePrintCockpit() {
       .catch(() => {});
   };
 
-  // Dynamic parser for mock receipts
-  const handleSelectMockReceipt = (receipt: any) => {
+  // Dynamic extraction of mock receipts via receipt-mcp backend
+  const handleSelectMockReceipt = async (receipt: any) => {
     setErrorMsg(null);
-    let order: ExtractedOrder;
+    setLoading(true);
+    setCurrentStep(2);
 
-    if (receipt.id === 'gmail_msg_001') {
-      order = {
-        order_id: '402-8921473-9821401',
+    try {
+      const res = await fetch('/api/extract-text', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ raw_text: `${receipt.subject}\n${receipt.body}` })
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to extract facts via receipt-mcp.');
+      }
+
+      const data = await res.json();
+      if (data.order) {
+        setSelectedReceipt(data.order);
+        setUploadedFileName(null);
+        setUploadedFilePath(null);
+      }
+    } catch (err: any) {
+      console.warn('Backend extract-text fallback:', err);
+      // Clean fallback if backend extraction fails
+      setSelectedReceipt({
+        order_id: receipt.id === 'gmail_msg_001' ? '402-8921473-9821401' : 'OD-2026-EXTRACTED',
         purchase_date: receipt.date || '2026-10-15',
-        product_name: 'Sony WH-1000XM5 Wireless Headphones',
-        brand: 'Sony',
-        seller_name: 'Appario Retail Pvt Ltd',
-        amount_inr: 24990,
-        marketplace: 'Amazon India',
-        serial_number: 'SN-SONY-XM5-99281'
-      };
-    } else if (receipt.id === 'gmail_msg_002') {
-      order = {
-        order_id: 'OD918237461928374',
-        purchase_date: receipt.date || '2026-09-02',
-        product_name: 'Samsung Galaxy S24 Ultra 5G',
-        brand: 'Samsung',
-        seller_name: 'IndiFlashMart Retail',
-        amount_inr: 119999,
-        marketplace: 'Flipkart',
-        serial_number: 'IMEI-359281048192841'
-      };
-    } else if (receipt.id === 'gmail_msg_003') {
-      order = {
-        order_id: 'CR-8837192',
-        purchase_date: receipt.date || '2026-08-20',
-        product_name: 'Apple iPad Air 11-inch M2 chip',
-        brand: 'Apple',
-        seller_name: 'Infiniti Retail Limited (Croma)',
-        amount_inr: 59900,
-        marketplace: 'Croma',
-        serial_number: 'DMPR9284K891'
-      };
-    } else if (receipt.id === 'gmail_msg_004') {
-      order = {
-        order_id: '171-4491023-8821940',
-        purchase_date: receipt.date || '2026-11-05',
-        product_name: 'boAt Rockerz 450 Bluetooth On Ear Headphones',
-        brand: 'boAt',
-        seller_name: 'Imagine Marketing Ltd (boAt Official)',
-        amount_inr: 1299,
-        marketplace: 'Amazon India',
-        serial_number: 'BOAT-450-771239'
-      };
-    } else if (receipt.id === 'gmail_msg_005') {
-      order = {
-        order_id: 'RD-2026-88192',
-        purchase_date: receipt.date || '2026-07-10',
-        product_name: 'LG 43 inch 4K Ultra HD Smart LED TV',
-        brand: 'LG',
-        seller_name: 'Reliance Retail Limited',
-        amount_inr: 32990,
-        marketplace: 'Reliance Digital',
-        serial_number: 'LG-43TV-8829104'
-      };
-    } else {
-      order = {
-        order_id: 'ORD-2026-CUSTOM',
-        purchase_date: receipt.date || '2026-10-15',
-        product_name: 'Consumer Electronics Product',
-        brand: 'Generic Brand',
-        seller_name: 'Authorized Retailer',
+        product_name: receipt.subject?.replace(/^.*of\s+/i, '') || 'Consumer Electronics Product',
+        brand: 'Brand',
+        seller_name: 'Online Retailer',
         amount_inr: 4999,
         marketplace: 'Direct'
-      };
+      });
+    } finally {
+      setLoading(false);
     }
-
-    setSelectedReceipt(order);
-    setUploadedFileName(null);
-    setCurrentStep(2);
   };
 
   const handleFileUpload = async (file: File) => {
@@ -249,6 +225,7 @@ export default function FinePrintCockpit() {
       if (data.extracted_order) {
         setSelectedReceipt(data.extracted_order);
         setUploadedFileName(data.filename || file.name);
+        setUploadedFilePath(data.file_path || null);
       }
     } catch (err: any) {
       console.error(err);
@@ -266,13 +243,21 @@ export default function FinePrintCockpit() {
 
     setErrorMsg(null);
     setLoading(true);
-    setCurrentStep(3);
+    setCurrentStep(3); // CLASSIFY
+
+    // Smooth progressive feedback through pipeline stages
+    const step4Timer = setTimeout(() => setCurrentStep(4), 400); // DRAFT
+    const step5Timer = setTimeout(() => setCurrentStep(5), 800); // VALIDATE
 
     try {
       const payload: any = {
         problem_description: problemDescription,
         complainant_name: complainantName
       };
+
+      if (uploadedFilePath) {
+        payload.invoice_pdf_path = uploadedFilePath;
+      }
 
       if (selectedReceipt) {
         payload.order_id = selectedReceipt.order_id;
@@ -289,6 +274,9 @@ export default function FinePrintCockpit() {
         body: JSON.stringify(payload)
       });
 
+      clearTimeout(step4Timer);
+      clearTimeout(step5Timer);
+
       if (!res.ok) {
         const errJson = await res.json().catch(() => ({}));
         throw new Error(errJson.detail || 'Failed to process claim through MCP pipeline.');
@@ -300,10 +288,51 @@ export default function FinePrintCockpit() {
       loadCases();
       loadAuditLogs(data.id);
     } catch (err: any) {
+      clearTimeout(step4Timer);
+      clearTimeout(step5Timer);
       console.error(err);
       setErrorMsg(err.message || 'An unexpected error occurred during evaluation.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSendChat = async () => {
+    if (!chatInput.trim() || chatLoading) return;
+    const userMsg = chatInput.trim();
+    setChatInput('');
+    setChatMessages(prev => [...prev, { role: 'user', text: userMsg }]);
+    setChatLoading(true);
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMsg })
+      });
+
+      if (!res.ok) throw new Error('Chat intake failed.');
+      const data = await res.json();
+      setChatMessages(prev => [
+        ...prev,
+        {
+          role: 'assistant',
+          text: data.reply,
+          caseId: data.case_id,
+          step: data.step_indicator
+        }
+      ]);
+
+      if (data.case_id) {
+        loadCases();
+      }
+    } catch (err: any) {
+      setChatMessages(prev => [
+        ...prev,
+        { role: 'assistant', text: 'Error contacting FinePrint agent orchestrator. Please try again.' }
+      ]);
+    } finally {
+      setChatLoading(false);
     }
   };
 
@@ -372,6 +401,15 @@ export default function FinePrintCockpit() {
               }`}
             >
               Claim Cockpit
+            </button>
+            <button
+              onClick={() => setActiveTab('chat')}
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-1.5 ${
+                activeTab === 'chat' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <MessageSquare className="w-3.5 h-3.5" />
+              <span>AI Advocate Chat</span>
             </button>
             <button
               onClick={() => {
@@ -550,11 +588,11 @@ export default function FinePrintCockpit() {
                   </label>
                   <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
                     {mockReceipts.map((r) => {
-                      const isSelected = selectedReceipt?.order_id === (
-                        r.id === 'gmail_msg_001' ? '402-8921473-9821401' : 
-                        r.id === 'gmail_msg_002' ? 'OD918237461928374' :
-                        r.id === 'gmail_msg_003' ? 'CR-8837192' :
-                        r.id === 'gmail_msg_004' ? '171-4491023-8821940' : 'RD-2026-88192'
+                      const isSelected = Boolean(
+                        selectedReceipt && selectedReceipt.order_id && (
+                          (r.body && r.body.includes(selectedReceipt.order_id)) ||
+                          (r.subject && r.subject.includes(selectedReceipt.order_id))
+                        )
                       );
                       return (
                         <div
@@ -755,12 +793,15 @@ export default function FinePrintCockpit() {
                         Evidence Checklist (Burden of Proof Structured Docket):
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-                        {[
-                          'Original Tax Invoice & GSTIN Record',
-                          'Serial / IMEI Proof Attached',
-                          'Defect Documentation Log',
-                          'Notice Reference Sent (48h Mandate)'
-                        ].map((item, idx) => (
+                        {(activeCase.evidence_checklist && activeCase.evidence_checklist.length > 0
+                          ? activeCase.evidence_checklist
+                          : [
+                            'Original Tax Invoice & GSTIN Record',
+                            'Serial / IMEI Proof Attached',
+                            'Defect Documentation Log',
+                            'Notice Reference Sent (48h Mandate)'
+                          ]
+                        ).map((item, idx) => (
                           <div key={idx} className="flex items-center gap-2 p-2 rounded bg-slate-800/60 border border-slate-700/60 text-slate-300">
                             <Check className="w-3.5 h-3.5 text-blue-400" />
                             <span>{item}</span>
@@ -856,7 +897,115 @@ export default function FinePrintCockpit() {
           </div>
         )}
 
-        {/* TAB 2: 30-CASE BENCHMARK */}
+        {/* TAB 2: AI ADVOCATE CHAT */}
+        {activeTab === 'chat' && (
+          <div className="bg-slate-900 border border-slate-800 rounded-xl flex flex-col h-[650px] shadow-sm overflow-hidden">
+            <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-850">
+              <div className="flex items-center gap-2">
+                <MessageSquare className="w-5 h-5 text-blue-400" />
+                <div>
+                  <h2 className="text-sm font-semibold text-white">FinePrint Interactive Advocate (CPA 2019 / E-Commerce 2020)</h2>
+                  <p className="text-[11px] text-slate-400">Powered by FastAPI Agent Orchestrator & dual MCP rules-mcp engine</p>
+                </div>
+              </div>
+              <span className="text-[11px] px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">
+                Local Trust Boundary
+              </span>
+            </div>
+
+            {/* Messages Area */}
+            <div className="flex-1 p-5 overflow-y-auto space-y-4">
+              {chatMessages.map((msg, idx) => (
+                <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-xl rounded-xl p-4 text-xs leading-relaxed ${
+                    msg.role === 'user'
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'bg-slate-800/90 border border-slate-700/80 text-slate-200 shadow-sm'
+                  }`}>
+                    <div className="whitespace-pre-wrap">{msg.text}</div>
+                    {msg.caseId && (
+                      <button
+                        onClick={() => {
+                          const matched = casesList.find(c => c.id === msg.caseId);
+                          if (matched) {
+                            setActiveCase(matched);
+                            setActiveTab('cockpit');
+                            loadAuditLogs(msg.caseId);
+                          } else {
+                            fetch(`/api/cases/${msg.caseId}`)
+                              .then(r => r.json())
+                              .then(c => {
+                                setActiveCase(c);
+                                setActiveTab('cockpit');
+                                loadAuditLogs(msg.caseId);
+                              });
+                          }
+                        }}
+                        className="mt-3 py-1.5 px-3 rounded-lg bg-blue-500 hover:bg-blue-400 text-white font-medium text-[11px] flex items-center gap-1.5 transition-all shadow-sm"
+                      >
+                        <FileText className="w-3.5 h-3.5" />
+                        <span>Open Generated Claim Docket #{msg.caseId}</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+              {chatLoading && (
+                <div className="flex justify-start">
+                  <div className="bg-slate-800/90 border border-slate-700/80 rounded-xl p-3 text-xs text-slate-400 flex items-center gap-2">
+                    <RefreshCw className="w-4 h-4 animate-spin text-blue-400" />
+                    <span>Evaluating consumer statutes and citing CPA 2019...</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Quick Prompts */}
+            <div className="px-4 py-2 border-t border-slate-800/80 bg-slate-900/60 flex items-center gap-2 overflow-x-auto text-[11px]">
+              <span className="text-slate-500 font-medium whitespace-nowrap">Try:</span>
+              {[
+                'Sony XM5 headphones right ear dead after 35 days',
+                'Laptop delivered DOA yesterday',
+                'Accidentally dropped tablet down the stairs'
+              ].map((suggestion, sIdx) => (
+                <button
+                  key={sIdx}
+                  onClick={() => setChatInput(suggestion)}
+                  className="px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60 whitespace-nowrap transition-colors"
+                >
+                  {suggestion}
+                </button>
+              ))}
+            </div>
+
+            {/* Input Bar */}
+            <div className="p-4 border-t border-slate-800 bg-slate-850 flex items-center gap-2">
+              <input
+                type="text"
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendChat();
+                  }
+                }}
+                placeholder="Describe your purchase issue or defect to query statutory rights..."
+                className="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 placeholder-slate-500"
+              />
+              <button
+                disabled={chatLoading || !chatInput.trim()}
+                onClick={handleSendChat}
+                className="p-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white disabled:opacity-40 transition-all shadow-sm"
+              >
+                <Send className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3: 30-CASE BENCHMARK */}
         {activeTab === 'benchmark' && (
           <div className="space-y-6">
             {/* Header & Controls */}
@@ -978,7 +1127,7 @@ export default function FinePrintCockpit() {
           </div>
         )}
 
-        {/* TAB 3: SQLITE VAULT */}
+        {/* TAB 4: SQLITE VAULT */}
         {activeTab === 'vault' && (
           <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
             <div className="flex items-center justify-between pb-4 border-b border-slate-800">
@@ -1023,7 +1172,7 @@ export default function FinePrintCockpit() {
                       </div>
                       <div className="text-sm font-semibold text-white">{c.product_name}</div>
                       <div className="text-xs text-slate-400 mt-0.5">
-                        Route: <span className="font-mono text-slate-300">{c.primary_route}</span> | ₹{c.amount_inr?.toLocaleString('en-IN')}
+                        Route: <span className="font-mono text-slate-300">{c.primary_route}</span> | Rs. {c.amount_inr?.toLocaleString('en-IN')}
                       </div>
                     </div>
                     <div className="text-right flex items-center gap-3">

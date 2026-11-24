@@ -9,6 +9,7 @@ class CaseCreateRequest(BaseModel):
     problem_description: str
     order_id: Optional[str] = None
     invoice_text: Optional[str] = None
+    invoice_pdf_path: Optional[str] = None
     product_name: Optional[str] = None
     brand: Optional[str] = None
     seller_name: Optional[str] = None
@@ -37,9 +38,17 @@ class CaseResponse(BaseModel):
     validation_passed: bool
     validation_errors: List[str]
     validation_warnings: List[str]
+    evidence_checklist: List[str] = Field(default_factory=list)
     whatsapp_text: Optional[str] = None
     nch_text: Optional[str] = None
     pdf_download_url: Optional[str] = None
+
+class ExtractOrderRequest(BaseModel):
+    raw_text: str
+
+class ExtractOrderResponse(BaseModel):
+    order: Dict[str, Any]
+    status: str = "success"
 
 class ChatRequest(BaseModel):
     message: str

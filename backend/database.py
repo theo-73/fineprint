@@ -15,9 +15,10 @@ DB_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "finepri
 @contextmanager
 def db_session():
     """Provides a managed SQLite connection context with automatic commit/rollback and closure."""
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH, timeout=30.0)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL;")
+    conn.execute("PRAGMA foreign_keys=ON;")
     try:
         yield conn
         conn.commit()
@@ -28,9 +29,10 @@ def db_session():
         conn.close()
 
 def get_connection():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH, timeout=30.0)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL;")
+    conn.execute("PRAGMA foreign_keys=ON;")
     return conn
 
 def init_db():
@@ -180,6 +182,15 @@ def insert_case(case_data: Dict[str, Any]) -> int:
         ))
         case_id = cursor.lastrowid
 
+    # Automatically persist associated evidence documents
+    if case_data.get("invoice_pdf_path") and os.path.exists(case_data.get("invoice_pdf_path")):
+        inv_path = case_data["invoice_pdf_path"]
+        insert_evidence(case_id, os.path.basename(inv_path), "INVOICE_PDF", inv_path)
+
+    if case_data.get("packet_pdf_path") and os.path.exists(case_data.get("packet_pdf_path")):
+        pkt_path = case_data["packet_pdf_path"]
+        insert_evidence(case_id, os.path.basename(pkt_path), "CLAIM_DOCKET_PDF", pkt_path)
+
     log_audit_event("6_OUTPUT", "Case created and persisted in SQLite", {"case_id": case_id, "claim_ref": claim_ref}, case_id)
     return case_id
 
@@ -198,6 +209,7 @@ def get_case(case_id: int) -> Optional[Dict[str, Any]]:
         d["validation_warnings"] = json.loads(d["validation_warnings"] or "[]")
         d["should_abstain"] = bool(d["should_abstain"])
         d["validation_passed"] = bool(d["validation_passed"])
+        d["evidence"] = get_evidence_by_case(case_id)
         return d
 
 def list_cases() -> List[Dict[str, Any]]:

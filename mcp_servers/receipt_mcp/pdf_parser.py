@@ -110,13 +110,13 @@ def generate_sample_invoice(
             Paragraph(f"<b>{product_name}</b><br/>Brand: {brand} | 1 Year Manufacturer Warranty", normal_style),
             Paragraph(serial_number, normal_style),
             Paragraph("1", normal_style),
-            Paragraph(f"₹{amount_inr:,.2f}", bold_style)
+            Paragraph(f"Rs. {amount_inr:,.2f}", bold_style)
         ],
         [
             Paragraph("<b>Total Amount Paid (Inclusive of 18% GST)</b>", bold_style),
             Paragraph("", normal_style),
             Paragraph("", normal_style),
-            Paragraph(f"<b>₹{amount_inr:,.2f}</b>", bold_style)
+            Paragraph(f"<b>Rs. {amount_inr:,.2f}</b>", bold_style)
         ]
     ]
     items_table = Table(items_data, colWidths=[250, 130, 40, 120])
