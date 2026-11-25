@@ -1,5 +1,4 @@
 # FinePrint — Consumer Rights MCP Agent
-### Track 1: "Make MCP Matter" | wHACKiest 2026 | Team Onyx (BMSIT)
 
 > **An MCP-powered consumer protection advocate for Indian e-commerce that turns purchase receipts into statutory claim dockets under CPA 2019 and E-Commerce Rules 2020.**
 
@@ -21,30 +20,77 @@ When consumer electronics fail after a platform's contractual 7-day return windo
 
 FinePrint executes a deterministic **6-stage pipeline** inside a local client trust boundary over real Model Context Protocol (MCP) stdio JSON-RPC transports:
 
-```
-[1 INPUT] -> [2 FIND] -> [3 CLASSIFY] -> [4 DRAFT] -> [5 VALIDATE] -> [6 OUTPUT]
-User text     receipt-mcp   rules-mcp:     Structured     Code validator    PDF notice,
-/ PDF invoice order facts,  case type ->   claim docket   checks facts &    WhatsApp &
-upload        date, serial  route / abstain                citations         NCH text
+### 1. Process Pipeline Flow
+
+```mermaid
+flowchart LR
+    S1["1. INPUT\nUser Text / PDF Invoice"] --> S2["2. FIND\nreceipt-mcp Facts & Serial"]
+    S2 --> S3["3. CLASSIFY\nrules-mcp Route / Abstain"]
+    S3 --> S4["4. DRAFT\nStructured Claim Docket"]
+    S4 --> S5["5. VALIDATE\nDeterministic Code Check"]
+    S5 --> S6["6. OUTPUT\nLegal PDF, WhatsApp & NCH"]
 ```
 
+### 2. Local Trust Boundary & System Architecture
+
+```mermaid
+flowchart TD
+    subgraph TrustBoundary ["Local Client Trust Boundary"]
+        direction TB
+
+        subgraph ClientTier ["Client Application"]
+            UI["Next.js 14 Cockpit\n(PDF Dropzone, Intake, Review, Vault, AI Advocate Chat)"]
+        end
+
+        subgraph AgentTier ["FastAPI Agent Orchestrator"]
+            Orch["Orchestrator\n(Coordinates 6-Stage Pipeline)"]
+            MCPAdapter["MCP Client Adapter\n(Stdio ClientSession via Python MCP SDK)"]
+            Validator["Deterministic Code Validator\n(Zero-Hallucination Citation Gate)"]
+            Builder["Packet Builder\n(ReportLab Legal PDF, WhatsApp Text & NCH Format)"]
+
+            Orch --> MCPAdapter
+            Orch --> Validator
+            Orch --> Builder
+        end
+
+        subgraph MCPServersTier ["MCP Servers & Local Storage"]
+            ReceiptMCP["receipt-mcp Server\n(Regex Facts Sanitizer & pdfplumber Parser)"]
+            RulesMCP["rules-mcp Server\n(CPA 2019 & E-Commerce Rules 2020 Engine)"]
+            SQLite[("Local SQLite Database\nCases, Evidence Dockets & Audit Logs")]
+        end
+
+        UI <-->|"REST API / JSON"| Orch
+        MCPAdapter <-->|"stdio / JSON-RPC"| ReceiptMCP
+        MCPAdapter <-->|"stdio / JSON-RPC"| RulesMCP
+        Orch <-->|"Persist & Query"| SQLite
+    end
 ```
-┌────────────────────────────────────────────────────────────────────────┐
-│                        LOCAL TRUST BOUNDARY                            │
-│                                                                        │
-│   CLIENT: Next.js 14 Cockpit (PDF Dropzone, Intake, Review, Vault)     │
-│      ↕ (REST / JSON)                                                   │
-│   AGENT (FastAPI Orchestrator):                                        │
-│      ├── Orchestrator: Coordinates 6-stage pipeline                    │
-│      ├── MCP Client Adapter: Spawns and calls stdio tool transports     │
-│      ├── Validator (Code): Verifies facts, citations & evidence        │
-│      └── Packet Builder: ReportLab PDF, WhatsApp text, NCH format      │
-│      ↕ (stdio / JSON-RPC via Python MCP SDK)                           │
-│   MCP SERVERS + DATA:                                                  │
-│      ├── SQLite (Local): Cases, evidence dockets, step audit logs      │
-│      ├── rules-mcp: Evaluates CPA 2019 & E-Commerce Rules 2020         │
-│      └── receipt-mcp: Schema-validates untrusted emails/PDF invoices   │
-└────────────────────────────────────────────────────────────────────────┘
+
+### 3. Execution Sequence & MCP Protocol Interaction
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as Consumer / Cockpit UI
+    participant Orch as FastAPI Orchestrator
+    participant Receipt as receipt-mcp (stdio)
+    participant Rules as rules-mcp (stdio)
+    participant Valid as Code Validator
+    participant Packet as Packet Builder
+    participant DB as Local SQLite DB
+
+    User->>Orch: POST /api/evaluate-claim (invoice PDF / text + defect)
+    Orch->>DB: Log intake event & persist evidence
+    Orch->>Receipt: JSON-RPC tools/call: extract_receipt_facts
+    Receipt-->>Orch: Schema-validated facts (order_id, date, amount, serial)
+    Orch->>Rules: JSON-RPC tools/call: classify_case (facts + defect)
+    Rules-->>Orch: Statutory route, legal citations, SLA deadline
+    Orch->>Valid: Check citations against statutory rules.yaml registry
+    Valid-->>Orch: Validation verdict (PASSED / HALT)
+    Orch->>Packet: Generate formal legal notice PDF, WhatsApp & NCH drafts
+    Packet-->>Orch: Structured legal packet artifacts
+    Orch->>DB: Update case status, packet paths & step audit log
+    Orch-->>User: Complete claim docket, statutory checklist & downloadable PDF
 ```
 
 ### 🔒 Prompt Injection & Privacy Safeguards
@@ -137,9 +183,21 @@ fineprint/
 │       └── rules.yaml       # Curated CPA 2019 & E-Com 2020 rules
 ├── frontend/                # Next.js 14 Cockpit
 │   ├── app/
-│   │   ├── page.tsx         # Main cockpit, PDF dropzone, benchmark, vault
-│   │   ├── layout.tsx       # Root layout
-│   │   └── globals.css      # Tailwind styling
+│   │   ├── page.tsx         # Lean controller coordinating view tabs
+│   │   ├── layout.tsx       # Root layout & font definitions
+│   │   └── globals.css      # Emil Kowalski press physics & styling
+│   ├── components/          # Modularized UI component system
+│   │   ├── Header.tsx       # Statutory branding, trust badge & nav tabs
+│   │   ├── ProcessStepper.tsx # Visual 6-stage architecture pipeline
+│   │   ├── IntakeCard.tsx   # PDF dropzone, defect input & evaluation CTA
+│   │   ├── ClaimDocket.tsx  # Dynamic checklist, routes & copy triggers
+│   │   ├── ChatAdvocate.tsx # Conversational AI consumer advocate tab
+│   │   ├── BenchmarkTab.tsx # Real-time benchmark KPIs & filterable table
+│   │   └── VaultTab.tsx     # Local SQLite case records & PDF downloads
+│   ├── lib/
+│   │   └── utils.ts         # formatINR, formatDate, cn utility functions
+│   ├── types/
+│   │   └── index.ts         # Shared TypeScript interfaces
 │   ├── package.json
 │   └── .eslintrc.json
 ├── tests/
@@ -153,7 +211,7 @@ fineprint/
 
 ---
 
-## 🏆 Hackathon Alignment (Track 1: Make MCP Matter)
+## 🛡️ Core MCP Architecture Standards
 - **Real Dual MCP Servers:** `receipt-mcp` and `rules-mcp` communicate over the standard MCP protocol via stdio / JSON-RPC.
 - **Local Trust Boundary:** Sensitive email data, invoice PDFs, and legal dockets remain within the user's local session.
 - **Auditable & Human-in-the-Loop:** Every step is recorded in SQLite audit logs and requires explicit user review before notice dispatch.
