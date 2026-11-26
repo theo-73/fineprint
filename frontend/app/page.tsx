@@ -105,10 +105,17 @@ function FinePrintCockpitContent() {
     fetch('/api/cases')
       .then((r) => r.json())
       .then((data) => {
-        if (Array.isArray(data)) {
-          setCasesList(data);
-        } else if (data && data.cases) {
-          setCasesList(data.cases);
+        const list: CaseData[] = Array.isArray(data) ? data : (data?.cases || []);
+        setCasesList(list);
+        if (list.length > 0) {
+          setActiveCase((prev) => {
+            if (!prev) {
+              setCurrentStep(6);
+              if (list[0].id) loadAuditLogs(list[0].id);
+              return list[0];
+            }
+            return prev;
+          });
         }
       })
       .catch(() => {});
@@ -255,7 +262,7 @@ function FinePrintCockpitContent() {
 
       const caseData: CaseData = await res.json();
       setActiveCase(caseData);
-      setCurrentStep(3);
+      setCurrentStep(6);
       loadCases();
       if (caseData.id) loadAuditLogs(caseData.id);
       success('Statutory Claim Generated', `Enforceable notice compiled for ${caseData.product_name}`);
@@ -264,6 +271,85 @@ function FinePrintCockpitContent() {
       setErrorMsg(msg);
       error('Evaluation Failed', msg);
       setCurrentStep(1);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSelectSampleAndEvaluate = async (idx: number) => {
+    const samples = [
+      {
+        order: {
+          order_id: '402-8921473-9821401',
+          purchase_date: '2026-10-15',
+          product_name: 'Sony WH-1000XM5 Wireless Noise Cancelling Headphones',
+          brand: 'Sony India Pvt Ltd',
+          seller_name: 'Appario Retail Pvt Ltd',
+          amount_inr: 24990,
+          marketplace: 'Amazon India'
+        },
+        problem: 'The right ear cup of my Sony WH-1000XM5 headphones stopped outputting audio after 35 days. Amazon return window closed on day 7, and customer care refused replacement citing contractual return window.'
+      },
+      {
+        order: {
+          order_id: 'OD-2026-9921472-881',
+          purchase_date: '2026-11-20',
+          product_name: 'Samsung Galaxy S24 Ultra 5G',
+          brand: 'Samsung India Electronics Pvt Ltd',
+          seller_name: 'Croma Online Stores',
+          amount_inr: 129999,
+          marketplace: 'Croma Online'
+        },
+        problem: 'The Samsung S24 Ultra display has a persistent green vertical line on the screen right out of the box (Dead on Arrival). Croma store refused replacement citing 24-hour return policy.'
+      },
+      {
+        order: {
+          order_id: 'INV-APL-2026-77192',
+          purchase_date: '2026-05-10',
+          product_name: 'Apple MacBook Air M3 (16GB / 512GB)',
+          brand: 'Apple India Private Limited',
+          seller_name: 'Reliance Digital Retail Ltd',
+          amount_inr: 134900,
+          marketplace: 'Reliance Digital'
+        },
+        problem: 'The MacBook Air M3 motherboard failed within the 12-month express manufacturer warranty period. Reliance Digital and Apple service centre refused free repair claiming lack of parts.'
+      }
+    ];
+
+    const sample = samples[idx] || samples[0];
+    setSelectedReceipt(sample.order);
+    setProblemDescription(sample.problem);
+    setLoading(true);
+    setCurrentStep(2);
+
+    try {
+      const payload = {
+        problem_description: sample.problem,
+        extracted_order: sample.order,
+        order_id: sample.order.order_id,
+        product_name: sample.order.product_name,
+        brand: sample.order.brand,
+        seller_name: sample.order.seller_name,
+        amount_inr: sample.order.amount_inr,
+        purchase_date: sample.order.purchase_date,
+        marketplace: sample.order.marketplace,
+        complainant_name: complainantName || 'Tejas K',
+      };
+      const res = await fetch('/api/evaluate-claim', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        const caseData: CaseData = await res.json();
+        setActiveCase(caseData);
+        setCurrentStep(6);
+        loadCases();
+        if (caseData.id) loadAuditLogs(caseData.id);
+        success('Statutory Claim Generated', `Enforceable notice compiled for ${caseData.product_name}`);
+      }
+    } catch (err: unknown) {
+      console.error('Auto evaluate sample error:', err);
     } finally {
       setLoading(false);
     }
@@ -393,10 +479,8 @@ function FinePrintCockpitContent() {
             if (tab === 'vault') loadCases();
           }}
           onSelectSampleInvoice={(idx) => {
-            if (mockReceipts[idx]) {
-              handleSelectMockReceipt(mockReceipts[idx]);
-              setActiveTab('cockpit');
-            }
+            handleSelectSampleAndEvaluate(idx);
+            setActiveTab('cockpit');
           }}
           onTriggerAction={(actionId) => {
             if (actionId === 'nch') {
@@ -560,11 +644,7 @@ function FinePrintCockpitContent() {
                   onCopyWhatsApp={(text) => copyToClipboard(text, 'wa')}
                   onCopyNCH={(text) => copyToClipboard(text, 'nch')}
                   onOpenDossier={(caseItem) => setDossierCase(caseItem)}
-                  onSelectSample={(idx) => {
-                    if (mockReceipts[idx]) {
-                      handleSelectMockReceipt(mockReceipts[idx]);
-                    }
-                  }}
+                  onSelectSample={(idx) => handleSelectSampleAndEvaluate(idx)}
                 />
               </div>
             </div>
@@ -633,10 +713,8 @@ function FinePrintCockpitContent() {
           if (tab === 'vault') loadCases();
         }}
         onSelectSampleInvoice={(idx) => {
-          if (mockReceipts[idx]) {
-            handleSelectMockReceipt(mockReceipts[idx]);
-            setActiveTab('cockpit');
-          }
+          handleSelectSampleAndEvaluate(idx);
+          setActiveTab('cockpit');
         }}
         onTriggerAction={(actionId) => {
           if (actionId === 'nch') {
