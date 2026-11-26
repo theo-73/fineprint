@@ -18,17 +18,20 @@ import { CaseTimelineJourney } from './CaseTimelineJourney';
 import { FieldNotesMarquee } from './FieldNotesMarquee';
 import { TechnicalBenchmarks } from './TechnicalBenchmarks';
 import { FaqAccordion } from './FaqAccordion';
+import { ScrollSplitShowcase } from './ScrollSplitShowcase';
 
 interface LandingViewProps {
   onNavigate: (tab: TabType) => void;
   user: AuthUser | null;
   onLoginSuccess: (user: AuthUser) => void;
+  onOpenCommandPalette?: () => void;
 }
 
 export const LandingView: React.FC<LandingViewProps> = ({ 
   onNavigate, 
   user, 
-  onLoginSuccess 
+  onLoginSuccess,
+  onOpenCommandPalette,
 }) => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
@@ -64,6 +67,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
         user={user}
         onOpenAuth={() => setIsAuthOpen(true)}
         onLaunchCockpit={handleLaunchCockpit}
+        onOpenCommandPalette={onOpenCommandPalette}
       />
 
       {/* AUTH / DEMO LOGIN MODAL */}
@@ -154,17 +158,47 @@ export const LandingView: React.FC<LandingViewProps> = ({
               {/* Micro Trust Badges */}
               <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-[#A1A1AA] font-medium pt-3 border-t border-[#27272A]">
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF2A1A]" />
                   <span>100% CPA 2019 Ground-Truth</span>
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF2A1A]" />
                   <span>Zero Hallucinations (PyTest 100%)</span>
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF2A1A]" />
                   <span>Rule 4(5) 48h SLA Window</span>
                 </span>
+              </div>
+
+              {/* Swiss Editorial Stats Row (Directly referencing Image 1: 50+ / 120+ / 8+) */}
+              <div className="grid grid-cols-3 gap-4 pt-4 border-t border-[#27272A] text-left">
+                <div className="space-y-0.5">
+                  <div className="font-display font-extrabold text-2xl sm:text-3xl text-white tracking-tight tabular-nums">
+                    ₹1.84<span className="text-[#FF2A1A]">Cr+</span>
+                  </div>
+                  <div className="font-mono text-[10px] text-[#A1A1AA] uppercase tracking-wider">
+                    Restitution Enforced
+                  </div>
+                </div>
+
+                <div className="space-y-0.5 border-l border-[#27272A] pl-4">
+                  <div className="font-display font-extrabold text-2xl sm:text-3xl text-white tracking-tight tabular-nums">
+                    0.00<span className="text-[#FF2A1A]">%</span>
+                  </div>
+                  <div className="font-mono text-[10px] text-[#A1A1AA] uppercase tracking-wider">
+                    Citation Hallucination
+                  </div>
+                </div>
+
+                <div className="space-y-0.5 border-l border-[#27272A] pl-4">
+                  <div className="font-display font-extrabold text-2xl sm:text-3xl text-white tracking-tight tabular-nums">
+                    48<span className="text-[#FF2A1A]">h</span>
+                  </div>
+                  <div className="font-mono text-[10px] text-[#A1A1AA] uppercase tracking-wider">
+                    Mandatory SLA Window
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -184,18 +218,23 @@ export const LandingView: React.FC<LandingViewProps> = ({
             <span>✦ ₹1.84 Crores Consideration Protected</span>
             <span className="text-[#FF2A1A]">⚖️ 100% CPA 2019 Section 84 Ground-Truth</span>
             <span>⚡ 800ms Notice Compilation Speed</span>
-            <span className="text-[#10B981]">✓ 0% Cited Citations Hallucinated (PyTest Verified)</span>
+            <span className="text-white">✓ 0% Cited Citations Hallucinated (PyTest Verified)</span>
             <span>⏱️ Rule 4(5) 48-Hour Grievance SLA</span>
             <span className="text-[#FF2A1A]">🛡️ Appario, Flipkart, Croma, Reliance Deflections Dismantled</span>
             <span>✦ ₹1.84 Crores Consideration Protected</span>
             <span className="text-[#FF2A1A]">⚖️ 100% CPA 2019 Section 84 Ground-Truth</span>
             <span>⚡ 800ms Notice Compilation Speed</span>
-            <span className="text-[#10B981]">✓ 0% Cited Citations Hallucinated (PyTest Verified)</span>
+            <span className="text-white">✓ 0% Cited Citations Hallucinated (PyTest Verified)</span>
           </div>
         </div>
 
         {/* ========================================================
-            4. 4 INTERACTIVE BENTO DEMO CARDS
+            4. SCROLL-LINKED SPLIT-OPENING FORENSIC SHOWCASE (Awwwards Style)
+        ======================================================== */}
+        <ScrollSplitShowcase />
+
+        {/* ========================================================
+            5. 4 INTERACTIVE BENTO DEMO CARDS
         ======================================================== */}
         <section>
           <LandingInteractiveDemos />

@@ -78,13 +78,13 @@ export const LandingHeroNetwork: React.FC = () => {
 
       {/* Visual Canvas Area with Editorial Architectural Graphic */}
       <div className="relative w-full aspect-[16/9] min-h-[320px] sm:min-h-[380px] bg-[#09090B] overflow-hidden">
-        {/* Architectural Hero Image (Clean Monochrome with Red Monolith) */}
+        {/* Swiss Editorial Consumer Rights Advocate Graphic */}
         <Image
-          src="/images/fineprint_hero.jpg"
-          alt="FinePrint Architectural Monolith Defense Network"
+          src="/images/fineprint_advocate.jpg"
+          alt="FinePrint Consumer Rights Advocate Editorial Visual"
           fill
           priority
-          className="object-cover object-center opacity-90 transition-transform duration-700 group-hover:scale-[1.02]"
+          className="object-cover object-center opacity-95 transition-transform duration-700 group-hover:scale-[1.02]"
         />
 
         {/* Minimal Grid Overlay (No Blurry Glows) */}

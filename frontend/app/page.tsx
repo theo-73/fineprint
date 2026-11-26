@@ -347,6 +347,7 @@ function FinePrintCockpitContent() {
             setCurrentUser(user);
             success('Signed in as ' + user.name, user.role);
           }}
+          onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
         />
 
         {/* Global Command Palette */}
