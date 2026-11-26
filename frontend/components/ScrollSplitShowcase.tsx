@@ -99,16 +99,16 @@ export const ScrollSplitShowcase: React.FC = () => {
       {/* ========================================================
           BACKGROUND KINETIC PARALLAX TYPOGRAPHY TICKERS
       ======================================================== */}
-      <div className="absolute inset-0 pointer-events-none opacity-5 overflow-hidden flex flex-col justify-around">
+      <div className="absolute inset-0 pointer-events-none opacity-[0.035] overflow-hidden flex flex-col justify-around">
         <motion.div
           style={{ x: xTickerLeft }}
-          className="whitespace-nowrap font-display font-black text-7xl md:text-9xl text-white tracking-tighter uppercase"
+          className="whitespace-nowrap font-display font-black text-3xl sm:text-4xl md:text-5xl text-white tracking-tight uppercase"
         >
           CPA 2019 SECTION 84 · STRICT PRODUCT LIABILITY · LATENT DEFECT CLAIMS · 48-HOUR SLA MANDATE · ZERO CITATION HALLUCINATION ·
         </motion.div>
         <motion.div
           style={{ x: xTickerRight }}
-          className="whitespace-nowrap font-display font-black text-7xl md:text-9xl text-[#FF2A1A] tracking-tighter uppercase"
+          className="whitespace-nowrap font-display font-black text-3xl sm:text-4xl md:text-5xl text-[#FF2A1A] tracking-tight uppercase"
         >
           E-COMMERCE RULES RULE 6(3) · 7-DAY RETURN BARRIER VOID · NCH 1915 LITIGATION · RESTITUTION COMPILATION ·
         </motion.div>
@@ -123,7 +123,7 @@ export const ScrollSplitShowcase: React.FC = () => {
               <span className="w-1.5 h-1.5 rounded-full bg-[#FF2A1A]" />
               <span>{"// 02 CASE STUDY USECASE"}</span>
             </div>
-            <h2 className="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl text-white tracking-tight uppercase">
+            <h2 className="font-display font-extrabold text-2xl sm:text-3xl md:text-4xl text-white tracking-tight uppercase">
               Statutory Dispute Resolution
             </h2>
             <p className="text-xs sm:text-sm text-[#A1A1AA] leading-relaxed">

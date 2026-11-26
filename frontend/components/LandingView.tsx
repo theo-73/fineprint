@@ -67,7 +67,6 @@ export const LandingView: React.FC<LandingViewProps> = ({
         user={user}
         onOpenAuth={() => setIsAuthOpen(true)}
         onLaunchCockpit={handleLaunchCockpit}
-        onOpenCommandPalette={onOpenCommandPalette}
       />
 
       {/* AUTH / DEMO LOGIN MODAL */}
@@ -116,7 +115,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
               </div>
 
               {/* Main Headline (Space Grotesk Display) */}
-              <h1 className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl lg:text-[4.2rem] tracking-tight leading-[1.04] text-white">
+              <h1 className="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] tracking-tight leading-[1.08] text-white">
                 Codified Law.{' '}
                 <span className="text-[#FF2A1A] block sm:inline">
                   Unforgiving Defense.
@@ -124,7 +123,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
               </h1>
 
               {/* Value Proposition */}
-              <p className="text-sm sm:text-base text-[#D4D4D8] max-w-xl leading-relaxed">
+              <p className="text-xs sm:text-sm text-[#D4D4D8] max-w-xl leading-relaxed">
                 When e-commerce platforms falsely claim your warranty return window expired after 7 days, FinePrint compiles enforceable statutory notices citing <b className="text-white">CPA 2019 Section 84</b> and <b className="text-white">E-Commerce Rules Rule 6(3)</b> in 800 milliseconds.
               </p>
 
@@ -158,7 +157,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
               {/* Swiss Editorial Stats Row (Directly referencing Image 1: 50+ / 120+ / 8+) */}
               <div className="grid grid-cols-3 gap-4 pt-4 border-t border-[#27272A] text-left">
                 <div className="space-y-0.5">
-                  <div className="font-display font-extrabold text-2xl sm:text-3xl text-white tracking-tight tabular-nums">
+                  <div className="font-display font-extrabold text-xl sm:text-2xl text-white tracking-tight tabular-nums">
                     ₹1.84<span className="text-[#FF2A1A]">Cr+</span>
                   </div>
                   <div className="font-mono text-[10px] text-[#A1A1AA] uppercase tracking-wider">
@@ -167,7 +166,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
                 </div>
 
                 <div className="space-y-0.5 border-l border-[#27272A] pl-4">
-                  <div className="font-display font-extrabold text-2xl sm:text-3xl text-white tracking-tight tabular-nums">
+                  <div className="font-display font-extrabold text-xl sm:text-2xl text-white tracking-tight tabular-nums">
                     0.00<span className="text-[#FF2A1A]">%</span>
                   </div>
                   <div className="font-mono text-[10px] text-[#A1A1AA] uppercase tracking-wider">
@@ -176,7 +175,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
                 </div>
 
                 <div className="space-y-0.5 border-l border-[#27272A] pl-4">
-                  <div className="font-display font-extrabold text-2xl sm:text-3xl text-white tracking-tight tabular-nums">
+                  <div className="font-display font-extrabold text-xl sm:text-2xl text-white tracking-tight tabular-nums">
                     48<span className="text-[#FF2A1A]">h</span>
                   </div>
                   <div className="font-mono text-[10px] text-[#A1A1AA] uppercase tracking-wider">
