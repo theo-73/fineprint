@@ -53,11 +53,11 @@ export const TechnicalBenchmarks: React.FC = () => {
   return (
     <div id="benchmarks" className="space-y-6">
       <div className="text-center max-w-xl mx-auto space-y-2 select-none">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FF2A1A]/15 border border-[#FF2A1A]/30 text-[11px] font-mono font-bold text-[#FF6E63] uppercase tracking-wider">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#16161B] border border-[#27272A] text-[11px] font-mono font-bold text-[#FF2A1A] uppercase tracking-wider">
           <BarChart3 className="w-3.5 h-3.5" />
           <span>Technical Verification & Benchmarks</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+        <h2 className="font-display text-2xl sm:text-3xl font-bold text-white tracking-tight">
           Empirical Performance Standards
         </h2>
         <p className="text-xs sm:text-sm text-[#A1A1AA]">
@@ -84,9 +84,9 @@ export const TechnicalBenchmarks: React.FC = () => {
                     <strong className="text-white block">{row.metric}</strong>
                     <span className="text-[10px] text-[#71717A] font-mono">{row.verifiedBy}</span>
                   </td>
-                  <td className="py-3.5 px-4 font-mono font-bold text-[#FF6E63] bg-[#FF2A1A]/10">
+                  <td className="py-3.5 px-4 font-mono font-bold text-white bg-[#18181D]">
                     <div className="flex items-center gap-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#FF2A1A]" />
                       <span>{row.fineprint}</span>
                     </div>
                   </td>

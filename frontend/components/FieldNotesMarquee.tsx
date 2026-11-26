@@ -48,7 +48,7 @@ export const FIELD_NOTES: FieldNote[] = [
   {
     id: 'samsung-washer',
     badge: 'No Spare Parts Deflection',
-    badgeColor: 'bg-[#10B981]/20 text-[#6EE7B7] border-[#10B981]/35',
+    badgeColor: 'bg-[#18181D] text-white border-[#27272A]',
     restitution: '₹34,500 Full Replacement',
     product: 'Samsung 7kg Front-Load',
     seller: 'SuperComNet Retail · Flipkart',
@@ -74,7 +74,7 @@ export const FIELD_NOTES: FieldNote[] = [
   {
     id: 'whirlpool-refrigerator',
     badge: 'Cooling Coil Gas Leak',
-    badgeColor: 'bg-[#10B981]/20 text-[#6EE7B7] border-[#10B981]/35',
+    badgeColor: 'bg-[#18181D] text-white border-[#27272A]',
     restitution: '₹28,490 Doorstep Refund',
     product: 'Whirlpool Pro-Cool 265L',
     seller: 'Infiniti Retail (Croma)',
@@ -90,11 +90,11 @@ export const FieldNotesMarquee: React.FC = () => {
   return (
     <div id="restitution" className="space-y-6">
       <div className="text-center max-w-xl mx-auto space-y-2 select-none">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FF2A1A]/15 border border-[#FF2A1A]/30 text-[11px] font-mono font-bold text-[#FF6E63] uppercase tracking-wider">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#16161B] border border-[#27272A] text-[11px] font-mono font-bold text-[#FF2A1A] uppercase tracking-wider">
           <ShieldCheck className="w-3.5 h-3.5" />
           <span>Wall of Statutory Restitution</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+        <h2 className="font-display text-2xl sm:text-3xl font-bold text-white tracking-tight">
           Real Citizens. Over ₹1.84 Crores Recovered.
         </h2>
         <p className="text-xs sm:text-sm text-[#A1A1AA]">
@@ -114,7 +114,7 @@ export const FieldNotesMarquee: React.FC = () => {
                 <span className={cn("px-2.5 py-0.5 rounded text-[10px] font-mono font-bold border", item.badgeColor)}>
                   {item.badge}
                 </span>
-                <span className="font-mono font-bold text-xs text-[#10B981]">
+                <span className="font-mono font-bold text-xs text-white tabular-nums">
                   {item.restitution}
                 </span>
               </div>

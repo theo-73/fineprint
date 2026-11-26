@@ -113,11 +113,11 @@ export const CaseTimelineJourney: React.FC = () => {
     <div id="journey" className="space-y-6">
       {/* Header */}
       <div className="text-center max-w-xl mx-auto space-y-2 select-none">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FF2A1A]/15 border border-[#FF2A1A]/30 text-[11px] font-mono font-bold text-[#FF6E63] uppercase tracking-wider">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#16161B] border border-[#27272A] text-[11px] font-mono font-bold text-[#FF2A1A] uppercase tracking-wider">
           <Clock className="w-3.5 h-3.5" />
           <span>Case Lifecycle Narrative</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+        <h2 className="font-display text-2xl sm:text-3xl font-bold text-white tracking-tight">
           A Real Consumer Dispute: From Glitch to Restitution
         </h2>
         <p className="text-xs sm:text-sm text-[#A1A1AA]">

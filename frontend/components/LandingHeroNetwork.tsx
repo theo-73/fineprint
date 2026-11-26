@@ -1,224 +1,176 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Shield, Lock, FileText, CheckCircle2, Scale, ArrowRight, Zap } from 'lucide-react';
+import Image from 'next/image';
+import { Shield, Lock, FileText, CheckCircle2, Scale, ArrowRight, Zap, Terminal } from 'lucide-react';
 
-interface NetworkNode {
+interface TelemetryPoint {
   id: string;
-  label: string;
-  sublabel: string;
-  cx: number;
-  cy: number;
-  r: number;
-  status: 'active' | 'verified' | 'isolated';
+  step: string;
+  title: string;
+  detail: string;
+  top: string;
+  left: string;
+  status: 'VERIFIED' | 'ACTIVE' | 'ISOLATED';
 }
 
-const NODES: NetworkNode[] = [
-  { id: 'node-invoice', label: 'PDF Invoice', sublabel: 'receipt-mcp stdio', cx: 80, cy: 110, r: 18, status: 'isolated' },
-  { id: 'node-facts', label: 'Fact Schema', sublabel: 'Order · Seller · GSTIN', cx: 210, cy: 70, r: 16, status: 'verified' },
-  { id: 'node-ast', label: 'rules-mcp AST', sublabel: 'Statutory Classifier', cx: 370, cy: 50, r: 22, status: 'active' },
-  { id: 'node-cpa', label: 'CPA 2019 Sec 84', sublabel: 'Product Liability', cx: 520, cy: 80, r: 20, status: 'verified' },
-  { id: 'node-ecom', label: 'E-Com Rule 6(3)', sublabel: 'Non-Refusal Mandate', cx: 660, cy: 60, r: 17, status: 'verified' },
-  { id: 'node-sla', label: 'Rule 4(5) SLA', sublabel: '48h Ack / 30d Redress', cx: 780, cy: 115, r: 19, status: 'active' },
-  { id: 'node-notice', label: 'Statutory Notice', sublabel: 'Generated PDF / WA', cx: 620, cy: 180, r: 24, status: 'verified' },
-  { id: 'node-nch', label: 'NCH 1915 Portal', sublabel: 'Pre-Litigation Escalation', cx: 440, cy: 190, r: 20, status: 'active' },
+const TELEMETRY_PINS: TelemetryPoint[] = [
+  {
+    id: 'pin-1',
+    step: '01',
+    title: 'Forensic PDF Ingestion',
+    detail: 'receipt-mcp stdio · Glyph cleaner · 100% Tax Invoice Sanitization',
+    top: '35%',
+    left: '22%',
+    status: 'ISOLATED',
+  },
+  {
+    id: 'pin-2',
+    step: '02',
+    title: 'AST Rules Engine',
+    detail: 'rules-mcp · CPA 2019 § 84 Strict Liability · Rule 6(3) Overhaul',
+    top: '20%',
+    left: '48%',
+    status: 'ACTIVE',
+  },
+  {
+    id: 'pin-3',
+    step: '03',
+    title: '48H Statutory SLA Clock',
+    detail: 'Rule 4(5) Grievance Officer SLA · 30-Day Mandatory Resolution',
+    top: '32%',
+    left: '74%',
+    status: 'VERIFIED',
+  },
+  {
+    id: 'pin-4',
+    step: '04',
+    title: 'Enforceable Legal Packet',
+    detail: 'Court-admissible PDF notice · WhatsApp Business API · NCH 1915',
+    top: '68%',
+    left: '52%',
+    status: 'VERIFIED',
+  },
 ];
 
 export const LandingHeroNetwork: React.FC = () => {
-  const [hoveredNode, setHoveredNode] = useState<NetworkNode | null>(null);
+  const [activePin, setActivePin] = useState<TelemetryPoint>(TELEMETRY_PINS[1]);
 
   return (
-    <div className="relative w-full rounded-3xl bg-[#121216] border border-[#27272A] shadow-2xl shadow-black/80 overflow-hidden select-none p-4 sm:p-6 group">
-      {/* Background Architectural Grid Lines */}
-      <div 
-        className="absolute inset-0 pointer-events-none opacity-20"
-        style={{
-          backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.25) 1.2px, transparent 1.2px)',
-          backgroundSize: '24px 24px',
-        }}
-        aria-hidden="true"
-      />
-
-      {/* Header Pill */}
-      <div className="relative z-10 flex items-center justify-between pb-3 border-b border-[#27272A] mb-2">
-        <div className="flex items-center gap-2">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF2A1A] opacity-75" />
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#FF2A1A]" />
-          </span>
-          <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">
-            Live Statutory Defense Constellation
+    <div className="relative w-full rounded-3xl bg-[#121216] border border-[#27272A] shadow-2xl overflow-hidden select-none group">
+      {/* Chrome Top Bar */}
+      <div className="px-5 py-3.5 bg-[#16161B] border-b border-[#27272A] flex items-center justify-between text-xs">
+        <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#27272A] border border-[#3F3F46]" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#27272A] border border-[#3F3F46]" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#FF2A1A]" />
+          </div>
+          <span className="font-mono text-[11px] font-bold text-white tracking-wider uppercase ml-1">
+            STATUTORY ARCHITECTURE SCHEMATIC
           </span>
         </div>
-        <div className="text-[10px] font-mono text-[#A1A1AA] bg-[#18181D] px-2 py-0.5 rounded-full border border-[#27272A]">
-          Interactive Pipeline Mesh · 8 Validated Nodes
+        <div className="flex items-center gap-2 font-mono text-[10px] text-[#A1A1AA]">
+          <span className="w-2 h-2 rounded-full bg-[#10B981]" />
+          <span>stdio FastMCP Protocol</span>
         </div>
       </div>
 
-      {/* SVG Interactive Constellation in Neon Red & White */}
-      <div className="relative w-full aspect-[16/7] min-h-[260px] sm:min-h-[300px]">
-        <svg 
-          viewBox="0 0 860 250" 
-          className="w-full h-full overflow-visible"
-          aria-label="Statutory Pipeline Constellation Diagram"
-        >
-          {/* Ambient Neon Core Glow */}
-          <radialGradient id="vermilion-glow" cx="44%" cy="40%" r="50%">
-            <stop offset="0%" stopColor="#FF2A1A" stopOpacity="0.25" />
-            <stop offset="70%" stopColor="#FF2A1A" stopOpacity="0.04" />
-            <stop offset="100%" stopColor="#FF2A1A" stopOpacity="0" />
-          </radialGradient>
-          <rect x="0" y="0" width="860" height="250" fill="url(#vermilion-glow)" />
+      {/* Visual Canvas Area with Editorial Architectural Graphic */}
+      <div className="relative w-full aspect-[16/9] min-h-[320px] sm:min-h-[380px] bg-[#09090B] overflow-hidden">
+        {/* Architectural Hero Image (Clean Monochrome with Red Monolith) */}
+        <Image
+          src="/images/fineprint_hero.jpg"
+          alt="FinePrint Architectural Monolith Defense Network"
+          fill
+          priority
+          className="object-cover object-center opacity-90 transition-transform duration-700 group-hover:scale-[1.02]"
+        />
 
-          {/* Hairline Mesh Connecting Lines */}
-          <g stroke="rgba(255, 255, 255, 0.15)" strokeWidth="1.5" strokeDasharray="3 3">
-            <line x1="80" y1="110" x2="210" y2="70" />
-            <line x1="210" y1="70" x2="370" y2="50" />
-            <line x1="370" y1="50" x2="520" y2="80" />
-            <line x1="520" y1="80" x2="660" y2="60" />
-            <line x1="660" y1="60" x2="780" y2="115" />
-            <line x1="520" y1="80" x2="620" y2="180" />
-            <line x1="620" y1="180" x2="780" y2="115" />
-            <line x1="370" y1="50" x2="440" y2="190" />
-            <line x1="440" y1="190" x2="620" y2="180" />
-            <line x1="210" y1="70" x2="440" y2="190" />
-          </g>
+        {/* Minimal Grid Overlay (No Blurry Glows) */}
+        <div 
+          className="absolute inset-0 pointer-events-none opacity-20"
+          style={{
+            backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 1px)',
+            backgroundSize: '24px 24px',
+          }}
+          aria-hidden="true"
+        />
 
-          {/* Animated Flowing Neon Red Pulses */}
-          <g stroke="#FF2A1A" strokeWidth="2.4" strokeLinecap="round" filter="drop-shadow(0 0 8px rgba(255, 42, 26, 0.7))">
-            <line 
-              x1="80" y1="110" x2="210" y2="70" 
-              strokeDasharray="16 120"
-              className="animate-pulse"
-              style={{ animationDuration: '2.5s' }}
-            />
-            <line 
-              x1="210" y1="70" x2="370" y2="50" 
-              strokeDasharray="20 150"
-              className="animate-pulse"
-              style={{ animationDuration: '3s', animationDelay: '0.4s' }}
-            />
-            <line 
-              x1="370" y1="50" x2="520" y2="80" 
-              strokeDasharray="22 140"
-              className="animate-pulse"
-              style={{ animationDuration: '2.8s', animationDelay: '0.8s' }}
-            />
-            <line 
-              x1="520" y1="80" x2="620" y2="180" 
-              strokeDasharray="25 130"
-              className="animate-pulse"
-              style={{ animationDuration: '2.4s', animationDelay: '1.2s' }}
-            />
-          </g>
-
-          {/* Nodes */}
-          {NODES.map((node) => {
-            const isHovered = hoveredNode?.id === node.id;
-            const isMain = node.id === 'node-ast' || node.id === 'node-notice';
-
-            return (
-              <g 
-                key={node.id} 
-                className="cursor-pointer transition-transform duration-200"
-                onMouseEnter={() => setHoveredNode(node)}
-                onMouseLeave={() => setHoveredNode(null)}
-              >
-                {/* Outer Ring Pulse */}
-                {isMain && (
-                  <circle
-                    cx={node.cx}
-                    cy={node.cy}
-                    r={node.r + 7}
-                    fill="none"
-                    stroke="#FF2A1A"
-                    strokeWidth="1.2"
-                    strokeDasharray="4 4"
-                    className="animate-spin"
-                    style={{ animationDuration: '14s', transformOrigin: `${node.cx}px ${node.cy}px` }}
-                  />
+        {/* Crisp Interactive Telemetry Pins */}
+        {TELEMETRY_PINS.map((pin) => {
+          const isSelected = activePin.id === pin.id;
+          return (
+            <button
+              key={pin.id}
+              onClick={() => setActivePin(pin)}
+              style={{ top: pin.top, left: pin.left }}
+              className="absolute -translate-x-1/2 -translate-y-1/2 z-20 group/pin transition-transform duration-200 hover:scale-110 focus:outline-none"
+              aria-label={`Inspect ${pin.title}`}
+            >
+              <div className="relative flex items-center justify-center">
+                {isSelected && (
+                  <span className="absolute w-8 h-8 rounded-full border border-[#FF2A1A] animate-ping opacity-75" />
                 )}
-
-                {/* Base Node Circle */}
-                <circle
-                  cx={node.cx}
-                  cy={node.cy}
-                  r={isHovered ? node.r + 3 : node.r}
-                  fill={isHovered ? '#FF2A1A' : '#18181D'}
-                  stroke={isHovered ? '#FFFFFF' : isMain ? '#FF2A1A' : '#3F3F46'}
-                  strokeWidth={isMain ? '2.5' : '1.8'}
-                  filter="drop-shadow(0 0 10px rgba(255, 42, 26, 0.4))"
-                  className="transition-all duration-200"
-                />
-
-                {/* Inner Dot */}
-                <circle
-                  cx={node.cx}
-                  cy={node.cy}
-                  r={isMain ? 4 : 3}
-                  fill={isHovered ? '#FFFFFF' : isMain ? '#FF2A1A' : '#10B981'}
-                />
-
-                {/* Node Label Text */}
-                <text
-                  x={node.cx}
-                  y={node.cy + node.r + 14}
-                  textAnchor="middle"
-                  className="font-sans font-bold text-[11px] fill-white select-none pointer-events-none"
+                <div
+                  className={`w-6 h-6 rounded-full flex items-center justify-center font-mono text-[10px] font-bold transition-all shadow-lg ${
+                    isSelected
+                      ? 'bg-[#FF2A1A] text-white ring-4 ring-[#FF2A1A]/30 scale-110'
+                      : 'bg-[#121216] text-[#D4D4D8] border border-[#3F3F46] hover:border-[#FF2A1A] hover:text-white'
+                  }`}
                 >
-                  {node.label}
-                </text>
-                <text
-                  x={node.cx}
-                  y={node.cy + node.r + 25}
-                  textAnchor="middle"
-                  className="font-mono text-[9px] fill-[#A1A1AA] select-none pointer-events-none"
-                >
-                  {node.sublabel}
-                </text>
-              </g>
-            );
-          })}
-        </svg>
+                  {pin.step}
+                </div>
+              </div>
+            </button>
+          );
+        })}
 
-        {/* Hover Inspection Floating HUD Card */}
-        {hoveredNode && (
-          <div 
-            className="absolute top-2 right-2 p-3 rounded-2xl bg-[#18181D]/95 backdrop-blur-md border border-[#FF2A1A]/50 shadow-2xl max-w-xs animate-enter z-20 text-xs"
-            role="status"
-          >
-            <div className="flex items-center gap-2 mb-1">
-              <span className="w-2 h-2 rounded-full bg-[#FF2A1A] animate-ping" />
-              <span className="font-bold text-white font-sans">{hoveredNode.label}</span>
-              <span className="text-[10px] font-mono uppercase bg-[#FF2A1A]/20 text-[#FF6E63] px-1.5 py-0.2 rounded font-bold border border-[#FF2A1A]/30">
-                {hoveredNode.status}
+        {/* Active Pin Detailed Telemetry HUD Card */}
+        <div className="absolute bottom-4 left-4 right-4 z-20 p-4 rounded-2xl bg-[#121216]/95 backdrop-blur-md border border-[#27272A] shadow-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs animate-enter">
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-[#FF2A1A] text-white">
+                STAGE {activePin.step}
+              </span>
+              <h4 className="font-display font-bold text-sm text-white">{activePin.title}</h4>
+              <span className="font-mono text-[10px] text-[#10B981] bg-[#10B981]/15 border border-[#10B981]/30 px-1.5 py-0.5 rounded font-semibold">
+                {activePin.status}
               </span>
             </div>
-            <p className="text-[11px] text-[#D4D4D8] leading-relaxed">
-              Subsystem: <b className="font-mono text-white">{hoveredNode.sublabel}</b>. Deterministic JSON-RPC execution isolated within sandbox trust boundary.
-            </p>
+            <p className="text-[11px] text-[#A1A1AA] font-mono">{activePin.detail}</p>
           </div>
-        )}
+
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-[10px] font-mono text-[#71717A] hidden md:inline">
+              Deterministic AST
+            </span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#FF2A1A]" />
+            <span className="font-mono text-[11px] font-bold text-[#F4F4F6]">
+              Zero Hallucinations
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Bottom Architectural Legend Bar */}
-      <div className="pt-3 border-t border-[#27272A] flex flex-wrap items-center justify-between gap-3 text-[11px] text-[#A1A1AA] font-mono">
+      <div className="px-5 py-3 bg-[#121216] border-t border-[#27272A] flex flex-wrap items-center justify-between gap-3 text-[11px] font-mono text-[#A1A1AA]">
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-[#10B981]" />
-            <span>Verified Fact Stream</span>
+            <span>receipt-mcp Ingestion</span>
           </span>
           <span className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-[#FF2A1A]" />
-            <span>Statutory Codified Anchor</span>
+            <span>rules-mcp § 84 Anchor</span>
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#3B82F6]" />
-            <span>Rule 4(5) SLA Clock</span>
+            <span className="w-2 h-2 rounded-full bg-white" />
+            <span>48h SLA Clock</span>
           </span>
         </div>
-        <div className="text-[#FF6E63] font-bold">
-          Zero Citations Hallucinated (PyTest 100%)
+        <div className="text-white font-bold tracking-wide">
+          100% CPA 2019 Ground-Truth (PyTest Verified)
         </div>
       </div>
     </div>
