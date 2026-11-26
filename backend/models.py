@@ -61,3 +61,4 @@ class ChatResponse(BaseModel):
     classification: Optional[Dict[str, Any]] = None
     case_ready: bool = False
     case_id: Optional[int] = None
+    conversation_state: Optional[Dict[str, Any]] = None

@@ -4,6 +4,7 @@ Connects the React/Next.js Cockpit to the Local MCP Agent, Validator, and SQLite
 """
 
 import os
+import re
 import shutil
 import uuid
 from typing import List, Dict, Any, Optional
@@ -55,9 +56,17 @@ def health_check():
     }
 
 @app.get("/api/mock-mailbox")
+@app.get("/api/receipts")
 def get_mock_mailbox():
     """Returns curated Indian e-commerce order receipts for offline demo intake."""
     return {"receipts": MOCK_INDIAN_RECEIPTS}
+
+@app.get("/api/rules")
+def list_rules():
+    """Returns codified Indian consumer protection rules and statutory citations."""
+    from backend.validator import ClaimValidator
+    val = ClaimValidator()
+    return {"rules": val.rules, "count": len(val.rules)}
 
 @app.post("/api/extract-text", response_model=ExtractOrderResponse)
 def extract_text(req: ExtractOrderRequest):
@@ -68,14 +77,30 @@ def extract_text(req: ExtractOrderRequest):
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to extract order facts from text: {str(e)}")
 
+MAX_UPLOAD_SIZE = 10 * 1024 * 1024  # 10 MB
+
 @app.post("/api/upload-invoice")
-async def upload_invoice(file: UploadFile = File(...)):
+def upload_invoice(file: UploadFile = File(...)):
     """Uploads a PDF invoice safely and extracts structured facts using receipt-mcp."""
     if not file.filename or not file.filename.lower().endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only valid .pdf files are accepted.")
 
-    raw_name = os.path.basename(file.filename or "invoice.pdf")
-    safe_name = f"{uuid.uuid4().hex[:8]}_{raw_name}"
+    # Verify magic bytes header
+    header = file.file.read(1024)
+    if not header.startswith(b"%PDF-"):
+        raise HTTPException(status_code=400, detail="Invalid PDF file format. Missing %PDF- header.")
+
+    # Verify file size within 10MB limit
+    file.file.seek(0, os.SEEK_END)
+    file_size = file.file.tell()
+    file.file.seek(0)
+    if file_size > MAX_UPLOAD_SIZE:
+        raise HTTPException(status_code=413, detail=f"File exceeds 10MB upload limit (size: {file_size / (1024*1024):.1f}MB).")
+
+    # Sanitize filename against path traversal
+    base_name = os.path.basename(file.filename or "invoice.pdf")
+    sanitized_name = re.sub(r'[^a-zA-Z0-9_.-]', '_', base_name)
+    safe_name = f"{uuid.uuid4().hex[:8]}_{sanitized_name}"
     file_path = os.path.join(UPLOAD_DIR, safe_name)
 
     try:
@@ -85,7 +110,7 @@ async def upload_invoice(file: UploadFile = File(...)):
         # Call receipt-mcp via FinePrintMCPClient
         extracted_dict = FinePrintMCPClient.parse_invoice_pdf(file_path)
         log_audit_event("2_FIND", "User uploaded PDF invoice parsed via receipt-mcp", {
-            "filename": raw_name,
+            "filename": sanitized_name,
             "safe_path": file_path,
             "order_id": extracted_dict.get("order_id"),
             "product_name": extracted_dict.get("product_name"),
@@ -94,7 +119,7 @@ async def upload_invoice(file: UploadFile = File(...)):
         return {
             "status": "success",
             "file_path": file_path,
-            "filename": raw_name,
+            "filename": sanitized_name,
             "extracted_order": extracted_dict
         }
     except Exception as e:
@@ -108,58 +133,104 @@ async def upload_invoice(file: UploadFile = File(...)):
 @app.post("/api/chat", response_model=ChatResponse)
 def chat_intake(req: ChatRequest):
     """
-    Interactive chat intake. Handles problem description and maps user to the 6-step flow.
+    Interactive chat intake. Handles problem descriptions, extracts order context,
+    checks statutory rules, and conversationally guides the user.
     """
     msg = req.message.strip()
     msg_lower = msg.lower()
 
-    # Check for direct defect description
-    if any(kw in msg_lower for kw in ["screen", "defect", "broke", "not working", "sound", "battery", "damaged", "return", "refund"]):
-        # Run pipeline
-        res = orchestrator.process_claim_pipeline(problem_description=msg)
-        if res.get("should_abstain"):
-            reply = (
-                f"I evaluated your issue against Indian consumer statutes. "
-                f"**Notice: We must abstain from filing a manufacturing defect claim.**\n\n"
-                f"**Reason:** {res.get('abstention_reason')}\n\n"
-                f"Under the Consumer Protection Act 2019 (Section 84), accidental damage or change of mind is not covered under statutory product liability unless Accidental Damage Protection was purchased."
-            )
-            step_indicator = 3
-        else:
-            reply = (
-                f"I found your order for **{res.get('product_name')}** (Order ID: `{res.get('order_id')}`) from {res.get('seller_name')}.\n\n"
-                f"**Statutory Assessment:**\n"
-                f"• Primary Escalation Route: `{res.get('primary_route')}`\n"
-                f"• Applicable Statute: {', '.join(res.get('statutory_citations', []))}\n"
-                f"• Status: Formal Claim Notice, WhatsApp text, and NCH docket generated.\n\n"
-                f"Review the claim packet below and approve to export."
-            )
-            step_indicator = 6
-
+    # 1. Detect explicit accidental damage or change-of-mind -> Statutory Abstention Advisory
+    if any(phrase in msg_lower for phrase in [
+        "dropped", "dropped phone", "fell down", "cracked screen", "spilled", 
+        "liquid damage", "water damage", "change of mind", "bought wrong", "dont like it"
+    ]):
+        reply = (
+            "I analyzed your situation against Indian consumer protection statutory guidelines.\n\n"
+            "⚠️ **Statutory Assessment: Abstain from Manufacturing Defect Claim**\n\n"
+            "Under **Sections 84 and 87 of the Consumer Protection Act, 2019**, product liability is strictly "
+            "limited to inherent manufacturing defects, design flaws, or non-conformity with express warranty. "
+            "Accidental physical impacts, liquid ingress, or post-window buyer remorse are statutory exceptions.\n\n"
+            "💡 **Recommended Next Step:** If you purchased an Accidental Damage Protection (ADP) policy, "
+            "file a claim under that policy. Otherwise, request an out-of-warranty repair quote from an authorized service centre."
+        )
         return ChatResponse(
             reply=reply,
-            step_indicator=step_indicator,
-            extracted_order={
-                "order_id": res.get("order_id"),
-                "product_name": res.get("product_name"),
-                "brand": res.get("brand"),
-                "seller_name": res.get("seller_name"),
-                "amount_inr": res.get("amount_inr")
-            },
-            classification={
-                "primary_route": res.get("primary_route"),
-                "statutory_citations": res.get("statutory_citations"),
-                "should_abstain": res.get("should_abstain")
-            },
-            case_ready=True,
-            case_id=res.get("id")
-        )
-    else:
-        return ChatResponse(
-            reply="Welcome to FinePrint! Please describe the issue with your purchased electronics or upload an invoice PDF to evaluate your statutory consumer rights under CPA 2019 and E-Commerce Rules 2020.",
-            step_indicator=1,
+            step_indicator=3,
+            classification={"should_abstain": True, "reason": "Accidental physical damage or post-window change of mind"},
             case_ready=False
         )
+
+    # 2. Check for order match in existing receipts via receipt-mcp
+    matches = FinePrintMCPClient.search_receipts(msg)
+    if matches:
+        matched_order = matches[0]
+        try:
+            res = orchestrator.process_claim_pipeline(
+                problem_description=msg,
+                order_override=matched_order
+            )
+            reply = (
+                f"I located your purchase record for **{res.get('product_name')}** (Order ID: `{res.get('order_id')}`) from **{res.get('seller_name')}**.\n\n"
+                f"🏛️ **Statutory Assessment & Liability Analysis:**\n"
+                f"• **Escalation Route:** `{res.get('primary_route')}`\n"
+                f"• **Governing Statutes:** {', '.join(res.get('statutory_citations', []))}\n"
+                f"• **Grievance SLA Mandate:** 48-Hour Written Acknowledgment (Rule 4(5))\n\n"
+                f"I have assembled your complete evidence docket, statutory notice PDF, WhatsApp escalation text, and National Consumer Helpline (NCH 1915) filing text."
+            )
+            return ChatResponse(
+                reply=reply,
+                step_indicator=6,
+                extracted_order={
+                    "order_id": res.get("order_id"),
+                    "product_name": res.get("product_name"),
+                    "brand": res.get("brand"),
+                    "seller_name": res.get("seller_name"),
+                    "amount_inr": res.get("amount_inr")
+                },
+                classification={
+                    "primary_route": res.get("primary_route"),
+                    "statutory_citations": res.get("statutory_citations"),
+                    "should_abstain": res.get("should_abstain")
+                },
+                case_ready=True,
+                case_id=res.get("id")
+            )
+        except Exception:
+            pass
+
+    # 3. Defect mentioned, but no invoice/receipt attached yet -> Guide user
+    if any(kw in msg_lower for kw in [
+        "screen", "defect", "broke", "not working", "sound", "battery", 
+        "refused", "service center", "return", "refund", "dead", "faulty", "stopped working"
+    ]):
+        reply = (
+            "I hear you. If your electronics developed an inherent defect during normal usage, you are protected by law.\n\n"
+            "📜 **Your Rights Under Indian Law:**\n"
+            "• **Rule 6(3)(a) of E-Commerce Rules, 2020:** Sellers and platforms **cannot refuse** repair, replacement, or refund "
+            "for defective goods, even if their platform 7-day return window has expired.\n"
+            "• **Section 84 & 86 of CPA 2019:** Strict statutory product liability applies to both manufacturer and seller.\n\n"
+            "To generate your verifiable claim docket, I need your purchase particulars:\n"
+            "1. **Upload your invoice PDF** on the *Intake & File Claim* tab (or drop it in the file uploader), OR\n"
+            "2. Provide your **Order ID, Product Name, Brand, Purchase Date, and Price Paid**.\n\n"
+            "Once attached, I will automatically assemble your formal legal notice."
+        )
+        return ChatResponse(
+            reply=reply,
+            step_indicator=2,
+            case_ready=False
+        )
+
+    # 4. General greeting / initial prompt
+    return ChatResponse(
+        reply=(
+            "Welcome to FinePrint! I am your AI Consumer Rights Advocate for Indian E-Commerce.\n\n"
+            "I help consumers enforce statutory warranties under the **Consumer Protection Act, 2019** and the "
+            "**E-Commerce Rules, 2020** when platforms (Amazon, Flipkart, Croma) or brands refuse returns after 7 days.\n\n"
+            "Tell me about the issue with your purchased device, or upload your purchase invoice PDF to get started."
+        ),
+        step_indicator=1,
+        case_ready=False
+    )
 
 @app.post("/api/cases", response_model=CaseResponse)
 def create_case(req: CaseCreateRequest):
@@ -180,13 +251,18 @@ def create_case(req: CaseCreateRequest):
             "return_window_days": 7
         }
 
-    case_record = orchestrator.process_claim_pipeline(
-        problem_description=req.problem_description,
-        invoice_text=req.invoice_text,
-        invoice_pdf_path=req.invoice_pdf_path,
-        order_override=order_override,
-        complainant_name=req.complainant_name or "Consumer"
-    )
+    try:
+        case_record = orchestrator.process_claim_pipeline(
+            problem_description=req.problem_description,
+            invoice_text=req.invoice_text,
+            invoice_pdf_path=req.invoice_pdf_path,
+            order_override=order_override,
+            complainant_name=req.complainant_name or "Consumer"
+        )
+    except ValueError as ve:
+        raise HTTPException(status_code=422, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Claim pipeline failed: {str(e)}")
 
     pdf_download_url = f"/api/cases/{case_record['id']}/download-pdf" if case_record.get("packet_pdf_path") else None
 

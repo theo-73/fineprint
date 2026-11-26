@@ -9,10 +9,44 @@ Compiles formal, verifiable consumer claim packets:
 import os
 from typing import Dict, Any, List, Optional
 from datetime import datetime
-from reportlab.lib.pagesizes import letter
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, HRFlowable
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
+
+class NumberedCanvas(canvas.Canvas):
+    """
+    Two-pass canvas that accumulates pages and renders 'Page X of Y' 
+    plus statutory compliance footer on every page.
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._saved_page_states = []
+
+    def showPage(self):
+        self._saved_page_states.append(dict(self.__dict__))
+        self._startPage()
+
+    def save(self):
+        num_pages = len(self._saved_page_states)
+        for state in self._saved_page_states:
+            self.__dict__.update(state)
+            self.draw_page_decorations(num_pages)
+            super().showPage()
+        super().save()
+
+    def draw_page_decorations(self, page_count: int):
+        self.saveState()
+        self.setFont("Helvetica", 8)
+        self.setFillColor(colors.HexColor('#64748B'))
+        # A4 width = 595.28 points; printable width = 515.28 (margins 40pt)
+        footer_text = f"Confidential Statutory Grievance Packet | CPA 2019 & E-Commerce Rules 2020 | Page {self._pageNumber} of {page_count}"
+        self.drawCentredString(595.28 / 2.0, 25, footer_text)
+        self.setStrokeColor(colors.HexColor('#CBD5E1'))
+        self.setLineWidth(0.5)
+        self.line(40, 36, 555.28, 36)
+        self.restoreState()
 
 class PacketBuilder:
     """
@@ -27,11 +61,11 @@ class PacketBuilder:
         os.makedirs(os.path.dirname(os.path.abspath(output_pdf_path)), exist_ok=True)
         doc = SimpleDocTemplate(
             output_pdf_path,
-            pagesize=letter,
+            pagesize=A4,
             leftMargin=40,
             rightMargin=40,
             topMargin=40,
-            bottomMargin=40
+            bottomMargin=50
         )
         styles = getSampleStyleSheet()
         story = []
@@ -115,7 +149,7 @@ class PacketBuilder:
                 Paragraph(f"<b>Date:</b> {today_str}", body_style)
             ]
         ]
-        ref_table = Table(ref_table_data, colWidths=[260, 260])
+        ref_table = Table(ref_table_data, colWidths=[250, 250])
         ref_table.setStyle(TableStyle([
             ('VALIGN', (0,0), (-1,-1), 'TOP'),
             ('LEFTPADDING', (0,0), (-1,-1), 0),
@@ -143,7 +177,7 @@ class PacketBuilder:
                           f"<b>Status:</b> Consumer under Section 2(7) of CPA 2019", body_style)
             ]
         ]
-        parties_table = Table(parties_data, colWidths=[260, 260])
+        parties_table = Table(parties_data, colWidths=[250, 250])
         parties_table.setStyle(TableStyle([
             ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#F1F5F9')),
             ('BOX', (0,0), (-1,-1), 0.5, BORDER_COLOR),
@@ -163,7 +197,7 @@ class PacketBuilder:
             [Paragraph("<b>Total Consideration Paid</b>", bold_body), Paragraph(f"Rs. {float(case_data.get('amount_inr', 0.0)):,.2f}", body_style)],
             [Paragraph("<b>Statutory Warranty Period</b>", bold_body), Paragraph(f"{case_data.get('warranty_months', 12)} Months Standard Warranty", body_style)]
         ]
-        prod_table = Table(prod_data, colWidths=[180, 340])
+        prod_table = Table(prod_data, colWidths=[160, 340])
         prod_table.setStyle(TableStyle([
             ('GRID', (0,0), (-1,-1), 0.5, BORDER_COLOR),
             ('BACKGROUND', (0,0), (0,-1), colors.HexColor('#F8FAFC')),
@@ -195,7 +229,7 @@ class PacketBuilder:
             "<b>C. E-Commerce Rules, 2020 — Rule 4(5) (Statutory Timelines):</b><br/>"
             "The designated Grievance Officer is legally mandated to acknowledge receipt of this consumer complaint within <b>forty-eight (48) hours</b> and resolve it within <b>thirty (30) days</b>."
         )
-        statute_box = Table([[Paragraph(statutes_text, citation_box_style)]], colWidths=[520])
+        statute_box = Table([[Paragraph(statutes_text, citation_box_style)]], colWidths=[500])
         statute_box.setStyle(TableStyle([
             ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#F0FDF4')),
             ('BOX', (0,0), (-1,-1), 1, colors.HexColor('#86EFAC')),
@@ -229,7 +263,7 @@ class PacketBuilder:
         evidence_p = "<br/>".join(evidence_items)
         story.append(Paragraph(evidence_p, body_style))
 
-        doc.build(story)
+        doc.build(story, canvasmaker=NumberedCanvas)
         return output_pdf_path
 
     @staticmethod
