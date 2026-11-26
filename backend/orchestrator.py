@@ -65,20 +65,10 @@ class FinePrintOrchestrator:
             if matches:
                 extracted_dict = matches[0]
             else:
-                extracted_dict = {
-                    "order_id": "402-8921473-9821401",
-                    "purchase_date": "2026-10-15",
-                    "product_name": "Sony WH-1000XM5 Wireless Headphones",
-                    "brand": "Sony",
-                    "seller_name": "Appario Retail Pvt Ltd",
-                    "seller_gstin": "29AAACA0123M1Z5",
-                    "marketplace": "Amazon India",
-                    "amount_inr": 24990.0,
-                    "serial_number": "SN-SONY-XM5-99281",
-                    "warranty_months": 12,
-                    "return_window_days": 7,
-                    "confidence_score": 0.96
-                }
+                raise ValueError(
+                    "No purchase invoice or order facts provided. "
+                    "Please upload an invoice PDF or select a receipt from your mailbox."
+                )
 
         extracted = ExtractedOrder(**extracted_dict)
         log_audit_event("2_FIND", "Extracted order facts via receipt-mcp [transport: stdio/json-rpc]", extracted.model_dump())

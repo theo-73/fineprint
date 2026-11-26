@@ -90,15 +90,21 @@ class OrderExtractor:
 
         # 4. Extract Amount
         amount = 0.0
-        amt_match = re.search(r"(?:₹|Rs\.?|INR)\s*([0-9,]+(?:\.[0-9]{2})?)", sanitized, re.IGNORECASE)
+        # Pass 1: Standard currency prefixes, including 'n'/'N' from font glyph mappings (common in ReportLab/pdfplumber)
+        amt_match = re.search(r"(?:₹|Rs\.?|INR|[nN])\s*([0-9]{1,3}(?:,[0-9]{2,3})*(?:\.[0-9]{2})?)", sanitized, re.IGNORECASE)
+        # Pass 2: Grand total labels with optional parentheticals (e.g. Inclusive of 18% GST)
         if not amt_match:
-            amt_match = re.search(r"(?:total|grand total|amount paid|invoice value)[:\s]*(?:₹|Rs\.?|INR)?\s*([0-9,]+(?:\.[0-9]{2})?)", sanitized, re.IGNORECASE)
+            amt_match = re.search(
+                r"(?:total|grand\s*total|amount\s*paid|invoice\s*value)[^\d\n\r]{0,45}?([0-9]{1,3}(?:,[0-9]{2,3})*(?:\.[0-9]{2})?)",
+                sanitized,
+                re.IGNORECASE
+            )
         if amt_match:
             try:
                 amt_str = amt_match.group(1).replace(",", "")
                 amount = float(amt_str)
             except Exception:
-                amount = 4999.0
+                amount = 0.0
 
         # 5. Extract GSTIN (15 characters: 2 digits + 5 letters + 4 digits + 1 letter + 1 digit + Z + 1 alphanumeric)
         gstin_match = re.search(r"\b([0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1})\b", sanitized)
@@ -124,7 +130,16 @@ class OrderExtractor:
         if brand != "Generic Brand":
             brand_line_match = re.search(rf"({brand}\s+[^\n\r,]{{5,80}})", sanitized, re.IGNORECASE)
             if brand_line_match:
-                product_name = brand_line_match.group(1).strip()
+                extracted_name = brand_line_match.group(1).strip()
+                # Check for multi-line description continuation
+                lines = sanitized.splitlines()
+                for idx, line in enumerate(lines):
+                    if extracted_name in line and idx + 1 < len(lines):
+                        next_line = lines[idx + 1].strip()
+                        if next_line and not any(kw in next_line.lower() for kw in ["sn-", "imei", "qty", "total", "price", "amount", "tax", "gst", "sold by", "return"]):
+                            extracted_name = f"{extracted_name} {next_line}".strip()
+                        break
+                product_name = extracted_name
         else:
             item_match = re.search(r"(?:description|item|product)[:\s]+([^\n\r,]{5,80})", sanitized, re.IGNORECASE)
             if item_match and not any(kw in item_match.group(1).lower() for kw in ["serial", "qty", "total", "price"]):

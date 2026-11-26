@@ -6,6 +6,7 @@ Only schema-validated ExtractedOrder objects are emitted.
 """
 
 import os
+import re
 from typing import List, Dict, Any, Optional
 from datetime import datetime, timedelta
 from .extractor import ExtractedOrder, OrderExtractor
@@ -119,10 +120,16 @@ class GmailConnector:
         """
         results: List[ExtractedOrder] = []
         q = query.lower().strip()
+        stop_words = {"the", "and", "for", "with", "after", "days", "from", "dead", "audio", "broke", "defect", "died", "not", "working", "issue", "month", "months"}
+        q_tokens = [tok for tok in re.findall(r"\w+", q) if len(tok) >= 3 and tok not in stop_words]
 
         for msg in MOCK_INDIAN_RECEIPTS:
             text = f"{msg['subject']} {msg['body']}".lower()
+            # Match full query substring or specific brand/product/order keywords
             if not q or (q in text):
+                extracted = OrderExtractor.extract_order_from_text(msg['body'])
+                results.append(extracted)
+            elif q_tokens and any(tok in text for tok in q_tokens if tok in {"sony", "xm5", "samsung", "galaxy", "croma", "apple", "ipad", "macbook", "oneplus", "noise", "boat", "appario", "flipkart", "amazon"} or tok.startswith("402") or tok.startswith("od9")):
                 extracted = OrderExtractor.extract_order_from_text(msg['body'])
                 results.append(extracted)
 

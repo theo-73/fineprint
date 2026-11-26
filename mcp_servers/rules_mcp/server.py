@@ -4,10 +4,19 @@ Exposes codified statutory consumer protection rules and case classification too
 """
 
 import sys
+import os
 import json
 from typing import Optional, Dict, Any, List
+
+# Ensure project root is in sys.path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+
 from mcp.server.mcpserver import MCPServer
-from engine import RulesEngine, CaseClassification
+
+try:
+    from mcp_servers.rules_mcp.engine import RulesEngine, CaseClassification
+except ImportError:
+    from engine import RulesEngine, CaseClassification
 
 server = MCPServer("fineprint-rules-mcp")
 engine = RulesEngine()

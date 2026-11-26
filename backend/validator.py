@@ -5,6 +5,7 @@ Halts and flags hallucinations, unsubstantiated claims, or fact tampering.
 """
 
 import os
+import re
 import yaml
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, Field
@@ -58,10 +59,22 @@ class ClaimValidator:
         for key in req_keys:
             extracted_val = str(extracted_facts.get(key, "")).strip().lower()
             draft_val = str(draft_claim.get(key, "")).strip().lower()
-            if extracted_val and draft_val and (extracted_val not in draft_val and draft_val not in extracted_val):
-                errors.append(
-                    f"Fact Mismatch: {key} in claim ('{draft_claim.get(key)}') does not match invoice receipt ('{extracted_facts.get(key)}')."
-                )
+            if extracted_val and draft_val:
+                if key == "order_id":
+                    if extracted_val not in draft_val and draft_val not in extracted_val:
+                        errors.append(
+                            f"Fact Mismatch: {key} in claim ('{draft_claim.get(key)}') does not match invoice receipt ('{extracted_facts.get(key)}')."
+                        )
+                else:
+                    # Token similarity for descriptive entity names to allow formatting variations
+                    extracted_tokens = set(re.findall(r"\w+", extracted_val))
+                    draft_tokens = set(re.findall(r"\w+", draft_val))
+                    common = extracted_tokens.intersection(draft_tokens)
+                    min_len = min(len(extracted_tokens), len(draft_tokens))
+                    if min_len > 0 and (len(common) / min_len) < 0.4:
+                        errors.append(
+                            f"Fact Mismatch: {key} in claim ('{draft_claim.get(key)}') does not match invoice receipt ('{extracted_facts.get(key)}')."
+                        )
 
         # 2. Statutory Citation Verification
         if not citations_cited:
