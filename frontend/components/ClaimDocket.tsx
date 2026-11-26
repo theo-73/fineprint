@@ -195,6 +195,8 @@ export const ClaimDocket: React.FC<ClaimDocketProps> = ({
       <div className="border border-slate-800 rounded-xl p-3.5 bg-slate-850">
         <button
           onClick={onToggleAuditTrail}
+          aria-expanded={showAuditTrail}
+          aria-controls="audit-trail-panel"
           className="btn-press w-full flex items-center justify-between text-xs font-medium text-slate-300 hover:text-white"
         >
           <div className="flex items-center gap-2">
@@ -205,7 +207,7 @@ export const ClaimDocket: React.FC<ClaimDocketProps> = ({
         </button>
 
         {showAuditTrail && (
-          <div className="mt-3 space-y-2 max-h-56 overflow-y-auto pr-1">
+          <div id="audit-trail-panel" className="mt-3 space-y-2 max-h-56 overflow-y-auto pr-1">
             {auditLogs.map((log) => (
               <div key={log.id} className="text-xs bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
                 <div className="flex items-center justify-between text-[11px] mb-1 font-mono">

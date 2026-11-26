@@ -68,10 +68,11 @@ export const IntakeCard: React.FC<IntakeCardProps> = ({
 
       {/* PDF Dropzone */}
       <div className="space-y-1.5">
-        <label className="text-xs text-slate-300 font-medium block">
+        <label htmlFor="pdf-upload-input" className="text-xs text-slate-300 font-medium block">
           Upload E-Commerce Tax Invoice (PDF):
         </label>
         <input
+          id="pdf-upload-input"
           ref={fileInputRef}
           type="file"
           accept=".pdf,application/pdf"
@@ -90,6 +91,12 @@ export const IntakeCard: React.FC<IntakeCardProps> = ({
           onDragLeave={() => setIsDragOver(false)}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              fileInputRef.current?.click();
+            }
+          }}
           className={cn(
             "border-2 border-dashed rounded-xl p-5 text-center cursor-pointer transition-all duration-200 select-none",
             isDragOver
@@ -211,10 +218,11 @@ export const IntakeCard: React.FC<IntakeCardProps> = ({
 
       {/* Complainant Name */}
       <div className="space-y-1">
-        <label className="text-xs text-slate-300 font-medium block">
+        <label htmlFor="complainant-name-input" className="text-xs text-slate-300 font-medium block">
           Complainant Name (Purchaser):
         </label>
         <input
+          id="complainant-name-input"
           type="text"
           value={complainantName}
           onChange={(e) => onComplainantNameChange(e.target.value)}
@@ -226,12 +234,13 @@ export const IntakeCard: React.FC<IntakeCardProps> = ({
       {/* Issue Description */}
       <div className="space-y-1">
         <div className="flex items-center justify-between text-xs text-slate-300 font-medium">
-          <label>Defect Description & Chronology:</label>
+          <label htmlFor="defect-description-input">Defect Description & Chronology:</label>
           <span className="text-[10px] text-slate-500 tabular-nums font-mono">
             {problemDescription.length} chars
           </span>
         </div>
         <textarea
+          id="defect-description-input"
           rows={3}
           value={problemDescription}
           onChange={(e) => onProblemDescriptionChange(e.target.value)}

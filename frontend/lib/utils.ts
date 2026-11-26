@@ -10,7 +10,7 @@ export function formatINR(amount: number): string {
     style: "currency",
     currency: "INR",
     maximumFractionDigits: 2,
-  }).format(amount).replace("₹", "Rs. ");
+  }).format(amount);
 }
 
 export function formatDate(dateStr: string): string {
