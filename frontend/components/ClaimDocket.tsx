@@ -134,7 +134,7 @@ export const ClaimDocket: React.FC<ClaimDocketProps> = ({
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 pb-5 border-b border-[#27272A]">
         <div className="space-y-1.5 flex-1">
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded-full bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/30">
+            <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded-full bg-[#18181D] text-white border border-[#3F3F46]">
               READY FOR ESCALATION
             </span>
             <span className="text-xs text-[#71717A] font-mono">{activeCase.claim_ref}</span>
@@ -184,8 +184,8 @@ export const ClaimDocket: React.FC<ClaimDocketProps> = ({
         <div className="text-xs text-[#D4D4D8] space-y-1.5 pt-1">
           <div className="font-semibold text-[#F4F4F6]">Sourced Statutory Authority:</div>
           {activeCase.statutory_citations.map((c, i) => (
-            <div key={i} className="flex items-start gap-2 text-[#10B981] font-medium">
-              <CheckCircle2 className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-[#10B981]" />
+            <div key={i} className="flex items-start gap-2 text-white font-medium">
+              <CheckCircle2 className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-[#FF2A1A]" />
               <span>{c}</span>
             </div>
           ))}
@@ -271,7 +271,7 @@ export const ClaimDocket: React.FC<ClaimDocketProps> = ({
             onClick={() => onCopyWhatsApp && onCopyWhatsApp(activeCase.whatsapp_text || '')}
             className="btn-press py-2.5 px-4 rounded-xl bg-[#18181D] hover:bg-[#202027] text-[#F4F4F6] border border-[#27272A] font-medium text-xs flex items-center justify-center gap-2 transition-all shadow-sm"
           >
-            {copiedWA ? <Check className="w-4 h-4 text-[#10B981]" /> : <Copy className="w-4 h-4 text-[#71717A]" />}
+            {copiedWA ? <Check className="w-4 h-4 text-[#FF2A1A]" /> : <Copy className="w-4 h-4 text-[#71717A]" />}
             <span>{copiedWA ? 'WhatsApp Copied!' : 'Copy WhatsApp Text'}</span>
           </button>
 
@@ -280,7 +280,7 @@ export const ClaimDocket: React.FC<ClaimDocketProps> = ({
             onClick={() => onCopyNCH && onCopyNCH(activeCase.nch_text || '')}
             className="btn-press py-2.5 px-4 rounded-xl bg-[#202027] hover:bg-[#272730] text-[#F4F4F6] border border-[#3F3F46] font-medium text-xs flex items-center justify-center gap-2 transition-all shadow-sm"
           >
-            {copiedNCH ? <Check className="w-4 h-4 text-[#10B981]" /> : <Copy className="w-4 h-4 text-[#A1A1AA]" />}
+            {copiedNCH ? <Check className="w-4 h-4 text-[#FF2A1A]" /> : <Copy className="w-4 h-4 text-[#A1A1AA]" />}
             <span>{copiedNCH ? 'NCH Copied!' : 'Copy NCH Portal Text'}</span>
           </button>
         </div>

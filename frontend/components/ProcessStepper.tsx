@@ -31,7 +31,7 @@ export const ProcessStepper: React.FC<ProcessStepperProps> = ({ currentStep }) =
         </div>
         <div className="text-[11px] text-[#A1A1AA] font-mono flex items-center gap-1.5">
           <span>Transport:</span>
-          <span className="text-[#10B981] font-semibold">stdio / JSON-RPC</span>
+          <span className="text-white font-semibold">stdio / JSON-RPC</span>
         </div>
       </div>
 
@@ -72,7 +72,7 @@ export const ProcessStepper: React.FC<ProcessStepperProps> = ({ currentStep }) =
                 </span>
 
                 {isPast ? (
-                  <Check className="w-3.5 h-3.5 text-[#10B981] flex-shrink-0" />
+                  <Check className="w-3.5 h-3.5 text-white flex-shrink-0" />
                 ) : isActive ? (
                   <div className="w-2 h-2 rounded-full bg-[#FF2A1A] animate-ping flex-shrink-0" />
                 ) : null}

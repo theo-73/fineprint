@@ -151,17 +151,17 @@ export const DefenseStudio: React.FC = () => {
           {/* Canvas Chrome Header */}
           <div className="px-4 py-2.5 bg-[#16161B] border-b border-[#27272A] flex items-center justify-between text-xs relative z-10">
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#EF4444]" />
-              <span className="w-2.5 h-2.5 rounded-full bg-[#F59E0B]" />
-              <span className="w-2.5 h-2.5 rounded-full bg-[#10B981]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#27272A]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#27272A]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#FF2A1A]" />
               <span className="ml-2 font-mono text-[10px] uppercase font-bold text-[#A1A1AA]">
                 LIVE STUDIO CANVAS
               </span>
             </div>
 
             <div className="flex items-center gap-2 font-mono text-[10px]">
-              <span className="w-2 h-2 rounded-full bg-[#10B981]" />
-              <span className="text-[#FF2A1A] font-bold">
+              <span className="w-2 h-2 rounded-full bg-[#FF2A1A]" />
+              <span className="text-white font-bold">
                 {STAGES[activeStage].badge.toUpperCase()}
               </span>
             </div>
@@ -178,7 +178,7 @@ export const DefenseStudio: React.FC = () => {
                     <FileSearch className="w-4 h-4 text-[#FF2A1A]" />
                     <span>Carrier Invoice Feed Telemetry</span>
                   </span>
-                  <span className="px-2 py-0.5 rounded-full bg-[#10B981]/15 border border-[#10B981]/30 text-[#10B981] font-bold text-[10px]">
+                  <span className="px-2 py-0.5 rounded-full bg-[#18181D] border border-[#27272A] text-white font-bold text-[10px]">
                     4 PLATFORMS ACTIVE
                   </span>
                 </div>
@@ -197,7 +197,7 @@ export const DefenseStudio: React.FC = () => {
                       </div>
                       <div className="text-right shrink-0">
                         <span className="font-mono font-bold text-white block">{row.amount}</span>
-                        <span className="text-[10px] text-[#10B981] font-semibold">{row.status}</span>
+                        <span className="text-[10px] text-white font-semibold">{row.status}</span>
                       </div>
                     </div>
                   ))}
@@ -210,7 +210,7 @@ export const DefenseStudio: React.FC = () => {
                   </div>
                   <div className="w-px h-6 bg-[#27272A]" />
                   <div>
-                    <span className="font-extrabold text-[#10B981] text-sm block">0</span>
+                    <span className="font-extrabold text-white text-sm block">0</span>
                     <span className="text-[10px] text-[#71717A] uppercase">Fallback Errors</span>
                   </div>
                   <div className="w-px h-6 bg-[#27272A]" />
@@ -243,14 +243,14 @@ export const DefenseStudio: React.FC = () => {
                     fill
                     className="object-cover object-center"
                   />
-                  <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-[#121216]/90 border border-[#27272A] text-[9px] font-mono text-[#10B981] font-bold">
+                  <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-[#121216]/90 border border-[#27272A] text-[9px] font-mono text-white font-bold">
                     CAD CROSS-SECTION ACTIVE
                   </div>
                 </div>
 
                 <div className="p-3 rounded-xl bg-[#16161B] border border-[#27272A] space-y-1">
-                  <div className="flex items-center gap-2 text-[#10B981] font-bold text-xs">
-                    <CheckCircle2 className="w-4 h-4 text-[#10B981]" />
+                  <div className="flex items-center gap-2 text-white font-bold text-xs">
+                    <CheckCircle2 className="w-4 h-4 text-[#FF2A1A]" />
                     <span>Statutory Authority: NCDRC Landmark Ratio</span>
                   </div>
                   <p className="text-[11px] text-[#D4D4D8] leading-relaxed">
@@ -268,7 +268,7 @@ export const DefenseStudio: React.FC = () => {
                     <Calculator className="w-4 h-4 text-[#FF2A1A]" />
                     <span>Multilateral Restitution Computation</span>
                   </span>
-                  <span className="font-mono text-[10px] font-bold text-[#10B981] bg-[#10B981]/15 px-2 py-0.5 rounded-full border border-[#10B981]/30">
+                  <span className="font-mono text-[10px] font-bold text-white bg-[#18181D] px-2 py-0.5 rounded-full border border-[#27272A]">
                     4/4 CHECKS PASS
                   </span>
                 </div>
@@ -283,7 +283,7 @@ export const DefenseStudio: React.FC = () => {
                     <div style={{ width: '55.5%' }} className="bg-[#FF2A1A] h-full" title="Base Consideration: ₹24,990" />
                     <div style={{ width: '2.8%' }} className="bg-[#F59E0B] h-full" title="Statutory 9% Interest: ₹1,250" />
                     <div style={{ width: '33.3%' }} className="bg-[#3B82F6] h-full" title="Mental Agony Damages: ₹15,000" />
-                    <div style={{ width: '8.4%' }} className="bg-[#10B981] h-full" title="Litigation Expenses: ₹3,750" />
+                    <div style={{ width: '8.4%' }} className="bg-[#E4E4E7] h-full" title="Litigation Expenses: ₹3,750" />
                   </div>
 
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] font-mono pt-1 text-[#A1A1AA]">
@@ -300,7 +300,7 @@ export const DefenseStudio: React.FC = () => {
                       <span>Damages: ₹15,000</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded bg-[#10B981]" />
+                      <span className="w-2 h-2 rounded bg-[#E4E4E7]" />
                       <span>Costs: ₹3,750</span>
                     </div>
                   </div>
@@ -316,7 +316,7 @@ export const DefenseStudio: React.FC = () => {
                         <strong className="text-white block">{item.rule}</strong>
                         <span className="text-[#A1A1AA] text-[10px]">{item.desc}</span>
                       </div>
-                      <span className="font-mono font-bold text-[#10B981] px-2 py-0.5 rounded bg-[#10B981]/15 border border-[#10B981]/30 text-[10px]">
+                      <span className="font-mono font-bold text-white px-2 py-0.5 rounded bg-[#18181D] border border-[#27272A] text-[10px]">
                         {item.status} ({item.score})
                       </span>
                     </div>
@@ -340,17 +340,17 @@ export const DefenseStudio: React.FC = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                   <div className="p-3 rounded-xl bg-[#16161B] border border-[#27272A] space-y-1 text-center">
-                    <span className="text-lg">📄</span>
+                    <FileSearch className="w-5 h-5 mx-auto text-[#FF2A1A]" />
                     <strong className="block text-white text-xs">Court Notice PDF</strong>
                     <span className="text-[10px] text-[#A1A1AA] block">Section 65B certified legal format</span>
                   </div>
                   <div className="p-3 rounded-xl bg-[#16161B] border border-[#27272A] space-y-1 text-center">
-                    <span className="text-lg">💬</span>
+                    <Send className="w-5 h-5 mx-auto text-[#FF2A1A]" />
                     <strong className="block text-white text-xs">WhatsApp Concierge</strong>
                     <span className="text-[10px] text-[#A1A1AA] block">Pre-formatted legal escalation text</span>
                   </div>
                   <div className="p-3 rounded-xl bg-[#16161B] border border-[#27272A] space-y-1 text-center">
-                    <span className="text-lg">🏛️</span>
+                    <Scale className="w-5 h-5 mx-auto text-[#FF2A1A]" />
                     <strong className="block text-white text-xs">NCH 1915 Filing</strong>
                     <span className="text-[10px] text-[#A1A1AA] block">Direct e-Daakhil payload bundle</span>
                   </div>

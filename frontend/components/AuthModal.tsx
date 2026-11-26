@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, CheckCircle2, ShieldCheck, ArrowRight, Sparkles, User, Lock, Mail, Building } from 'lucide-react';
+import { X, CheckCircle2, ShieldCheck, ArrowRight, Sparkles, User, Lock, Mail, Building, Check } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { BrandMark } from './BrandMark';
 
@@ -117,8 +117,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           <div className="p-8 text-center space-y-5 animate-enter">
             <div className="relative flex items-center justify-center w-20 h-20 mx-auto my-2">
               <span className="absolute inset-0 rounded-full bg-[#FF2A1A]/20 animate-ping" />
-              <div className="relative w-14 h-14 rounded-2xl bg-[#FF2A1A] flex items-center justify-center text-white text-2xl shadow-xl shadow-[#FF2A1A]/40 border border-white/20">
-                ✓
+              <div className="relative w-14 h-14 rounded-2xl bg-[#FF2A1A] flex items-center justify-center text-white shadow-xl shadow-[#FF2A1A]/40 border border-white/20">
+                <Check className="w-7 h-7 text-white" />
               </div>
             </div>
 
@@ -137,16 +137,16 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
             {/* Checklist */}
             <div className="p-3.5 bg-[#18181D] rounded-2xl border border-[#27272A] text-left space-y-2 text-xs font-mono">
-              <div className="flex items-center gap-2 text-[#10B981]">
-                <span>✓</span>
+              <div className="flex items-center gap-2 text-white">
+                <Check className="w-3.5 h-3.5 text-[#FF2A1A]" />
                 <span>FastMCP stdio subprocess synchronized</span>
               </div>
-              <div className="flex items-center gap-2 text-[#10B981]">
-                <span>✓</span>
+              <div className="flex items-center gap-2 text-white">
+                <Check className="w-3.5 h-3.5 text-[#FF2A1A]" />
                 <span>CPA 2019 § 84 &amp; Rule 6(3) rules engine active</span>
               </div>
-              <div className="flex items-center gap-2 text-[#10B981]">
-                <span>✓</span>
+              <div className="flex items-center gap-2 text-white">
+                <Check className="w-3.5 h-3.5 text-[#FF2A1A]" />
                 <span>Cryptographic SHA-256 session token issued</span>
               </div>
             </div>

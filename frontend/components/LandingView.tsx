@@ -155,22 +155,6 @@ export const LandingView: React.FC<LandingViewProps> = ({
                 </button>
               </div>
 
-              {/* Micro Trust Badges */}
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-[#A1A1AA] font-medium pt-3 border-t border-[#27272A]">
-                <span className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF2A1A]" />
-                  <span>100% CPA 2019 Ground-Truth</span>
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF2A1A]" />
-                  <span>Zero Hallucinations (PyTest 100%)</span>
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF2A1A]" />
-                  <span>Rule 4(5) 48h SLA Window</span>
-                </span>
-              </div>
-
               {/* Swiss Editorial Stats Row (Directly referencing Image 1: 50+ / 120+ / 8+) */}
               <div className="grid grid-cols-3 gap-4 pt-4 border-t border-[#27272A] text-left">
                 <div className="space-y-0.5">
@@ -211,20 +195,20 @@ export const LandingView: React.FC<LandingViewProps> = ({
         </section>
 
         {/* ========================================================
-            3. INFINITE TELEMETRY MARQUEE
+            3. INFINITE TELEMETRY MARQUEE (Zero Emojis, Pure Swiss Typography)
         ======================================================== */}
-        <div className="relative py-3.5 bg-[#121216] border-y border-[#27272A] overflow-hidden select-none -mx-4 sm:-mx-6 lg:-mx-8">
-          <div className="stats-marquee flex items-center gap-8 whitespace-nowrap text-xs font-semibold text-[#A1A1AA] tracking-wide font-mono">
-            <span>✦ ₹1.84 Crores Consideration Protected</span>
-            <span className="text-[#FF2A1A]">⚖️ 100% CPA 2019 Section 84 Ground-Truth</span>
-            <span>⚡ 800ms Notice Compilation Speed</span>
-            <span className="text-white">✓ 0% Cited Citations Hallucinated (PyTest Verified)</span>
-            <span>⏱️ Rule 4(5) 48-Hour Grievance SLA</span>
-            <span className="text-[#FF2A1A]">🛡️ Appario, Flipkart, Croma, Reliance Deflections Dismantled</span>
-            <span>✦ ₹1.84 Crores Consideration Protected</span>
-            <span className="text-[#FF2A1A]">⚖️ 100% CPA 2019 Section 84 Ground-Truth</span>
-            <span>⚡ 800ms Notice Compilation Speed</span>
-            <span className="text-white">✓ 0% Cited Citations Hallucinated (PyTest Verified)</span>
+        <div className="relative py-3 bg-[#121216] border-y border-[#27272A] overflow-hidden select-none -mx-4 sm:-mx-6 lg:-mx-8">
+          <div className="stats-marquee flex items-center gap-8 whitespace-nowrap text-xs font-bold text-[#A1A1AA] tracking-widest font-mono uppercase">
+            <span>[CONSIDERATION ENFORCED: ₹1.84 CR+]</span>
+            <span className="text-[#FF2A1A]">[GROUND TRUTH: CPA 2019 SECTION 84]</span>
+            <span>[COMPILATION LATENCY: 800MS]</span>
+            <span className="text-white">[CITATION HALLUCINATION: 0.00% (PYTEST)]</span>
+            <span>[GRIEVANCE SLA: RULE 4(5) 48H]</span>
+            <span className="text-[#FF2A1A]">[OVERRULED: 7-DAY RETURN RESTRICTIONS]</span>
+            <span>[CONSIDERATION ENFORCED: ₹1.84 CR+]</span>
+            <span className="text-[#FF2A1A]">[GROUND TRUTH: CPA 2019 SECTION 84]</span>
+            <span>[COMPILATION LATENCY: 800MS]</span>
+            <span className="text-white">[CITATION HALLUCINATION: 0.00% (PYTEST)]</span>
           </div>
         </div>
 

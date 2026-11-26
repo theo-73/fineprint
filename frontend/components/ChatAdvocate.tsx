@@ -47,7 +47,7 @@ export const ChatAdvocate: React.FC<ChatAdvocateProps> = ({
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/25 font-medium">
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#18181D] text-white border border-[#3F3F46] font-medium">
             Local MCP Client Active
           </span>
         </div>

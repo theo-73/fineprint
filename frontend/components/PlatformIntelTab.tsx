@@ -159,7 +159,7 @@ export const PlatformIntelTab: React.FC = () => {
           </div>
           <div className="text-center">
             <span className="text-[10px] text-[#71717A] uppercase font-mono block">FinePrint Reversal</span>
-            <span className="text-sm font-bold text-[#10B981] tabular-nums">94.2%</span>
+            <span className="text-sm font-bold text-white tabular-nums">94.2%</span>
           </div>
         </div>
       </div>
@@ -189,9 +189,9 @@ export const PlatformIntelTab: React.FC = () => {
                   <span
                     className={cn(
                       "text-xs font-black font-mono px-2 py-0.5 rounded-lg border",
-                      plat.grade === 'A' && "bg-[#10B981]/15 text-[#10B981] border-[#10B981]/30",
-                      plat.grade.startsWith('B') && "bg-[#3B82F6]/15 text-[#60A5FA] border-[#3B82F6]/30",
-                      plat.grade.startsWith('C') && "bg-[#F59E0B]/15 text-[#FBBF24] border-[#F59E0B]/30"
+                      plat.grade === 'A' && "bg-[#18181D] text-white border-[#3F3F46]",
+                      plat.grade.startsWith('B') && "bg-[#18181D] text-[#D4D4D8] border-[#27272A]",
+                      plat.grade.startsWith('C') && "bg-[#18181D] text-[#A1A1AA] border-[#27272A]"
                     )}
                   >
                     Grade {plat.grade}
@@ -230,8 +230,8 @@ export const PlatformIntelTab: React.FC = () => {
           <div className="flex items-center gap-2 text-xs">
             <span className="text-[#71717A]">Grievance Officer:</span>
             {selectedPlatform.grievanceOfficerPublished ? (
-              <span className="inline-flex items-center gap-1 text-[#10B981] font-semibold bg-[#10B981]/15 px-2 py-0.5 rounded border border-[#10B981]/30">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" />
+              <span className="inline-flex items-center gap-1 text-white font-semibold bg-[#18181D] px-2 py-0.5 rounded border border-[#3F3F46]">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#FF2A1A]" />
                 <span>Published under Rule 4</span>
               </span>
             ) : (
@@ -250,7 +250,7 @@ export const PlatformIntelTab: React.FC = () => {
             <div className="text-2xl font-bold text-[#F4F4F6] tabular-nums">
               {selectedPlatform.averageResolutionDays} Days
             </div>
-            <div className="text-[10px] text-[#10B981] font-medium">Within statutory 30d window</div>
+            <div className="text-[10px] text-white font-medium">Within statutory 30d window</div>
           </div>
 
           <div className="p-4 rounded-xl bg-[#18181D] border border-[#27272A] space-y-1">
@@ -263,7 +263,7 @@ export const PlatformIntelTab: React.FC = () => {
 
           <div className="p-4 rounded-xl bg-[#18181D] border border-[#27272A] space-y-1">
             <div className="text-[11px] text-[#71717A] uppercase font-mono">FinePrint Reversal Speed</div>
-            <div className="text-2xl font-bold text-[#10B981] tabular-nums">
+            <div className="text-2xl font-bold text-white tabular-nums">
               &lt; 48 Hours
             </div>
             <div className="text-[10px] text-[#A1A1AA] font-medium">Post formal statutory dispatch</div>
@@ -285,15 +285,15 @@ export const PlatformIntelTab: React.FC = () => {
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-[#18181D] border border-[#10B981]/20 space-y-2">
-            <div className="font-bold text-[#10B981] flex items-center gap-1.5 uppercase font-mono text-[11px]">
-              <ShieldCheck className="w-4 h-4 text-[#10B981]" />
+          <div className="p-4 rounded-xl bg-[#18181D] border border-[#27272A] space-y-2">
+            <div className="font-bold text-white flex items-center gap-1.5 uppercase font-mono text-[11px]">
+              <ShieldCheck className="w-4 h-4 text-[#FF2A1A]" />
               <span>FinePrint Codified Countermeasure</span>
             </div>
             <p className="text-[#D4D4D8] leading-relaxed">
               {selectedPlatform.fineprintCountermeasure}
             </p>
-            <div className="pt-2 border-t border-[#27272A] text-[11px] text-[#10B981]">
+            <div className="pt-2 border-t border-[#27272A] text-[11px] text-white">
               <b>Enforcement Impact:</b> Converts arbitrary 7-day dismissal into legally binding 48h grievance ticket.
             </div>
           </div>
@@ -320,7 +320,7 @@ export const PlatformIntelTab: React.FC = () => {
               </span>
               <h4 className="text-xs font-bold text-[#F4F4F6]">{dp.pattern}</h4>
               <p className="text-[11px] text-[#A1A1AA] leading-relaxed">{dp.description}</p>
-              <div className="p-2.5 rounded-lg bg-[#121216] border border-[#27272A] text-[11px] text-[#10B981] leading-relaxed font-medium">
+              <div className="p-2.5 rounded-lg bg-[#121216] border border-[#27272A] text-[11px] text-white leading-relaxed font-medium">
                 <b>Defense:</b> {dp.countermeasure}
               </div>
             </div>

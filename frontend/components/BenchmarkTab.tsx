@@ -39,7 +39,7 @@ export const BenchmarkTab: React.FC<BenchmarkTabProps> = ({
               <Cpu className="w-5 h-5 text-[#FF2A1A]" />
               <span>Public 30-Case Verification Benchmark Suite</span>
             </h2>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/30 font-semibold">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#18181D] text-white border border-[#3F3F46] font-semibold">
               PyTest Verified
             </span>
           </div>
@@ -71,22 +71,22 @@ export const BenchmarkTab: React.FC<BenchmarkTabProps> = ({
 
           <div className="bg-[#121216] border border-[#27272A] rounded-2xl p-5 shadow-xl">
             <div className="text-xs text-[#A1A1AA] font-medium">In-Scope Route Accuracy</div>
-            <div className="text-3xl font-bold text-[#10B981] mt-1.5 tabular-nums">
+            <div className="text-3xl font-bold text-white mt-1.5 tabular-nums">
               {summary.in_scope_route_accuracy_pct}%
             </div>
-            <div className="text-[11px] text-[#10B981] mt-1 font-medium flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" />
+            <div className="text-[11px] text-[#D4D4D8] mt-1 font-medium flex items-center gap-1">
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#FF2A1A]" />
               <span>Target ≥90.0% Passed (19/20)</span>
             </div>
           </div>
 
           <div className="bg-[#121216] border border-[#27272A] rounded-2xl p-5 shadow-xl">
             <div className="text-xs text-[#A1A1AA] font-medium">Statutory Citation Validity</div>
-            <div className="text-3xl font-bold text-[#10B981] mt-1.5 tabular-nums">
+            <div className="text-3xl font-bold text-white mt-1.5 tabular-nums">
               {summary.citation_validity_pct}%
             </div>
-            <div className="text-[11px] text-[#10B981] mt-1 font-medium flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#10B981]" />
+            <div className="text-[11px] text-[#D4D4D8] mt-1 font-medium flex items-center gap-1">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#FF2A1A]" />
               <span>Zero Hallucinations Verified</span>
             </div>
           </div>
@@ -167,8 +167,8 @@ export const BenchmarkTab: React.FC<BenchmarkTabProps> = ({
                     </td>
                     <td className="px-4 py-3 text-right">
                       {isPassed ? (
-                        <span className="inline-flex items-center gap-1 text-[#10B981] font-semibold text-[11px]">
-                          <CheckCircle2 className="w-3.5 h-3.5" />
+                        <span className="inline-flex items-center gap-1 text-white font-semibold text-[11px]">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#FF2A1A]" />
                           <span>PASS</span>
                         </span>
                       ) : (

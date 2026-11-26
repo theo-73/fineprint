@@ -111,7 +111,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       title: 'Load Sony WH-1000XM5 Inherent Hardware Failure',
       category: 'Sample Purchase Invoices',
       subtitle: 'Amazon.in · Appario Retail · ₹24,990 · Hardware ANC defect after 35 days',
-      icon: <FileText className="w-4 h-4 text-[#10B981]" />,
+      icon: <FileText className="w-4 h-4 text-[#FF2A1A]" />,
       action: () => {
         onNavigate('cockpit');
         selectSample(0);
@@ -122,7 +122,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       title: 'Load Samsung S24 Ultra Dead On Arrival (DOA)',
       category: 'Sample Purchase Invoices',
       subtitle: 'Croma.com · Infiniti Retail · ₹1,29,999 · Screen green tint out of box',
-      icon: <FileText className="w-4 h-4 text-[#10B981]" />,
+      icon: <FileText className="w-4 h-4 text-[#FF2A1A]" />,
       action: () => {
         onNavigate('cockpit');
         selectSample(1);
@@ -133,7 +133,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       title: 'Load Apple MacBook Air M3 Motherboard Refusal',
       category: 'Sample Purchase Invoices',
       subtitle: 'Reliance Digital · ₹1,34,900 · Service center denied parts within warranty',
-      icon: <FileText className="w-4 h-4 text-[#10B981]" />,
+      icon: <FileText className="w-4 h-4 text-[#FF2A1A]" />,
       action: () => {
         onNavigate('cockpit');
         selectSample(2);

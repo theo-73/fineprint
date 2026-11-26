@@ -61,7 +61,7 @@ export const IntakeCard: React.FC<IntakeCardProps> = ({
             <p className="text-[11px] text-[#A1A1AA]">Validated via receipt-mcp isolation</p>
           </div>
         </div>
-        <span className="text-[10px] font-mono text-[#10B981] bg-[#10B981]/10 px-2 py-0.5 rounded border border-[#10B981]/20">
+        <span className="text-[10px] font-mono text-white bg-[#18181D] px-2 py-0.5 rounded border border-[#3F3F46]">
           Untrusted Inputs Sanitized
         </span>
       </div>
@@ -127,12 +127,12 @@ export const IntakeCard: React.FC<IntakeCardProps> = ({
         </div>
 
         {uploadedFileName && (
-          <div className="p-2.5 rounded-lg bg-[#10B981]/10 border border-[#10B981]/25 text-[#10B981] text-xs flex items-center justify-between gap-2">
+          <div className="p-2.5 rounded-lg bg-[#18181D] border border-[#27272A] text-white text-xs flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 truncate">
-              <CheckCircle2 className="w-4 h-4 text-[#10B981] flex-shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-[#FF2A1A] flex-shrink-0" />
               <span className="truncate">Active Invoice: <b>{uploadedFileName}</b></span>
             </div>
-            <span className="text-[10px] font-mono bg-[#10B981]/20 px-1.5 py-0.5 rounded text-[#10B981] flex-shrink-0">
+            <span className="text-[10px] font-mono bg-[#27272A] px-1.5 py-0.5 rounded text-white flex-shrink-0">
               Parsed
             </span>
           </div>
@@ -184,7 +184,7 @@ export const IntakeCard: React.FC<IntakeCardProps> = ({
               <ShoppingBag className="w-3.5 h-3.5" />
               <span>Verified Fact Schema</span>
             </span>
-            <span className="text-[10px] font-mono text-[#10B981] bg-[#10B981]/10 px-1.5 py-0.5 rounded border border-[#10B981]/20">
+            <span className="text-[10px] font-mono text-white bg-[#18181D] px-1.5 py-0.5 rounded border border-[#3F3F46]">
               receipt-mcp Verified
             </span>
           </div>

@@ -100,7 +100,7 @@ export const ClaimDossierModal: React.FC<ClaimDossierModalProps> = ({
                 className={cn(
                   "text-[10px] font-mono px-2 py-0.5 rounded font-semibold",
                   currentCase.status === 'READY'
-                    ? "bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/30"
+                    ? "bg-[#18181D] text-white border border-[#3F3F46]"
                     : "bg-[#F59E0B]/15 text-[#FBBF24] border border-[#F59E0B]/30"
                 )}
               >
@@ -142,7 +142,7 @@ export const ClaimDossierModal: React.FC<ClaimDossierModalProps> = ({
           </div>
           <div className="p-3.5 rounded-xl bg-[#18181D] border border-[#27272A] text-center">
             <div className="text-[10px] text-[#71717A] font-mono uppercase">Escalation Route</div>
-            <div className="text-xs font-bold font-mono text-[#10B981] mt-1 truncate">
+            <div className="text-xs font-bold font-mono text-white mt-1 truncate">
               {currentCase.primary_route || 'Direct Brand'}
             </div>
           </div>
@@ -172,8 +172,8 @@ export const ClaimDossierModal: React.FC<ClaimDossierModalProps> = ({
               </div>
               <div className="space-y-1.5">
                 {currentCase.statutory_citations?.map((c, i) => (
-                  <div key={i} className="flex items-start gap-2 p-2 rounded-lg bg-[#18181D] border border-[#27272A] text-xs text-[#10B981] font-medium">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981] shrink-0 mt-0.5" />
+                  <div key={i} className="flex items-start gap-2 p-2 rounded-lg bg-[#18181D] border border-[#27272A] text-xs text-white font-medium">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#FF2A1A] shrink-0 mt-0.5" />
                     <span>{c}</span>
                   </div>
                 ))}
@@ -224,7 +224,7 @@ export const ClaimDossierModal: React.FC<ClaimDossierModalProps> = ({
               onClick={handleCopyWA}
               className="btn-press px-3.5 py-2 bg-[#18181D] hover:bg-[#202027] text-[#F4F4F6] border border-[#27272A] text-xs font-medium rounded-xl flex items-center gap-1.5 transition-all"
             >
-              {copiedWA ? <Check className="w-3.5 h-3.5 text-[#10B981]" /> : <Copy className="w-3.5 h-3.5 text-[#71717A]" />}
+              {copiedWA ? <Check className="w-3.5 h-3.5 text-[#FF2A1A]" /> : <Copy className="w-3.5 h-3.5 text-[#71717A]" />}
               <span>{copiedWA ? 'WhatsApp Copied!' : 'WhatsApp Text'}</span>
             </button>
 
@@ -232,7 +232,7 @@ export const ClaimDossierModal: React.FC<ClaimDossierModalProps> = ({
               onClick={handleCopyNCH}
               className="btn-press px-3.5 py-2 bg-[#202027] hover:bg-[#272730] text-[#F4F4F6] border border-[#3F3F46] text-xs font-medium rounded-xl flex items-center gap-1.5 transition-all"
             >
-              {copiedNCH ? <Check className="w-3.5 h-3.5 text-[#10B981]" /> : <Copy className="w-3.5 h-3.5 text-[#A1A1AA]" />}
+              {copiedNCH ? <Check className="w-3.5 h-3.5 text-[#FF2A1A]" /> : <Copy className="w-3.5 h-3.5 text-[#A1A1AA]" />}
               <span>{copiedNCH ? 'NCH Copied!' : 'NCH Portal Text'}</span>
             </button>
           </div>

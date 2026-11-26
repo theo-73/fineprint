@@ -74,13 +74,13 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             role="status"
             className={cn(
               "pointer-events-auto p-3.5 rounded-2xl border shadow-2xl flex items-start gap-3 backdrop-blur-xl transition-all duration-300 animate-enter",
-              toast.type === 'success' && "bg-[#121216]/95 border-[#10B981]/30 text-[#10B981] shadow-[#10B981]/10",
+              toast.type === 'success' && "bg-[#121216]/95 border-[#27272A] text-white shadow-black/40",
               toast.type === 'error' && "bg-[#181012]/95 border-[#FF2A1A]/30 text-[#FF6E63] shadow-[#FF2A1A]/10",
               toast.type === 'info' && "bg-[#121216]/95 border-[#27272A] text-[#F4F4F6] shadow-black/40"
             )}
           >
             <div className="shrink-0 mt-0.5">
-              {toast.type === 'success' && <CheckCircle2 className="w-4 h-4 text-[#10B981]" />}
+              {toast.type === 'success' && <CheckCircle2 className="w-4 h-4 text-[#FF2A1A]" />}
               {toast.type === 'error' && <AlertCircle className="w-4 h-4 text-[#FF2A1A]" />}
               {toast.type === 'info' && <Info className="w-4 h-4 text-[#FF2A1A]" />}
             </div>

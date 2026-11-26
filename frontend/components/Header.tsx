@@ -139,7 +139,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* User Status Badge */}
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#18181D] border border-[#27272A] text-xs">
-            <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-[#FF2A1A] animate-pulse" />
             <span className="font-mono text-[11px] text-white font-bold hidden sm:inline">
               {user ? user.name.split(' ')[0] : 'Demo Counsel'}
             </span>

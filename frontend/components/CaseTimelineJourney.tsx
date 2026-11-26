@@ -44,7 +44,7 @@ const CASE_STEPS: CaseStep[] = [
     artifactLabel: 'PLATFORM DEFLECTION INTERCEPTED',
     stat1: { label: 'BOT CLAIM', value: '7-Day Window Expired', color: 'text-[#F87171]' },
     stat2: { label: 'SERVICE CENTER', value: '45 km Away', color: 'text-[#A1A1AA]' },
-    stat3: { label: 'CONTRACT CLAUSE', value: 'Void Ab Initio', color: 'text-[#34D399]' }
+    stat3: { label: 'CONTRACT CLAUSE', value: 'Void Ab Initio', color: 'text-white' }
   },
   {
     step: '03',
@@ -56,7 +56,7 @@ const CASE_STEPS: CaseStep[] = [
     audioSpeech: 'Formal Demand: Immediate replacement or 24,990 rupee refund with 10,000 rupee damages within 48 hours, failing which NCDRC proceedings commence.',
     artifactLabel: 'ENFORCEABLE STATUTORY DOCKET',
     stat1: { label: 'STATUTORY SECTION', value: 'CPA 2019 § 84', color: 'text-[#FF2A1A]' },
-    stat2: { label: 'SLA WINDOW', value: 'Rule 4(5) 48 Hours', color: 'text-[#34D399]' },
+    stat2: { label: 'SLA WINDOW', value: 'Rule 4(5) 48 Hours', color: 'text-white' },
     stat3: { label: 'TOTAL CLAIM', value: '₹44,990 Restitution', color: 'text-white' }
   },
   {
@@ -68,9 +68,9 @@ const CASE_STEPS: CaseStep[] = [
     counterPhrase: 'Case Resolved: Reverse pickup completed, full consideration ₹24,990 credited to original payment method.',
     audioSpeech: 'Case Resolved. Reverse pickup completed, full consideration 24,990 rupees credited to original payment method.',
     artifactLabel: 'RESTITUTION EXECUTED',
-    stat1: { label: 'RESOLUTION', value: 'Full Refund Credited', color: 'text-[#34D399]' },
+    stat1: { label: 'RESOLUTION', value: 'Full Refund Credited', color: 'text-white' },
     stat2: { label: 'TAT', value: '54 Hours Total', color: 'text-white' },
-    stat3: { label: 'SAVED', value: '₹24,990 Preserved', color: 'text-[#34D399]' }
+    stat3: { label: 'SAVED', value: '₹24,990 Preserved', color: 'text-white' }
   }
 ];
 
@@ -207,7 +207,7 @@ export const CaseTimelineJourney: React.FC = () => {
                   onClick={() => handleCopyPhrase(activeStep.counterPhrase)}
                   className="btn-press px-3 py-1.5 rounded-lg border border-[#27272A] bg-[#18181D] hover:bg-[#202027] text-xs text-[#D4D4D8] font-semibold flex items-center gap-1.5"
                 >
-                  {copied ? <Check className="w-3.5 h-3.5 text-[#10B981]" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copied ? <Check className="w-3.5 h-3.5 text-white" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copied ? "Copied" : "Copy"}</span>
                 </button>
               </div>
@@ -249,8 +249,8 @@ export const CaseTimelineJourney: React.FC = () => {
               </div>
             </div>
 
-            <div className="pt-2 text-[10px] text-[#10B981] font-semibold flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5" />
+            <div className="pt-2 text-[10px] text-white font-semibold flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#FF2A1A]" />
               <span>Ground-Truth Verification Passed</span>
             </div>
           </div>

@@ -23,10 +23,10 @@ export function getStatutoryScoreTone(score: number) {
     return {
       label: 'Actionable Statutory Breach',
       sublabel: 'E-Commerce Rules Rule 6(3) Mandate',
-      hex: '#10B981',
-      badgeBg: 'bg-[#10B981]/10',
-      badgeText: 'text-[#10B981]',
-      badgeBorder: 'border-[#10B981]/25',
+      hex: '#FFFFFF',
+      badgeBg: 'bg-[#18181D]',
+      badgeText: 'text-white',
+      badgeBorder: 'border-[#3F3F46]',
     };
   }
   if (score >= 35) {
@@ -130,7 +130,7 @@ export const StatutoryRadarMeter: React.FC<StatutoryRadarMeterProps> = ({
           <path
             d="M 10 65 A 55 55 0 0 1 110 65"
             fill="none"
-            stroke="#10B981"
+            stroke="#E4E4E7"
             strokeWidth="9"
             strokeLinecap="round"
             pathLength="100"

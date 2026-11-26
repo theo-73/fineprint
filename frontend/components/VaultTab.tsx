@@ -113,7 +113,7 @@ export const VaultTab: React.FC<VaultTabProps> = ({
                     className={cn(
                       "text-[10px] font-mono px-2 py-0.5 rounded font-semibold",
                       c.status === 'READY'
-                        ? "bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/30"
+                        ? "bg-[#18181D] text-white border border-[#3F3F46]"
                         : "bg-[#F59E0B]/15 text-[#FBBF24] border border-[#F59E0B]/30"
                     )}
                   >

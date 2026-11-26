@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Shield, Lock, FileText, CheckCircle2, Scale, ArrowRight, Zap, Terminal } from 'lucide-react';
+import { Shield, Lock, FileText, Scale, ArrowRight, Zap, Terminal } from 'lucide-react';
 
 interface TelemetryPoint {
   id: string;
@@ -11,45 +11,45 @@ interface TelemetryPoint {
   detail: string;
   top: string;
   left: string;
-  status: 'VERIFIED' | 'ACTIVE' | 'ISOLATED';
+  status: string;
 }
 
 const TELEMETRY_PINS: TelemetryPoint[] = [
   {
     id: 'pin-1',
     step: '01',
-    title: 'Forensic PDF Ingestion',
+    title: 'Tax Invoice Fact Extraction',
     detail: 'receipt-mcp stdio · Glyph cleaner · 100% Tax Invoice Sanitization',
-    top: '35%',
-    left: '22%',
-    status: 'ISOLATED',
+    top: '28%',
+    left: '30%',
+    status: 'INGESTED',
   },
   {
     id: 'pin-2',
     step: '02',
-    title: 'AST Rules Engine',
-    detail: 'rules-mcp · CPA 2019 § 84 Strict Liability · Rule 6(3) Overhaul',
-    top: '20%',
-    left: '48%',
+    title: 'CPA 2019 § 84 AST Rule',
+    detail: 'rules-mcp · Strict Manufacturer & Seller Liability · Zero Hallucinations',
+    top: '44%',
+    left: '68%',
     status: 'ACTIVE',
   },
   {
     id: 'pin-3',
     step: '03',
-    title: '48H Statutory SLA Clock',
-    detail: 'Rule 4(5) Grievance Officer SLA · 30-Day Mandatory Resolution',
-    top: '32%',
-    left: '74%',
-    status: 'VERIFIED',
+    title: 'Rule 6(3) Contract Override',
+    detail: 'Overrides platform 7-day return restrictions for latent manufacturing defects',
+    top: '64%',
+    left: '34%',
+    status: 'OVERRULED',
   },
   {
     id: 'pin-4',
     step: '04',
-    title: 'Enforceable Legal Packet',
-    detail: 'Court-admissible PDF notice · WhatsApp Business API · NCH 1915',
-    top: '68%',
-    left: '52%',
-    status: 'VERIFIED',
+    title: 'SHA-256 Admissible Seal',
+    detail: 'Court-admissible PDF docket with BSA 2023 § 63 cryptographic certificate',
+    top: '76%',
+    left: '72%',
+    status: 'ENFORCED',
   },
 ];
 
@@ -58,7 +58,7 @@ export const LandingHeroNetwork: React.FC = () => {
 
   return (
     <div className="relative w-full rounded-3xl bg-[#121216] border border-[#27272A] shadow-2xl overflow-hidden select-none group">
-      {/* Chrome Top Bar */}
+      {/* Chrome Top Bar (Swiss Minimalist) */}
       <div className="px-5 py-3.5 bg-[#16161B] border-b border-[#27272A] flex items-center justify-between text-xs">
         <div className="flex items-center gap-2.5">
           <div className="flex items-center gap-1.5">
@@ -67,21 +67,21 @@ export const LandingHeroNetwork: React.FC = () => {
             <span className="w-2.5 h-2.5 rounded-full bg-[#FF2A1A]" />
           </div>
           <span className="font-mono text-[11px] font-bold text-white tracking-wider uppercase ml-1">
-            STATUTORY ARCHITECTURE SCHEMATIC
+            STATUTORY DOSSIER COMPILATION
           </span>
         </div>
         <div className="flex items-center gap-2 font-mono text-[10px] text-[#A1A1AA]">
-          <span className="w-2 h-2 rounded-full bg-[#10B981]" />
+          <span className="w-2 h-2 rounded-full bg-[#FF2A1A]" />
           <span>stdio FastMCP Protocol</span>
         </div>
       </div>
 
-      {/* Visual Canvas Area with Editorial Architectural Graphic */}
+      {/* Visual Canvas Area with Official Legal Notice Dossier Graphic */}
       <div className="relative w-full aspect-[16/9] min-h-[320px] sm:min-h-[380px] bg-[#09090B] overflow-hidden">
-        {/* Swiss Editorial Consumer Rights Advocate Graphic */}
+        {/* Official Statutory Legal Notice Dossier Graphic */}
         <Image
-          src="/images/fineprint_advocate.jpg"
-          alt="FinePrint Consumer Rights Advocate Editorial Visual"
+          src="/images/fineprint_dossier_hero.jpg"
+          alt="FinePrint Statutory Legal Notice Dossier"
           fill
           priority
           className="object-cover object-center opacity-95 transition-transform duration-700 group-hover:scale-[1.02]"
@@ -105,7 +105,7 @@ export const LandingHeroNetwork: React.FC = () => {
               key={pin.id}
               onClick={() => setActivePin(pin)}
               style={{ top: pin.top, left: pin.left }}
-              className="absolute -translate-x-1/2 -translate-y-1/2 z-20 group/pin transition-transform duration-200 hover:scale-110 focus:outline-none"
+              className="absolute -translate-x-1/2 -translate-y-1/2 z-20 group/pin transition-transform duration-200 hover:scale-110 focus:outline-none cursor-pointer"
               aria-label={`Inspect ${pin.title}`}
             >
               <div className="relative flex items-center justify-center">
@@ -116,7 +116,7 @@ export const LandingHeroNetwork: React.FC = () => {
                   className={`w-6 h-6 rounded-full flex items-center justify-center font-mono text-[10px] font-bold transition-all shadow-lg ${
                     isSelected
                       ? 'bg-[#FF2A1A] text-white ring-4 ring-[#FF2A1A]/30 scale-110'
-                      : 'bg-[#121216] text-[#D4D4D8] border border-[#3F3F46] hover:border-[#FF2A1A] hover:text-white'
+                      : 'bg-[#121216] text-white border border-[#3F3F46] hover:border-[#FF2A1A]'
                   }`}
                 >
                   {pin.step}
@@ -134,7 +134,7 @@ export const LandingHeroNetwork: React.FC = () => {
                 STAGE {activePin.step}
               </span>
               <h4 className="font-display font-bold text-sm text-white">{activePin.title}</h4>
-              <span className="font-mono text-[10px] text-[#10B981] bg-[#10B981]/15 border border-[#10B981]/30 px-1.5 py-0.5 rounded font-semibold">
+              <span className="font-mono text-[10px] text-white bg-[#18181D] border border-[#27272A] px-1.5 py-0.5 rounded font-semibold">
                 {activePin.status}
               </span>
             </div>
@@ -143,28 +143,25 @@ export const LandingHeroNetwork: React.FC = () => {
 
           <div className="flex items-center gap-2 shrink-0">
             <span className="text-[10px] font-mono text-[#71717A] hidden md:inline">
-              Deterministic AST
+              AST Deterministic
             </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#FF2A1A]" />
-            <span className="font-mono text-[11px] font-bold text-[#F4F4F6]">
-              Zero Hallucinations
-            </span>
+            <div className="w-1.5 h-1.5 rounded-full bg-[#FF2A1A]" />
           </div>
         </div>
       </div>
 
-      {/* Bottom Architectural Legend Bar */}
+      {/* Bottom Architectural Legend Bar (Clean Tri-Color Black, White, Red) */}
       <div className="px-5 py-3 bg-[#121216] border-t border-[#27272A] flex flex-wrap items-center justify-between gap-3 text-[11px] font-mono text-[#A1A1AA]">
         <div className="flex items-center gap-4">
-          <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#10B981]" />
-            <span>receipt-mcp Ingestion</span>
+          <span className="flex items-center gap-1.5 text-white">
+            <span className="w-2 h-2 rounded-full bg-white" />
+            <span>receipt-mcp</span>
           </span>
-          <span className="flex items-center gap-1.5">
+          <span className="flex items-center gap-1.5 text-white">
             <span className="w-2 h-2 rounded-full bg-[#FF2A1A]" />
-            <span>rules-mcp § 84 Anchor</span>
+            <span>rules-mcp § 84</span>
           </span>
-          <span className="flex items-center gap-1.5">
+          <span className="flex items-center gap-1.5 text-white">
             <span className="w-2 h-2 rounded-full bg-white" />
             <span>48h SLA Clock</span>
           </span>

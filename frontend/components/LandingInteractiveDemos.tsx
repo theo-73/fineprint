@@ -253,7 +253,7 @@ export const LandingInteractiveDemos: React.FC = () => {
                   Total Amount Paid (Inclusive of 18% GST) n24,990.00
                 </p>
                 <p className="text-[#FF6E63] text-[10px]">
-                  ⚠️ Standard regex fails: `₹` parsed as ascii `n`, amount falls back to ₹4,999 error.
+                  [PARSER FAULT]: Standard regex fails when &apos;₹&apos; encodes as ascii &apos;n&apos;, corrupting amount to ₹4,999.
                 </p>
               </div>
             ) : (

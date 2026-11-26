@@ -270,9 +270,9 @@ export const StatutesTab: React.FC = () => {
                   className={cn(
                     "text-[10px] font-mono px-2 py-0.5 rounded-full font-bold",
                     item.category === 'Product Liability' && "bg-[#FF2A1A]/10 text-[#FF2A1A] border border-[#FF2A1A]/20",
-                    item.category === 'E-Commerce Rules' && "bg-[#10B981]/10 text-[#10B981] border border-[#10B981]/20",
-                    item.category === 'Statutory Abstention' && "bg-[#F59E0B]/10 text-[#FBBF24] border border-[#F59E0B]/20",
-                    item.category === 'Dark Patterns' && "bg-[#3B82F6]/10 text-[#60A5FA] border border-[#3B82F6]/20"
+                    item.category === 'E-Commerce Rules' && "bg-[#18181D] text-white border border-[#3F3F46]",
+                    item.category === 'Statutory Abstention' && "bg-[#18181D] text-[#A1A1AA] border border-[#27272A]",
+                    item.category === 'Dark Patterns' && "bg-[#18181D] text-[#D4D4D8] border border-[#27272A]"
                   )}
                 >
                   {item.section}
@@ -293,7 +293,7 @@ export const StatutesTab: React.FC = () => {
                 <div className="text-[11px] font-semibold text-[#F4F4F6]">Enforcement Principles:</div>
                 {item.keyEnforcementPoints.map((pt, pIdx) => (
                   <div key={pIdx} className="flex items-start gap-2 text-xs text-[#D4D4D8]">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981] shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#FF2A1A] shrink-0 mt-0.5" />
                     <span className="text-[11px]">{pt}</span>
                   </div>
                 ))}
@@ -308,7 +308,7 @@ export const StatutesTab: React.FC = () => {
                 onClick={() => handleCopyCitation(`${item.act} - ${item.section}: ${item.title}`, item.id)}
                 className="btn-press flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#18181D] hover:bg-[#FF2A1A]/15 text-[#FF6E63] border border-[#27272A] hover:border-[#FF2A1A]/30 transition-colors font-medium text-xs"
               >
-                {copiedId === item.id ? <Check className="w-3.5 h-3.5 text-[#10B981]" /> : <Copy className="w-3.5 h-3.5" />}
+                {copiedId === item.id ? <Check className="w-3.5 h-3.5 text-[#FF2A1A]" /> : <Copy className="w-3.5 h-3.5" />}
                 <span>{copiedId === item.id ? 'Copied' : 'Copy Citation'}</span>
               </button>
             </div>

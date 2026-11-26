@@ -167,10 +167,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="p-3 rounded-xl bg-[#18181D] border border-[#27272A] space-y-2">
             <div className="flex items-center justify-between text-[11px] font-mono">
               <span className="flex items-center gap-1.5 text-[#D4D4D8]">
-                <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-[#FF2A1A] animate-pulse" />
                 <span className="font-semibold">MCP Trust Boundary</span>
               </span>
-              <span className="text-[#10B981] font-bold text-[10px] bg-[#10B981]/15 px-1.5 py-0.2 rounded border border-[#10B981]/30">
+              <span className="text-white font-bold text-[10px] bg-[#121216] px-1.5 py-0.2 rounded border border-[#27272A]">
                 Active
               </span>
             </div>
@@ -192,7 +192,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         ) : (
           <div className="flex justify-center" title="MCP Trust Boundary: Active">
-            <span className="w-3 h-3 rounded-full bg-[#10B981] animate-pulse" />
+            <span className="w-3 h-3 rounded-full bg-[#FF2A1A] animate-pulse" />
           </div>
         )}
       </div>
