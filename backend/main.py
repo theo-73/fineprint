@@ -8,6 +8,7 @@ import re
 import shutil
 import uuid
 from typing import List, Dict, Any, Optional
+from pydantic import BaseModel
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
@@ -232,20 +233,48 @@ def chat_intake(req: ChatRequest):
         case_ready=False
     )
 
+class EvaluateClaimRequest(BaseModel):
+    problem_description: str
+    order_id: Optional[str] = None
+    invoice_text: Optional[str] = None
+    invoice_pdf_path: Optional[str] = None
+    product_name: Optional[str] = None
+    brand: Optional[str] = None
+    seller_name: Optional[str] = None
+    amount_inr: Optional[float] = None
+    purchase_date: Optional[str] = None
+    serial_number: Optional[str] = None
+    marketplace: Optional[str] = None
+    complainant_name: Optional[str] = "Consumer"
+    extracted_order: Optional[Dict[str, Any]] = None
+
+@app.post("/api/evaluate-claim", response_model=CaseResponse)
 @app.post("/api/cases", response_model=CaseResponse)
-def create_case(req: CaseCreateRequest):
+def create_case(req: EvaluateClaimRequest):
     """Creates a new claim case and executes the 6-stage pipeline."""
     order_override = None
-    if req.order_id:
+    if req.extracted_order:
+        raw_order = req.extracted_order.copy()
+        raw_order["order_id"] = raw_order.get("order_id") or req.order_id or "ORD-2026-UNKNOWN"
+        raw_order["purchase_date"] = raw_order.get("purchase_date") or req.purchase_date or "2026-10-15"
+        raw_order["product_name"] = raw_order.get("product_name") or req.product_name or "Consumer Electronics Device"
+        raw_order["brand"] = raw_order.get("brand") or req.brand or "Brand / Manufacturer"
+        raw_order["seller_name"] = raw_order.get("seller_name") or req.seller_name or "Authorized Retailer"
+        raw_order["amount_inr"] = float(raw_order.get("amount_inr") or req.amount_inr or 4999.0)
+        raw_order["marketplace"] = raw_order.get("marketplace") or req.marketplace or "Amazon India"
+        raw_order["warranty_months"] = int(raw_order.get("warranty_months") or 12)
+        raw_order["return_window_days"] = int(raw_order.get("return_window_days") or 7)
+        order_override = raw_order
+    elif req.order_id:
         order_override = {
             "order_id": req.order_id,
             "purchase_date": req.purchase_date or "2026-10-15",
-            "product_name": req.product_name or "Consumer Electronics",
-            "brand": req.brand or "Brand",
+            "product_name": req.product_name or "Consumer Electronics Device",
+            "brand": req.brand or "Brand / Manufacturer",
             "seller_name": req.seller_name or "Authorized Retailer",
             "seller_gstin": None,
             "marketplace": req.marketplace or "Amazon India",
-            "amount_inr": req.amount_inr or 4999.0,
+            "amount_inr": float(req.amount_inr or 4999.0),
             "serial_number": req.serial_number,
             "warranty_months": 12,
             "return_window_days": 7
@@ -357,10 +386,11 @@ def download_pdf(case_id: int):
     )
 
 @app.get("/api/cases/{case_id}/audit-logs")
+@app.get("/api/cases/{case_id}/audit")
 def get_case_audit_logs(case_id: int):
     """Retrieves step-by-step audit logs for a specific case."""
     logs = get_audit_logs(case_id)
-    return {"case_id": case_id, "logs": logs}
+    return {"case_id": case_id, "logs": logs, "audit_logs": logs}
 
 @app.get("/api/cases/{case_id}/evidence")
 def get_case_evidence(case_id: int):
@@ -369,6 +399,8 @@ def get_case_evidence(case_id: int):
     return {"case_id": case_id, "evidence": evidence}
 
 @app.post("/api/benchmark/run")
+@app.get("/api/benchmark")
+@app.post("/api/benchmark")
 def run_benchmark():
     """Runs the 30-case public benchmark and returns real-time metrics."""
     from tests.test_30_case_benchmark import run_full_benchmark_suite

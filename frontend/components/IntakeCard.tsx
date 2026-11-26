@@ -176,41 +176,41 @@ export const IntakeCard: React.FC<IntakeCardProps> = ({
         </div>
       </div>
 
-      {/* Extracted Facts Card */}
+      {/* Extracted Facts Card (Crisp White High-Contrast Fact Sheet) */}
       {selectedReceipt && (
-        <div className="p-3.5 rounded-xl bg-[#18181D] border border-[#27272A] space-y-2 text-xs animate-enter">
-          <div className="flex items-center justify-between font-semibold text-[#FF2A1A]">
-            <span className="flex items-center gap-1.5 text-xs">
-              <ShoppingBag className="w-3.5 h-3.5" />
+        <div className="p-4 rounded-xl bg-white text-black border border-black/15 space-y-2.5 text-xs shadow-lg animate-enter font-sans">
+          <div className="flex items-center justify-between pb-1.5 border-b border-black/10">
+            <span className="flex items-center gap-1.5 text-xs font-black uppercase text-black tracking-wider">
+              <ShoppingBag className="w-3.5 h-3.5 text-[#FF2A1A]" />
               <span>Verified Fact Schema</span>
             </span>
-            <span className="text-[10px] font-mono text-white bg-[#18181D] px-1.5 py-0.5 rounded border border-[#3F3F46]">
-              receipt-mcp Verified
+            <span className="text-[10px] font-mono text-white bg-black px-2 py-0.5 rounded font-bold uppercase tracking-wider">
+              receipt-mcp
             </span>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 text-[11px] text-[#D4D4D8] pt-1 border-t border-[#27272A]">
+          <div className="grid grid-cols-2 gap-2.5 text-[11px] font-mono">
             <div>
-              <span className="text-[#71717A] block">Order ID:</span>
-              <span className="font-mono text-[#F4F4F6] font-semibold">{selectedReceipt.order_id}</span>
+              <span className="text-[#52525B] text-[10px] uppercase font-bold block">Order ID:</span>
+              <span className="font-bold text-black">{selectedReceipt.order_id}</span>
             </div>
             <div>
-              <span className="text-[#71717A] block">Amount Paid:</span>
-              <span className="font-semibold text-[#FF2A1A] tabular-nums text-xs">
+              <span className="text-[#52525B] text-[10px] uppercase font-bold block">Amount Paid:</span>
+              <span className="font-extrabold text-[#FF2A1A] tabular-nums text-xs">
                 {formatINR(selectedReceipt.amount_inr)}
               </span>
             </div>
             <div className="col-span-2">
-              <span className="text-[#71717A] block">Product:</span>
-              <span className="text-[#F4F4F6] font-medium">{selectedReceipt.product_name}</span>
+              <span className="text-[#52525B] text-[10px] uppercase font-bold block">Product:</span>
+              <span className="text-black font-bold font-sans">{selectedReceipt.product_name}</span>
             </div>
             <div>
-              <span className="text-[#71717A] block">Seller:</span>
-              <span className="text-[#D4D4D8]">{selectedReceipt.seller_name}</span>
+              <span className="text-[#52525B] text-[10px] uppercase font-bold block">Seller:</span>
+              <span className="text-[#27272A]">{selectedReceipt.seller_name}</span>
             </div>
             <div>
-              <span className="text-[#71717A] block">Platform:</span>
-              <span className="text-[#D4D4D8]">{selectedReceipt.marketplace || 'Direct'}</span>
+              <span className="text-[#52525B] text-[10px] uppercase font-bold block">Platform:</span>
+              <span className="text-[#27272A]">{selectedReceipt.marketplace || 'Direct'}</span>
             </div>
           </div>
         </div>

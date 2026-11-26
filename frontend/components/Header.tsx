@@ -103,7 +103,13 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="text-xs font-mono font-medium text-[#71717A] hidden sm:inline">FinePrint</span>
+                <button
+                  onClick={() => onTabChange && onTabChange('overview')}
+                  className="text-xs font-mono font-bold text-[#A1A1AA] hover:text-white transition-colors cursor-pointer hidden sm:inline"
+                  title="Return to Home Landing Page"
+                >
+                  FinePrint
+                </button>
                 <ChevronRight className="w-3 h-3 text-[#52525B] hidden sm:inline" />
                 <h1 className="text-sm font-bold tracking-tight text-white font-sans">
                   {current.label}

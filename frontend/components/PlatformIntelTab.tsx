@@ -285,15 +285,15 @@ export const PlatformIntelTab: React.FC = () => {
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-[#18181D] border border-[#27272A] space-y-2">
-            <div className="font-bold text-white flex items-center gap-1.5 uppercase font-mono text-[11px]">
+          <div className="p-4 rounded-xl bg-white text-black border border-black/15 space-y-2 shadow-lg">
+            <div className="font-bold text-black flex items-center gap-1.5 uppercase font-mono text-[11px]">
               <ShieldCheck className="w-4 h-4 text-[#FF2A1A]" />
               <span>FinePrint Codified Countermeasure</span>
             </div>
-            <p className="text-[#D4D4D8] leading-relaxed">
+            <p className="text-[#18181B] leading-relaxed font-medium">
               {selectedPlatform.fineprintCountermeasure}
             </p>
-            <div className="pt-2 border-t border-[#27272A] text-[11px] text-white">
+            <div className="pt-2 border-t border-black/10 text-[11px] text-[#27272A] font-semibold">
               <b>Enforcement Impact:</b> Converts arbitrary 7-day dismissal into legally binding 48h grievance ticket.
             </div>
           </div>

@@ -8,11 +8,11 @@ from typing import Optional, Dict, Any, List
 from pydantic import BaseModel, Field
 
 class ExtractedOrder(BaseModel):
-    order_id: str = Field(description="Order ID or Invoice Number")
-    purchase_date: str = Field(description="Date of purchase in YYYY-MM-DD format")
-    product_name: str = Field(description="Name or model of product")
-    brand: str = Field(description="Brand or Manufacturer name")
-    seller_name: str = Field(description="Name of seller on invoice")
+    order_id: str = Field(default="ORD-2026-DEF", description="Order ID or Invoice Number")
+    purchase_date: str = Field(default="2026-10-15", description="Date of purchase in YYYY-MM-DD format")
+    product_name: str = Field(default="Consumer Electronics Device", description="Name or model of product")
+    brand: str = Field(default="Brand / Manufacturer", description="Brand or Manufacturer name")
+    seller_name: str = Field(default="Authorized Retailer", description="Name of seller on invoice")
     seller_gstin: Optional[str] = Field(default=None, description="Seller GSTIN if present")
     marketplace: str = Field(default="Unknown", description="E-commerce marketplace (Amazon, Flipkart, Croma, Direct)")
     amount_inr: float = Field(default=0.0, description="Total amount paid in INR")

@@ -102,7 +102,7 @@ export const VaultTab: React.FC<VaultTabProps> = ({
             <div
               key={c.id}
               onClick={() => onSelectCase(c)}
-              className="interactive-card p-4 rounded-xl bg-[#18181D] hover:bg-[#202027] border border-[#27272A] hover:border-[#FF2A1A]/50 cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 group transition-all shadow-md"
+              className="interactive-card p-4 rounded-xl bg-white text-black hover:bg-[#FAFAFA] border border-black/15 hover:border-[#FF2A1A] cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 group transition-all shadow-md font-sans"
               role="button"
               tabIndex={0}
             >
@@ -111,24 +111,24 @@ export const VaultTab: React.FC<VaultTabProps> = ({
                   <span className="font-mono text-xs text-[#FF2A1A] font-bold">{c.claim_ref}</span>
                   <span
                     className={cn(
-                      "text-[10px] font-mono px-2 py-0.5 rounded font-semibold",
+                      "text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase",
                       c.status === 'READY'
-                        ? "bg-[#18181D] text-white border border-[#3F3F46]"
-                        : "bg-[#F59E0B]/15 text-[#FBBF24] border border-[#F59E0B]/30"
+                        ? "bg-black text-white"
+                        : "bg-[#F59E0B]/15 text-[#B45309] border border-[#F59E0B]/30"
                     )}
                   >
                     {c.status}
                   </span>
-                  <span className="text-[11px] text-[#71717A] font-mono">
+                  <span className="text-[11px] text-[#52525B] font-mono">
                     Order: {c.order_id || 'N/A'}
                   </span>
                 </div>
-                <div className="text-sm font-bold text-[#F4F4F6] group-hover:text-[#FF6E63] transition-colors">
+                <div className="text-sm font-bold text-black group-hover:text-[#FF2A1A] transition-colors">
                   {c.product_name}
                 </div>
-                <div className="text-xs text-[#A1A1AA]">
-                  Route: <span className="font-mono text-[#F4F4F6] font-medium">{c.primary_route}</span> | Consideration:{" "}
-                  <b className="text-[#FF2A1A] font-semibold tabular-nums">{formatINR(c.amount_inr)}</b>
+                <div className="text-xs text-[#52525B]">
+                  Route: <span className="font-mono text-black font-semibold">{c.primary_route}</span> | Consideration:{" "}
+                  <b className="text-[#FF2A1A] font-extrabold tabular-nums">{formatINR(c.amount_inr)}</b>
                 </div>
               </div>
 

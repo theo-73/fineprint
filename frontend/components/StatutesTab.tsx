@@ -281,7 +281,7 @@ export const StatutesTab: React.FC = () => {
 
               <h3 className="text-sm font-bold text-[#F4F4F6] leading-snug">{item.title}</h3>
 
-              <div className="p-3 rounded-xl bg-[#18181D] border border-[#27272A] text-[11px] text-[#D4D4D8] font-mono leading-relaxed italic">
+              <div className="p-3.5 rounded-xl bg-white text-black border border-black/15 text-[11px] font-mono leading-relaxed shadow-sm">
                 &ldquo;{item.statutoryText}&rdquo;
               </div>
 

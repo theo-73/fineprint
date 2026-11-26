@@ -34,12 +34,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const navItems: NavItem[] = [
     {
-      id: 'overview',
-      label: 'Overview & Showcase',
-      badge: 'Live',
-      icon: <Sparkles className="w-4 h-4" />,
-    },
-    {
       id: 'cockpit',
       label: 'Dispute Cockpit',
       icon: <Layers className="w-4 h-4" />,
@@ -84,14 +78,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
       )}
     >
       <div>
-        {/* Brand Header */}
+        {/* Brand Header - Click to navigate to Landing Page */}
         <div className="flex items-center justify-between p-4 border-b border-[#27272A]">
-          <div className="flex items-center gap-3 overflow-hidden">
+          <button
+            onClick={() => onTabChange('overview')}
+            className="flex items-center gap-3 overflow-hidden text-left hover:opacity-85 transition-opacity group cursor-pointer focus:outline-none"
+            title="Go to FinePrint Home Landing Page"
+          >
             <BrandMark size={36} />
             {!collapsed && (
               <div className="truncate">
                 <div className="flex items-center gap-1.5">
-                  <span className="font-bold text-sm tracking-tight text-white">Fine<span className="text-[#FF2A1A]">Print</span></span>
+                  <span className="font-bold text-sm tracking-tight text-white group-hover:text-white">Fine<span className="text-[#FF2A1A]">Print</span></span>
                   <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#FF2A1A]/20 text-[#FF6E63] border border-[#FF2A1A]/30 font-bold">
                     CPA 2019
                   </span>
@@ -101,7 +99,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </div>
               </div>
             )}
-          </div>
+          </button>
           <button
             onClick={onToggleCollapse}
             className="p-1.5 rounded-lg text-[#71717A] hover:text-white hover:bg-[#18181D] transition-colors shrink-0"

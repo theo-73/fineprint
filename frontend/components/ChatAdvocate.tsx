@@ -61,19 +61,24 @@ export const ChatAdvocate: React.FC<ChatAdvocateProps> = ({
             <div key={msg.id} className={cn("flex", isUser ? "justify-end" : "justify-start")}>
               <div
                 className={cn(
-                  "max-w-xl rounded-2xl p-4 text-xs leading-relaxed shadow-sm",
+                  "max-w-xl rounded-2xl p-4 sm:p-5 text-xs leading-relaxed shadow-lg font-sans",
                   isUser
                     ? "bg-[#FF2A1A] text-white rounded-br-sm shadow-md shadow-[#FF2A1A]/20"
-                    : "bg-[#18181D] border border-[#27272A] text-[#F4F4F6] rounded-bl-sm"
+                    : "bg-white text-black border border-black/15 rounded-bl-sm"
                 )}
               >
                 {!isUser && (
-                  <div className="flex items-center gap-1.5 text-[10px] font-mono font-semibold text-[#FF2A1A] mb-1.5 uppercase tracking-wider">
-                    <Scale className="w-3 h-3" />
-                    <span>FinePrint Statutory Agent</span>
+                  <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-black mb-2 uppercase tracking-wider border-b border-black/10 pb-1">
+                    <span className="w-2 h-2 rounded-full bg-[#FF2A1A]" />
+                    <span>FinePrint Statutory Agent · CPA 2019 Mandate</span>
                   </div>
                 )}
-                <div className="whitespace-pre-wrap">{msg.text}</div>
+                <div className={cn(
+                  "whitespace-pre-wrap",
+                  isUser ? "text-white" : "text-[#18181B] font-medium"
+                )}>
+                  {msg.text}
+                </div>
 
                 {msg.caseId && (
                   <button

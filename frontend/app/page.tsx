@@ -78,7 +78,11 @@ function FinePrintCockpitContent() {
     fetch('/api/mock-mailbox')
       .then((r) => r.json())
       .then((data) => {
-        if (data.receipts) setMockReceipts(data.receipts);
+        if (data.receipts && data.receipts.length > 0) {
+          setMockReceipts(data.receipts);
+          // Auto-select the first curated receipt (Sony WH-1000XM5) on load
+          handleSelectMockReceipt(data.receipts[0]);
+        }
       })
       .catch(() => {});
 
@@ -101,16 +105,21 @@ function FinePrintCockpitContent() {
     fetch('/api/cases')
       .then((r) => r.json())
       .then((data) => {
-        if (data.cases) setCasesList(data.cases);
+        if (Array.isArray(data)) {
+          setCasesList(data);
+        } else if (data && data.cases) {
+          setCasesList(data.cases);
+        }
       })
       .catch(() => {});
   };
 
   const loadAuditLogs = (caseId: number) => {
-    fetch(`/api/cases/${caseId}/audit`)
+    fetch(`/api/cases/${caseId}/audit-logs`)
       .then((r) => r.json())
       .then((data) => {
-        if (data.audit_logs) setAuditLogs(data.audit_logs);
+        if (data && data.logs) setAuditLogs(data.logs);
+        else if (data && data.audit_logs) setAuditLogs(data.audit_logs);
       })
       .catch(() => {});
   };
@@ -133,6 +142,13 @@ function FinePrintCockpitContent() {
         setSelectedReceipt(data.order);
         setUploadedFileName(null);
         setUploadedFilePath(null);
+        if (data.order.product_name?.toLowerCase().includes('sony') || receipt.subject.toLowerCase().includes('sony')) {
+          setProblemDescription('The right ear cup of my Sony WH-1000XM5 headphones stopped outputting audio after 35 days. Amazon return window closed on day 7, and customer care refused replacement citing contractual return window.');
+        } else if (data.order.product_name?.toLowerCase().includes('samsung') || receipt.subject.toLowerCase().includes('samsung')) {
+          setProblemDescription('The Samsung S24 Ultra display has a persistent green vertical line on the screen right out of the box (Dead on Arrival). Croma store refused replacement citing 24-hour return policy.');
+        } else if (data.order.product_name?.toLowerCase().includes('macbook') || receipt.subject.toLowerCase().includes('macbook')) {
+          setProblemDescription('The MacBook Air M3 motherboard failed within the 12-month express manufacturer warranty period. Reliance Digital and Apple service centre refused free repair claiming lack of parts.');
+        }
         success('Verified Purchase Order Loaded', `${data.order.product_name} (${data.order.seller_name})`);
       }
     } catch (err: unknown) {
@@ -186,11 +202,20 @@ function FinePrintCockpitContent() {
   };
 
   const handleRunEvaluation = async () => {
-    if (!selectedReceipt) {
-      setErrorMsg('Please select a receipt from your mailbox or upload an invoice PDF first.');
-      error('Receipt Missing', 'Fact extraction requires an invoice PDF or curated order.');
-      return;
+    let effectiveReceipt = selectedReceipt;
+    if (!effectiveReceipt && mockReceipts.length > 0) {
+      effectiveReceipt = {
+        order_id: '402-8921473-9821401',
+        purchase_date: '2026-10-15',
+        product_name: 'Sony WH-1000XM5 Wireless Noise Cancelling Headphones',
+        brand: 'Sony India Pvt Ltd',
+        seller_name: 'Appario Retail Pvt Ltd',
+        amount_inr: 24990,
+        marketplace: 'Amazon India'
+      };
+      setSelectedReceipt(effectiveReceipt);
     }
+
     if (!problemDescription.trim()) {
       setErrorMsg('Please enter a description of the defect.');
       error('Defect Missing', 'Please describe the defect symptoms.');
@@ -204,8 +229,16 @@ function FinePrintCockpitContent() {
     try {
       const payload = {
         problem_description: problemDescription,
-        extracted_order: selectedReceipt,
-        complainant_name: complainantName || 'Complainant',
+        extracted_order: effectiveReceipt,
+        order_id: effectiveReceipt?.order_id,
+        product_name: effectiveReceipt?.product_name,
+        brand: effectiveReceipt?.brand,
+        seller_name: effectiveReceipt?.seller_name,
+        amount_inr: effectiveReceipt?.amount_inr,
+        purchase_date: effectiveReceipt?.purchase_date,
+        serial_number: effectiveReceipt?.serial_number,
+        marketplace: effectiveReceipt?.marketplace,
+        complainant_name: complainantName || 'Consumer',
         invoice_pdf_path: uploadedFilePath
       };
 
@@ -404,7 +437,18 @@ function FinePrintCockpitContent() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between pb-3 border-b border-[#27272A]">
-              <span className="font-bold text-sm text-white">Navigation</span>
+              <button
+                onClick={() => {
+                  setActiveTab('overview');
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center gap-1.5 text-left"
+              >
+                <span className="font-bold text-sm text-white">Fine<span className="text-[#FF2A1A]">Print</span></span>
+                <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-[#FF2A1A]/20 text-[#FF6E63] font-bold">
+                  Home
+                </span>
+              </button>
               <button 
                 onClick={() => setMobileMenuOpen(false)}
                 className="p-1 rounded-lg text-[#A1A1AA] hover:text-white"
@@ -414,7 +458,6 @@ function FinePrintCockpitContent() {
             </div>
             <nav className="mt-4 space-y-1.5 flex-1">
               {[
-                { id: 'overview', label: 'Overview & Showcase' },
                 { id: 'cockpit', label: 'Dispute Cockpit' },
                 { id: 'chat', label: 'Interactive Advocate' },
                 { id: 'statutes', label: 'Statutes & Precedents' },
@@ -517,6 +560,11 @@ function FinePrintCockpitContent() {
                   onCopyWhatsApp={(text) => copyToClipboard(text, 'wa')}
                   onCopyNCH={(text) => copyToClipboard(text, 'nch')}
                   onOpenDossier={(caseItem) => setDossierCase(caseItem)}
+                  onSelectSample={(idx) => {
+                    if (mockReceipts[idx]) {
+                      handleSelectMockReceipt(mockReceipts[idx]);
+                    }
+                  }}
                 />
               </div>
             </div>
