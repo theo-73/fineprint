@@ -89,6 +89,125 @@ body {
   animation: fadeInSubtle 200ms var(--ease-out) forwards;
 }
 
+/* Floating Mono Annotations (APIx Inspired) */
+@keyframes annoFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+.animate-anno-float {
+  animation: annoFloat 6s ease-in-out infinite;
+}
+
+/* Supersonic Proximity Shimmer & Shockwave (APIx Inspired) */
+@keyframes supersonicTextShimmer {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+.shimmer-text {
+  background: linear-gradient(90deg, #181716 0%, #C83625 25%, #F35944 50%, #C83625 75%, #181716 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: supersonicTextShimmer 2.2s linear infinite;
+}
+
+@keyframes sonicShockwavePulse {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.98);
+    border-color: rgba(200, 54, 37, 0.85);
+  }
+  50% {
+    opacity: 0.35;
+    border-color: rgba(243, 89, 68, 0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.15, 1.45);
+    border-color: rgba(200, 54, 37, 0);
+  }
+}
+
+.animate-shockwave {
+  animation: sonicShockwavePulse 1.6s cubic-bezier(0.1, 0.8, 0.2, 1) infinite;
+}
+
+/* Floating Figma/Canva Collaborator Cursors (APIx Inspired) */
+@keyframes figmaFloat1 {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-10px, 8px);
+  }
+}
+
+@keyframes figmaFloat2 {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(12px, -8px);
+  }
+}
+
+@keyframes figmaFloat3 {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(8px, 10px);
+  }
+}
+
+.animate-cursor-1 {
+  animation: figmaFloat1 6.5s ease-in-out infinite;
+}
+
+.animate-cursor-2 {
+  animation: figmaFloat2 7.2s ease-in-out infinite;
+}
+
+.animate-cursor-3 {
+  animation: figmaFloat3 6s ease-in-out infinite;
+}
+
+/* Canvas Dot Grid Background */
+.canvas-dot-grid {
+  background-image: radial-gradient(rgba(24, 23, 22, 0.12) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* Infinite Telemetry Marquee */
+@keyframes statsMarquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.stats-marquee {
+  display: flex;
+  width: max-content;
+  animation: statsMarquee 26s linear infinite;
+}
+
+.stats-marquee:hover {
+  animation-play-state: paused;
+}
+
 /* Strict prefers-reduced-motion support */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {

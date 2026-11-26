@@ -4,7 +4,7 @@ import React from 'react';
 import { 
   Scale, MessageSquare, BookOpen, BarChart3, 
   Cpu, Database, ChevronLeft, ChevronRight, 
-  Lock, Shield, Terminal, Activity 
+  Lock, Shield, Terminal, Activity, Sparkles 
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { TabType } from './Header';
@@ -32,6 +32,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
   caseCount,
 }) => {
   const navItems: NavItem[] = [
+    {
+      id: 'overview',
+      label: 'Overview & Showcase',
+      badge: 'Live',
+      icon: <Sparkles className="w-4 h-4" />,
+    },
     {
       id: 'cockpit',
       label: 'Dispute Cockpit',

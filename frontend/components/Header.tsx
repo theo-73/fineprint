@@ -3,11 +3,11 @@
 import React from 'react';
 import { 
   Scale, Layers, MessageSquare, BookOpen, BarChart3, 
-  Cpu, Database, Search, Menu, ChevronRight 
+  Cpu, Database, Search, Menu, ChevronRight, Sparkles 
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
-export type TabType = 'cockpit' | 'chat' | 'statutes' | 'intel' | 'benchmark' | 'vault';
+export type TabType = 'overview' | 'cockpit' | 'chat' | 'statutes' | 'intel' | 'benchmark' | 'vault';
 
 interface HeaderProps {
   activeTab: TabType;
@@ -18,6 +18,11 @@ interface HeaderProps {
 }
 
 export const TAB_METADATA: Record<TabType, { label: string; icon: React.ReactNode; subtitle: string }> = {
+  overview: {
+    label: 'Overview & Showcase',
+    icon: <Sparkles className="w-4 h-4 text-[#C83625]" />,
+    subtitle: 'System Architecture, Constellation & Interactive Sandbox',
+  },
   cockpit: {
     label: 'Dispute Cockpit',
     icon: <Layers className="w-4 h-4 text-[#C83625]" />,

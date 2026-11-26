@@ -12,6 +12,7 @@ import { BenchmarkTab } from '../components/BenchmarkTab';
 import { VaultTab } from '../components/VaultTab';
 import { StatutesTab } from '../components/StatutesTab';
 import { PlatformIntelTab } from '../components/PlatformIntelTab';
+import { LandingView } from '../components/LandingView';
 import { CommandPalette } from '../components/CommandPalette';
 import { ClaimDossierModal } from '../components/ClaimDossierModal';
 import { ToastProvider, useToast } from '../components/ToastProvider';
@@ -410,6 +411,7 @@ function FinePrintCockpitContent() {
             </div>
             <nav className="mt-4 space-y-1.5 flex-1">
               {[
+                { id: 'overview', label: 'Overview & Showcase' },
                 { id: 'cockpit', label: 'Dispute Cockpit' },
                 { id: 'chat', label: 'Interactive Advocate' },
                 { id: 'statutes', label: 'Statutes & Precedents' },
@@ -475,6 +477,17 @@ function FinePrintCockpitContent() {
           {/* Stepper only on Cockpit */}
           {activeTab === 'cockpit' && (
             <ProcessStepper currentStep={currentStep} />
+          )}
+
+          {/* TAB 0: OVERVIEW & SHOWCASE (Inspired by yatra Landing.jsx & APIx landing.html) */}
+          {activeTab === 'overview' && (
+            <LandingView
+              onNavigate={(tab) => {
+                setActiveTab(tab);
+                if (tab === 'benchmark' && !benchmarkSummary) handleRunBenchmark();
+                if (tab === 'vault') loadCases();
+              }}
+            />
           )}
 
           {/* TAB 1: COCKPIT */}

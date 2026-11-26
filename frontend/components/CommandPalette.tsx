@@ -40,6 +40,14 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   const commands: CommandItem[] = [
     // Navigation
     {
+      id: 'nav-overview',
+      title: 'Overview & Interactive Showcase',
+      category: 'Navigation',
+      subtitle: 'System architecture, constellation & interactive bento sandbox',
+      icon: <Sparkles className="w-4 h-4 text-[#C83625]" />,
+      action: () => onNavigate('overview'),
+    },
+    {
       id: 'nav-cockpit',
       title: 'Dispute Cockpit & Intake',
       category: 'Navigation',
