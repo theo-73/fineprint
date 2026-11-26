@@ -320,7 +320,7 @@ export default function FinePrintCockpit() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
+    <div className="min-h-screen bg-[#F4F3F0] text-[#181716] flex flex-col font-sans selection:bg-[#C83625]/20 selection:text-[#181716]">
       {/* Top Header */}
       <Header
         activeTab={activeTab}
@@ -336,14 +336,14 @@ export default function FinePrintCockpit() {
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-8 space-y-6">
         {/* Global Error Banner */}
         {errorMsg && (
-          <div className="bg-rose-950/40 border border-rose-500/40 rounded-xl p-4 flex items-center justify-between gap-3 text-xs text-rose-200 shadow-sm animate-enter">
+          <div className="bg-[#FDF4F2] border border-[#F8CFC9] rounded-xl p-4 flex items-center justify-between gap-3 text-xs text-[#C83625] shadow-sm animate-enter">
             <div className="flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-rose-400 flex-shrink-0" />
+              <AlertCircle className="w-4 h-4 text-[#C83625] flex-shrink-0" />
               <span>{errorMsg}</span>
             </div>
             <button
               onClick={() => setErrorMsg(null)}
-              className="text-rose-400 hover:text-rose-200 font-semibold text-[11px] px-2 py-0.5 rounded"
+              className="text-[#C83625] hover:text-[#B32E1F] font-semibold text-[11px] px-2 py-0.5 rounded"
             >
               Dismiss
             </button>
@@ -428,8 +428,8 @@ export default function FinePrintCockpit() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800/80 py-4 px-6 text-center text-xs text-slate-500 font-sans">
-        FinePrint Consumer Rights MCP Agent | wHACKiest 2026 Track 1: Make MCP Matter | Team Onyx (BMSIT)
+      <footer className="border-t border-[#E5E2DC] py-4 px-6 text-center text-xs text-[#736E65] font-sans">
+        FinePrint Consumer Rights MCP Agent • Codified Statutory Defense under CPA 2019 & E-Commerce Rules 2020
       </footer>
     </div>
   );

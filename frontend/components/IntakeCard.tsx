@@ -49,26 +49,26 @@ export const IntakeCard: React.FC<IntakeCardProps> = ({
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 space-y-5 shadow-sm">
+    <div className="bg-[#FFFFFF] border border-[#E5E2DC] rounded-2xl p-5 md:p-6 space-y-5 shadow-sm">
       {/* Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400 border border-blue-500/20">
+      <div className="flex items-center justify-between pb-3 border-b border-[#E5E2DC]">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-[#FDF4F2] flex items-center justify-center text-[#C83625] border border-[#F8CFC9]">
             <Inbox className="w-4 h-4" />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-white tracking-tight">Purchase Intake</h2>
-            <p className="text-[11px] text-slate-400">Validated via receipt-mcp isolation</p>
+            <h2 className="text-sm font-bold text-[#181716] tracking-tight">Purchase Intake</h2>
+            <p className="text-[11px] text-[#736E65]">Validated via receipt-mcp isolation</p>
           </div>
         </div>
-        <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+        <span className="text-[10px] font-mono text-[#166534] bg-[#F0FDF4] px-2 py-0.5 rounded border border-[#BBF7D0]">
           Untrusted Inputs Sanitized
         </span>
       </div>
 
       {/* PDF Dropzone */}
       <div className="space-y-1.5">
-        <label htmlFor="pdf-upload-input" className="text-xs text-slate-300 font-medium block">
+        <label htmlFor="pdf-upload-input" className="text-xs text-[#262422] font-medium block">
           Upload E-Commerce Tax Invoice (PDF):
         </label>
         <input
@@ -100,15 +100,15 @@ export const IntakeCard: React.FC<IntakeCardProps> = ({
           className={cn(
             "border-2 border-dashed rounded-xl p-5 text-center cursor-pointer transition-all duration-200 select-none",
             isDragOver
-              ? "border-blue-500 bg-blue-500/10 ring-2 ring-blue-500/20"
-              : "border-slate-700/80 bg-slate-850/60 hover:border-slate-600 hover:bg-slate-800/70"
+              ? "border-[#C83625] bg-[#FDF4F2] ring-2 ring-[#C83625]/20"
+              : "border-[#D4D0C7] bg-[#FAF9F7] hover:border-[#C83625]/60 hover:bg-[#FDF4F2]"
           )}
           role="button"
           tabIndex={0}
           aria-label="Upload PDF tax invoice"
         >
           <div className="flex flex-col items-center justify-center gap-2">
-            <div className="w-9 h-9 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 border border-blue-500/20">
+            <div className="w-9 h-9 rounded-xl bg-[#FDF4F2] flex items-center justify-center text-[#C83625] border border-[#F8CFC9]">
               {uploading ? (
                 <RefreshCw className="w-4 h-4 animate-spin" />
               ) : (
@@ -116,10 +116,10 @@ export const IntakeCard: React.FC<IntakeCardProps> = ({
               )}
             </div>
             <div>
-              <span className="text-xs font-semibold text-slate-200">
+              <span className="text-xs font-semibold text-[#181716]">
                 {uploading ? 'Extracting structured facts via receipt-mcp...' : 'Drop tax invoice PDF here or click to browse'}
               </span>
-              <p className="text-[11px] text-slate-400 mt-0.5">
+              <p className="text-[11px] text-[#736E65] mt-0.5">
                 Supports official invoices from Amazon.in, Flipkart, Croma & Reliance Digital
               </p>
             </div>
@@ -127,12 +127,12 @@ export const IntakeCard: React.FC<IntakeCardProps> = ({
         </div>
 
         {uploadedFileName && (
-          <div className="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs flex items-center justify-between gap-2">
+          <div className="p-2.5 rounded-lg bg-[#F0FDF4] border border-[#BBF7D0] text-[#166534] text-xs flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 truncate">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-[#16A34A] flex-shrink-0" />
               <span className="truncate">Active Invoice: <b>{uploadedFileName}</b></span>
             </div>
-            <span className="text-[10px] font-mono bg-emerald-500/20 px-1.5 py-0.5 rounded text-emerald-200 flex-shrink-0">
+            <span className="text-[10px] font-mono bg-[#DCFCE7] px-1.5 py-0.5 rounded text-[#166534] flex-shrink-0">
               Parsed
             </span>
           </div>
@@ -141,7 +141,7 @@ export const IntakeCard: React.FC<IntakeCardProps> = ({
 
       {/* Curated Indian Receipts */}
       <div className="space-y-2">
-        <label className="text-xs text-slate-300 font-medium block">
+        <label className="text-xs text-[#262422] font-medium block">
           Or Select Curated Purchase Proofs (receipt-mcp):
         </label>
         <div className="space-y-1.5 max-h-52 overflow-y-auto pr-1">
@@ -159,17 +159,17 @@ export const IntakeCard: React.FC<IntakeCardProps> = ({
                 className={cn(
                   "btn-press p-2.5 rounded-xl border text-xs cursor-pointer transition-all",
                   isSelected
-                    ? "bg-blue-600/20 border-blue-500 ring-1 ring-blue-500/30"
-                    : "bg-slate-850 hover:bg-slate-800 border-slate-700/80 text-slate-300"
+                    ? "bg-[#FDF4F2] border-[#C83625] ring-1 ring-[#C83625]"
+                    : "bg-[#FAF9F7] hover:bg-[#F5F3EF] border-[#E5E2DC] text-[#262422]"
                 )}
                 role="button"
                 tabIndex={0}
               >
-                <div className="flex items-center justify-between font-semibold text-slate-200 mb-0.5">
-                  <span className="truncate text-blue-400 font-mono text-[11px]">{r.sender}</span>
-                  <span className="text-[10px] text-slate-500 font-mono">{r.date}</span>
+                <div className="flex items-center justify-between font-semibold text-[#181716] mb-0.5">
+                  <span className="truncate text-[#C83625] font-mono text-[11px] font-bold">{r.sender}</span>
+                  <span className="text-[10px] text-[#736E65] font-mono">{r.date}</span>
                 </div>
-                <div className="text-slate-300 font-medium text-[11px] truncate">{r.subject}</div>
+                <div className="text-[#262422] font-medium text-[11px] truncate">{r.subject}</div>
               </div>
             );
           })}
@@ -178,39 +178,39 @@ export const IntakeCard: React.FC<IntakeCardProps> = ({
 
       {/* Extracted Facts Card */}
       {selectedReceipt && (
-        <div className="p-3.5 rounded-xl bg-slate-850/80 border border-slate-700/80 space-y-2 text-xs animate-enter">
-          <div className="flex items-center justify-between font-semibold text-blue-400">
+        <div className="p-3.5 rounded-xl bg-[#FAF9F7] border border-[#E5E2DC] space-y-2 text-xs animate-enter">
+          <div className="flex items-center justify-between font-semibold text-[#C83625]">
             <span className="flex items-center gap-1.5 text-xs">
               <ShoppingBag className="w-3.5 h-3.5" />
               <span>Verified Fact Schema</span>
             </span>
-            <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
+            <span className="text-[10px] font-mono text-[#166534] bg-[#F0FDF4] px-1.5 py-0.5 rounded border border-[#BBF7D0]">
               receipt-mcp Verified
             </span>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-300 pt-1 border-t border-slate-800">
+          <div className="grid grid-cols-2 gap-2 text-[11px] text-[#262422] pt-1 border-t border-[#E5E2DC]">
             <div>
-              <span className="text-slate-500 block">Order ID:</span>
-              <span className="font-mono text-slate-200">{selectedReceipt.order_id}</span>
+              <span className="text-[#736E65] block">Order ID:</span>
+              <span className="font-mono text-[#181716] font-semibold">{selectedReceipt.order_id}</span>
             </div>
             <div>
-              <span className="text-slate-500 block">Amount Paid:</span>
-              <span className="font-semibold text-emerald-400 tabular-nums">
+              <span className="text-[#736E65] block">Amount Paid:</span>
+              <span className="font-semibold text-[#C83625] tabular-nums text-xs">
                 {formatINR(selectedReceipt.amount_inr)}
               </span>
             </div>
             <div className="col-span-2">
-              <span className="text-slate-500 block">Product:</span>
-              <span className="text-white font-medium">{selectedReceipt.product_name}</span>
+              <span className="text-[#736E65] block">Product:</span>
+              <span className="text-[#181716] font-medium">{selectedReceipt.product_name}</span>
             </div>
             <div>
-              <span className="text-slate-500 block">Seller:</span>
-              <span className="text-slate-200">{selectedReceipt.seller_name}</span>
+              <span className="text-[#736E65] block">Seller:</span>
+              <span className="text-[#181716]">{selectedReceipt.seller_name}</span>
             </div>
             <div>
-              <span className="text-slate-500 block">Platform:</span>
-              <span className="text-slate-200">{selectedReceipt.marketplace || 'Direct'}</span>
+              <span className="text-[#736E65] block">Platform:</span>
+              <span className="text-[#181716]">{selectedReceipt.marketplace || 'Direct'}</span>
             </div>
           </div>
         </div>
@@ -218,7 +218,7 @@ export const IntakeCard: React.FC<IntakeCardProps> = ({
 
       {/* Complainant Name */}
       <div className="space-y-1">
-        <label htmlFor="complainant-name-input" className="text-xs text-slate-300 font-medium block">
+        <label htmlFor="complainant-name-input" className="text-xs text-[#262422] font-medium block">
           Complainant Name (Purchaser):
         </label>
         <input
@@ -227,15 +227,15 @@ export const IntakeCard: React.FC<IntakeCardProps> = ({
           value={complainantName}
           onChange={(e) => onComplainantNameChange(e.target.value)}
           placeholder="Full Legal Name"
-          className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+          className="w-full bg-[#FAF9F7] border border-[#D4D0C7] rounded-xl px-3.5 py-2 text-xs text-[#181716] placeholder-[#A39E93] focus:outline-none focus:border-[#C83625] focus:ring-1 focus:ring-[#C83625] transition-colors"
         />
       </div>
 
       {/* Issue Description */}
       <div className="space-y-1">
-        <div className="flex items-center justify-between text-xs text-slate-300 font-medium">
+        <div className="flex items-center justify-between text-xs text-[#262422] font-medium">
           <label htmlFor="defect-description-input">Defect Description & Chronology:</label>
-          <span className="text-[10px] text-slate-500 tabular-nums font-mono">
+          <span className="text-[10px] text-[#736E65] tabular-nums font-mono">
             {problemDescription.length} chars
           </span>
         </div>
@@ -245,7 +245,7 @@ export const IntakeCard: React.FC<IntakeCardProps> = ({
           value={problemDescription}
           onChange={(e) => onProblemDescriptionChange(e.target.value)}
           placeholder="Describe how the defect manifested, timeline of usage, and customer service response..."
-          className="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none transition-colors"
+          className="w-full bg-[#FAF9F7] border border-[#D4D0C7] rounded-xl p-3 text-xs text-[#181716] placeholder-[#A39E93] focus:outline-none focus:border-[#C83625] focus:ring-1 focus:ring-[#C83625] resize-none transition-colors"
         />
       </div>
 
@@ -253,7 +253,7 @@ export const IntakeCard: React.FC<IntakeCardProps> = ({
       <button
         disabled={loading || !problemDescription.trim()}
         onClick={onEvaluate}
-        className="btn-press w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-md shadow-blue-600/25 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="btn-press w-full py-3 px-4 rounded-xl bg-[#C83625] hover:bg-[#B32E1F] text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-md shadow-[#C83625]/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
       >
         {loading ? (
           <>
