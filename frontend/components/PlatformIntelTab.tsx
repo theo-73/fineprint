@@ -50,7 +50,7 @@ const PLATFORMS_DATA: PlatformIntel[] = [
     averageResolutionDays: 6.8,
     registeredSellersCount: '1.4M+',
     commonDeflectionTactic:
-      'Marks order as &quot;Delivered in Good Condition&quot; and instructs buyer to physically take the defective unit to an offline brand service center.',
+      'Marks order as "Delivered in Good Condition" and instructs buyer to physically take the defective unit to an offline brand service center.',
     fineprintCountermeasure:
       'Invokes CPA 2019 Section 86 holding the marketplace seller jointly liable for delivering defective goods and asserting burden of proof on the seller.',
     topDarkPattern: 'Pre-selected Opt-in Insurance / Extended Warranty Surcharge',
@@ -66,7 +66,7 @@ const PLATFORMS_DATA: PlatformIntel[] = [
     averageResolutionDays: 3.1,
     registeredSellersCount: 'Direct Tata Retail',
     commonDeflectionTactic:
-      'Demands an official &quot;Denial Letter / DOA Certificate&quot; from the OEM service center before processing an online return.',
+      'Demands an official "Denial Letter / DOA Certificate" from the OEM service center before processing an online return.',
     fineprintCountermeasure:
       'Furnishes formal statutory demand citing Section 84(a) manufacturing defect and requests pickup for technical inspection within 48 hours.',
     topDarkPattern: 'Strict Store Credit Voucher Default over Bank Account Refund',
@@ -98,7 +98,7 @@ const PLATFORMS_DATA: PlatformIntel[] = [
     averageResolutionDays: 4.8,
     registeredSellersCount: 'Curated Brands',
     commonDeflectionTactic:
-      'Rejects returns of electronics citing &quot;Brand Warranty Only&quot; upon unboxing.',
+      'Rejects returns of electronics citing "Brand Warranty Only" upon unboxing.',
     fineprintCountermeasure:
       'Compiles formal notice referencing E-Commerce Rules Rule 4(5) requiring platform acknowledgment and statutory dispute escalation.',
     topDarkPattern: 'Non-refundable Delivery Fee Retention on Defective Returns',
@@ -136,30 +136,30 @@ export const PlatformIntelTab: React.FC = () => {
   return (
     <div className="space-y-6 animate-enter">
       {/* Header Banner */}
-      <div className="bg-[#FFFFFF] border border-[#E5E2DC] rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
+      <div className="bg-[#121216] border border-[#27272A] rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xl">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-lg font-bold text-[#181716] flex items-center gap-2 tracking-tight">
-              <BarChart3 className="w-5 h-5 text-[#C83625]" />
+            <h2 className="text-lg font-bold text-[#F4F4F6] flex items-center gap-2 tracking-tight">
+              <BarChart3 className="w-5 h-5 text-[#FF2A1A]" />
               <span>Indian E-Commerce Platform Statutory Compliance Radar</span>
             </h2>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FDF4F2] text-[#C83625] border border-[#F8CFC9] font-bold">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FF2A1A]/10 text-[#FF2A1A] border border-[#FF2A1A]/20 font-bold">
               Market Intelligence 2026
             </span>
           </div>
-          <p className="text-xs text-[#736E65] mt-1 leading-relaxed">
+          <p className="text-xs text-[#A1A1AA] mt-1 leading-relaxed">
             Empirical compliance benchmarks evaluating how major e-commerce platforms handle inherent defects, return deflections, and mandatory Rule 4(5) grievance SLAs.
           </p>
         </div>
 
-        <div className="flex items-center gap-3 self-start md:self-auto bg-[#FAF9F7] p-2.5 rounded-xl border border-[#E5E2DC]">
-          <div className="text-center pr-3 border-r border-[#E5E2DC]">
-            <span className="text-[10px] text-[#736E65] uppercase font-mono block">Average Deflection</span>
-            <span className="text-sm font-bold text-[#C83625] tabular-nums">37.8%</span>
+        <div className="flex items-center gap-3 self-start md:self-auto bg-[#18181D] p-2.5 rounded-xl border border-[#27272A]">
+          <div className="text-center pr-3 border-r border-[#27272A]">
+            <span className="text-[10px] text-[#71717A] uppercase font-mono block">Average Deflection</span>
+            <span className="text-sm font-bold text-[#FF2A1A] tabular-nums">37.8%</span>
           </div>
           <div className="text-center">
-            <span className="text-[10px] text-[#736E65] uppercase font-mono block">FinePrint Reversal</span>
-            <span className="text-sm font-bold text-[#16A34A] tabular-nums">94.2%</span>
+            <span className="text-[10px] text-[#71717A] uppercase font-mono block">FinePrint Reversal</span>
+            <span className="text-sm font-bold text-[#10B981] tabular-nums">94.2%</span>
           </div>
         </div>
       </div>
@@ -175,37 +175,37 @@ export const PlatformIntelTab: React.FC = () => {
               className={cn(
                 "btn-press p-4 rounded-2xl border cursor-pointer transition-all flex flex-col justify-between text-left",
                 isSelected
-                  ? "bg-[#FFFFFF] border-[#C83625] shadow-md ring-1 ring-[#C83625]"
-                  : "bg-[#FFFFFF] hover:bg-[#FAF9F7] border-[#E5E2DC] text-[#262422]"
+                  ? "bg-[#18181D] border-[#FF2A1A] shadow-xl ring-1 ring-[#FF2A1A]/30"
+                  : "bg-[#121216] hover:bg-[#18181D] border-[#27272A] text-[#D4D4D8]"
               )}
               role="button"
               tabIndex={0}
             >
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="w-8 h-8 rounded-xl bg-[#FAF9F7] border border-[#E5E2DC] flex items-center justify-center font-bold text-[11px] font-mono text-[#181716]">
+                  <span className="w-8 h-8 rounded-xl bg-[#18181D] border border-[#27272A] flex items-center justify-center font-bold text-[11px] font-mono text-[#F4F4F6]">
                     {plat.logoText}
                   </span>
                   <span
                     className={cn(
                       "text-xs font-black font-mono px-2 py-0.5 rounded-lg border",
-                      plat.grade === 'A' && "bg-[#F0FDF4] text-[#166534] border-[#BBF7D0]",
-                      plat.grade.startsWith('B') && "bg-[#EFF6FF] text-[#1D4ED8] border-[#BFDBFE]",
-                      plat.grade.startsWith('C') && "bg-[#FEFCE8] text-[#854D0E] border-[#FEF08A]"
+                      plat.grade === 'A' && "bg-[#10B981]/15 text-[#10B981] border-[#10B981]/30",
+                      plat.grade.startsWith('B') && "bg-[#3B82F6]/15 text-[#60A5FA] border-[#3B82F6]/30",
+                      plat.grade.startsWith('C') && "bg-[#F59E0B]/15 text-[#FBBF24] border-[#F59E0B]/30"
                     )}
                   >
                     Grade {plat.grade}
                   </span>
                 </div>
-                <h3 className="font-bold text-xs text-[#181716] line-clamp-1">{plat.name}</h3>
-                <div className="text-[11px] text-[#736E65] mt-1 font-mono">
-                  SLA Compliance: <b className="text-[#181716] tabular-nums">{plat.slaCompliancePct}%</b>
+                <h3 className="font-bold text-xs text-[#F4F4F6] line-clamp-1">{plat.name}</h3>
+                <div className="text-[11px] text-[#A1A1AA] mt-1 font-mono">
+                  SLA Compliance: <b className="text-[#F4F4F6] tabular-nums">{plat.slaCompliancePct}%</b>
                 </div>
               </div>
 
-              <div className="pt-3 mt-3 border-t border-[#E5E2DC] flex items-center justify-between text-[11px]">
-                <span className="text-[#736E65]">Deflection:</span>
-                <span className="font-mono font-bold text-[#C83625] tabular-nums">
+              <div className="pt-3 mt-3 border-t border-[#27272A] flex items-center justify-between text-[11px]">
+                <span className="text-[#71717A]">Deflection:</span>
+                <span className="font-mono font-bold text-[#FF2A1A] tabular-nums">
                   {plat.deflectionRatePct}%
                 </span>
               </div>
@@ -215,28 +215,28 @@ export const PlatformIntelTab: React.FC = () => {
       </div>
 
       {/* Selected Platform Deep Dive */}
-      <div className="bg-[#FFFFFF] border border-[#E5E2DC] rounded-2xl p-6 space-y-5 shadow-sm">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#E5E2DC]">
+      <div className="bg-[#121216] border border-[#27272A] rounded-2xl p-6 space-y-5 shadow-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#27272A]">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono font-bold text-[#C83625] bg-[#FDF4F2] px-2.5 py-0.5 rounded border border-[#F8CFC9]">
+              <span className="text-xs font-mono font-bold text-[#FF2A1A] bg-[#FF2A1A]/10 px-2.5 py-0.5 rounded border border-[#FF2A1A]/20">
                 PLATFORM VULNERABILITY DOSSIER
               </span>
-              <span className="text-xs text-[#736E65] font-mono">ID: {selectedPlatform.id}</span>
+              <span className="text-xs text-[#71717A] font-mono">ID: {selectedPlatform.id}</span>
             </div>
-            <h3 className="text-base font-bold text-[#181716] mt-1">{selectedPlatform.name}</h3>
+            <h3 className="text-base font-bold text-[#F4F4F6] mt-1">{selectedPlatform.name}</h3>
           </div>
 
           <div className="flex items-center gap-2 text-xs">
-            <span className="text-[#736E65]">Grievance Officer:</span>
+            <span className="text-[#71717A]">Grievance Officer:</span>
             {selectedPlatform.grievanceOfficerPublished ? (
-              <span className="inline-flex items-center gap-1 text-[#166534] font-semibold bg-[#F0FDF4] px-2 py-0.5 rounded border border-[#BBF7D0]">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#16A34A]" />
+              <span className="inline-flex items-center gap-1 text-[#10B981] font-semibold bg-[#10B981]/15 px-2 py-0.5 rounded border border-[#10B981]/30">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" />
                 <span>Published under Rule 4</span>
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 text-[#9F1239] font-semibold bg-[#FFF1F2] px-2 py-0.5 rounded border border-[#FECDD3]">
-                <XCircle className="w-3.5 h-3.5 text-[#E11D48]" />
+              <span className="inline-flex items-center gap-1 text-[#FF2A1A] font-semibold bg-[#FF2A1A]/15 px-2 py-0.5 rounded border border-[#FF2A1A]/30">
+                <XCircle className="w-3.5 h-3.5 text-[#FF2A1A]" />
                 <span>Omitted</span>
               </span>
             )}
@@ -245,55 +245,55 @@ export const PlatformIntelTab: React.FC = () => {
 
         {/* 3 Metric Pillars */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="p-4 rounded-xl bg-[#FAF9F7] border border-[#E5E2DC] space-y-1">
-            <div className="text-[11px] text-[#736E65] uppercase font-mono">Average Resolution Time</div>
-            <div className="text-2xl font-bold text-[#181716] tabular-nums">
+          <div className="p-4 rounded-xl bg-[#18181D] border border-[#27272A] space-y-1">
+            <div className="text-[11px] text-[#71717A] uppercase font-mono">Average Resolution Time</div>
+            <div className="text-2xl font-bold text-[#F4F4F6] tabular-nums">
               {selectedPlatform.averageResolutionDays} Days
             </div>
-            <div className="text-[10px] text-[#16A34A] font-medium">Within statutory 30d window</div>
+            <div className="text-[10px] text-[#10B981] font-medium">Within statutory 30d window</div>
           </div>
 
-          <div className="p-4 rounded-xl bg-[#FAF9F7] border border-[#E5E2DC] space-y-1">
-            <div className="text-[11px] text-[#736E65] uppercase font-mono">Statutory Return Deflection</div>
-            <div className="text-2xl font-bold text-[#C83625] tabular-nums">
+          <div className="p-4 rounded-xl bg-[#18181D] border border-[#27272A] space-y-1">
+            <div className="text-[11px] text-[#71717A] uppercase font-mono">Statutory Return Deflection</div>
+            <div className="text-2xl font-bold text-[#FF2A1A] tabular-nums">
               {selectedPlatform.deflectionRatePct}%
             </div>
-            <div className="text-[10px] text-[#C83625] font-medium">Buyers initially refused falsely</div>
+            <div className="text-[10px] text-[#FF6E63] font-medium">Buyers initially refused falsely</div>
           </div>
 
-          <div className="p-4 rounded-xl bg-[#FAF9F7] border border-[#E5E2DC] space-y-1">
-            <div className="text-[11px] text-[#736E65] uppercase font-mono">FinePrint Reversal Speed</div>
-            <div className="text-2xl font-bold text-[#16A34A] tabular-nums">
+          <div className="p-4 rounded-xl bg-[#18181D] border border-[#27272A] space-y-1">
+            <div className="text-[11px] text-[#71717A] uppercase font-mono">FinePrint Reversal Speed</div>
+            <div className="text-2xl font-bold text-[#10B981] tabular-nums">
               &lt; 48 Hours
             </div>
-            <div className="text-[10px] text-[#736E65] font-medium">Post formal statutory dispatch</div>
+            <div className="text-[10px] text-[#A1A1AA] font-medium">Post formal statutory dispatch</div>
           </div>
         </div>
 
         {/* Tactic & Countermeasure */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-          <div className="p-4 rounded-xl bg-[#FFF1F2]/60 border border-[#FECDD3] space-y-2">
-            <div className="font-bold text-[#9F1239] flex items-center gap-1.5 uppercase font-mono text-[11px]">
-              <AlertCircle className="w-4 h-4 text-[#E11D48]" />
+          <div className="p-4 rounded-xl bg-[#18181D] border border-[#FF2A1A]/20 space-y-2">
+            <div className="font-bold text-[#FF6E63] flex items-center gap-1.5 uppercase font-mono text-[11px]">
+              <AlertCircle className="w-4 h-4 text-[#FF2A1A]" />
               <span>Common Platform Deflection Tactic</span>
             </div>
-            <p className="text-[#881337] leading-relaxed">
+            <p className="text-[#D4D4D8] leading-relaxed">
               {selectedPlatform.commonDeflectionTactic}
             </p>
-            <div className="pt-2 border-t border-[#FECDD3] text-[11px] text-[#9F1239]">
+            <div className="pt-2 border-t border-[#27272A] text-[11px] text-[#FF6E63]">
               <b>Active Dark Pattern:</b> {selectedPlatform.topDarkPattern}
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-[#F0FDF4]/60 border border-[#BBF7D0] space-y-2">
-            <div className="font-bold text-[#166534] flex items-center gap-1.5 uppercase font-mono text-[11px]">
-              <ShieldCheck className="w-4 h-4 text-[#16A34A]" />
+          <div className="p-4 rounded-xl bg-[#18181D] border border-[#10B981]/20 space-y-2">
+            <div className="font-bold text-[#10B981] flex items-center gap-1.5 uppercase font-mono text-[11px]">
+              <ShieldCheck className="w-4 h-4 text-[#10B981]" />
               <span>FinePrint Codified Countermeasure</span>
             </div>
-            <p className="text-[#14532D] leading-relaxed">
+            <p className="text-[#D4D4D8] leading-relaxed">
               {selectedPlatform.fineprintCountermeasure}
             </p>
-            <div className="pt-2 border-t border-[#BBF7D0] text-[11px] text-[#166534]">
+            <div className="pt-2 border-t border-[#27272A] text-[11px] text-[#10B981]">
               <b>Enforcement Impact:</b> Converts arbitrary 7-day dismissal into legally binding 48h grievance ticket.
             </div>
           </div>
@@ -301,26 +301,26 @@ export const PlatformIntelTab: React.FC = () => {
       </div>
 
       {/* Dark Patterns Dismantled Section */}
-      <div className="bg-[#FFFFFF] border border-[#E5E2DC] rounded-2xl p-6 space-y-4 shadow-sm">
-        <div className="flex items-center gap-2 pb-3 border-b border-[#E5E2DC]">
-          <Zap className="w-5 h-5 text-[#C83625]" />
+      <div className="bg-[#121216] border border-[#27272A] rounded-2xl p-6 space-y-4 shadow-xl">
+        <div className="flex items-center gap-2 pb-3 border-b border-[#27272A]">
+          <Zap className="w-5 h-5 text-[#FF2A1A]" />
           <div>
-            <h3 className="text-sm font-bold text-[#181716] uppercase tracking-wider font-mono">
+            <h3 className="text-sm font-bold text-[#F4F4F6] uppercase tracking-wider font-mono">
               3 Market Deceptions Dismantled by FinePrint
             </h3>
-            <p className="text-xs text-[#736E65]">How our deterministic MCP tools enforce compliance against unfair trade practices</p>
+            <p className="text-xs text-[#A1A1AA]">How our deterministic MCP tools enforce compliance against unfair trade practices</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {DARK_PATTERNS_DISMANTLED.map((dp, i) => (
-            <div key={i} className="p-4 rounded-xl bg-[#FAF9F7] border border-[#E5E2DC] space-y-2">
-              <span className="text-[10px] font-mono font-bold text-[#C83625] uppercase tracking-wider">
+            <div key={i} className="p-4 rounded-xl bg-[#18181D] border border-[#27272A] space-y-2">
+              <span className="text-[10px] font-mono font-bold text-[#FF2A1A] uppercase tracking-wider">
                 Deception #{i + 1}
               </span>
-              <h4 className="text-xs font-bold text-[#181716]">{dp.pattern}</h4>
-              <p className="text-[11px] text-[#736E65] leading-relaxed">{dp.description}</p>
-              <div className="p-2.5 rounded-lg bg-[#FFFFFF] border border-[#E5E2DC] text-[11px] text-[#166534] leading-relaxed font-medium">
+              <h4 className="text-xs font-bold text-[#F4F4F6]">{dp.pattern}</h4>
+              <p className="text-[11px] text-[#A1A1AA] leading-relaxed">{dp.description}</p>
+              <div className="p-2.5 rounded-lg bg-[#121216] border border-[#27272A] text-[11px] text-[#10B981] leading-relaxed font-medium">
                 <b>Defense:</b> {dp.countermeasure}
               </div>
             </div>

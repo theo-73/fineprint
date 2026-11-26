@@ -14,6 +14,7 @@ interface CommandPaletteProps {
   onClose: () => void;
   onNavigate: (tab: TabType) => void;
   onSelectSampleCase?: (index: number) => void;
+  onSelectSampleInvoice?: (index: number) => void;
   onTriggerAction?: (actionId: string) => void;
 }
 
@@ -31,11 +32,20 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   onClose,
   onNavigate,
   onSelectSampleCase,
+  onSelectSampleInvoice,
   onTriggerAction,
 }) => {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const selectSample = (idx: number) => {
+    if (onSelectSampleInvoice) {
+      onSelectSampleInvoice(idx);
+    } else if (onSelectSampleCase) {
+      onSelectSampleCase(idx);
+    }
+  };
 
   const commands: CommandItem[] = [
     // Navigation
@@ -101,10 +111,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       title: 'Load Sony WH-1000XM5 Inherent Hardware Failure',
       category: 'Sample Purchase Invoices',
       subtitle: 'Amazon.in · Appario Retail · ₹24,990 · Hardware ANC defect after 35 days',
-      icon: <FileText className="w-4 h-4 text-[#16A34A]" />,
+      icon: <FileText className="w-4 h-4 text-[#10B981]" />,
       action: () => {
         onNavigate('cockpit');
-        if (onSelectSampleCase) onSelectSampleCase(0);
+        selectSample(0);
       },
     },
     {
@@ -112,10 +122,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       title: 'Load Samsung S24 Ultra Dead On Arrival (DOA)',
       category: 'Sample Purchase Invoices',
       subtitle: 'Croma.com · Infiniti Retail · ₹1,29,999 · Screen green tint out of box',
-      icon: <FileText className="w-4 h-4 text-[#16A34A]" />,
+      icon: <FileText className="w-4 h-4 text-[#10B981]" />,
       action: () => {
         onNavigate('cockpit');
-        if (onSelectSampleCase) onSelectSampleCase(1);
+        selectSample(1);
       },
     },
     {
@@ -123,10 +133,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       title: 'Load Apple MacBook Air M3 Motherboard Refusal',
       category: 'Sample Purchase Invoices',
       subtitle: 'Reliance Digital · ₹1,34,900 · Service center denied parts within warranty',
-      icon: <FileText className="w-4 h-4 text-[#16A34A]" />,
+      icon: <FileText className="w-4 h-4 text-[#10B981]" />,
       action: () => {
         onNavigate('cockpit');
-        if (onSelectSampleCase) onSelectSampleCase(2);
+        selectSample(2);
       },
     },
     // Statutory Quick Actions
@@ -210,18 +220,18 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-[#181716]/60 backdrop-blur-sm animate-enter select-none"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-[#09090B]/80 backdrop-blur-md animate-enter select-none"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
     >
       <div 
-        className="w-full max-w-xl bg-[#FFFFFF] border border-[#E5E2DC] rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh] animate-hud-slide"
+        className="w-full max-w-xl bg-[#121216] border border-[#27272A] rounded-3xl shadow-2xl shadow-black/90 overflow-hidden flex flex-col max-h-[80vh] text-white"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search Input Bar */}
-        <div className="p-4 border-b border-[#E5E2DC] flex items-center gap-3 bg-[#FAF9F7]">
-          <Search className="w-5 h-5 text-[#C83625] shrink-0" />
+        <div className="p-4 border-b border-[#27272A] flex items-center gap-3 bg-[#18181D]">
+          <Search className="w-5 h-5 text-[#FF2A1A] shrink-0" />
           <input
             ref={inputRef}
             type="text"
@@ -231,14 +241,14 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               setSelectedIndex(0);
             }}
             placeholder="Type a command, statute, order ID, or section..."
-            className="flex-1 bg-transparent text-sm text-[#181716] placeholder-[#A39E93] focus:outline-none font-sans"
+            className="flex-1 bg-transparent text-sm text-white placeholder-[#71717A] focus:outline-none font-sans"
           />
-          <kbd className="hidden sm:inline-flex items-center gap-1 text-[10px] font-mono font-bold text-[#736E65] bg-[#FFFFFF] border border-[#E5E2DC] px-2 py-0.5 rounded shadow-xs">
+          <kbd className="hidden sm:inline-flex items-center gap-1 text-[10px] font-mono font-bold text-[#A1A1AA] bg-[#121216] border border-[#27272A] px-2 py-0.5 rounded shadow-xs">
             ESC
           </kbd>
           <button 
             onClick={onClose} 
-            className="text-[#736E65] hover:text-[#181716] p-1 rounded-lg hover:bg-[#FFFFFF] transition-colors"
+            className="text-[#71717A] hover:text-white p-1 rounded-lg hover:bg-[#27272A] transition-colors"
             aria-label="Close Command Palette"
           >
             <X className="w-4 h-4" />
@@ -261,8 +271,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                   className={cn(
                     "flex items-center justify-between p-3 rounded-2xl cursor-pointer text-xs transition-all",
                     isSelected
-                      ? "bg-[#FDF4F2] border border-[#F8CFC9] text-[#181716]"
-                      : "hover:bg-[#FAF9F7] text-[#262422] border border-transparent"
+                      ? "bg-[#18181D] border border-[#FF2A1A] text-white shadow-md shadow-[#FF2A1A]/10"
+                      : "hover:bg-[#18181D] text-[#D4D4D8] border border-transparent"
                   )}
                   role="button"
                   tabIndex={0}
@@ -270,19 +280,19 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                   <div className="flex items-center gap-3">
                     <div className={cn(
                       "w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border transition-colors",
-                      isSelected ? "bg-[#FFFFFF] border-[#F8CFC9]" : "bg-[#FAF9F7] border-[#E5E2DC]"
+                      isSelected ? "bg-[#121216] border-[#FF2A1A]/60" : "bg-[#18181D] border-[#27272A]"
                     )}>
                       {cmd.icon}
                     </div>
                     <div>
-                      <div className="font-bold text-xs text-[#181716] flex items-center gap-2">
+                      <div className="font-bold text-xs text-white flex items-center gap-2">
                         <span>{cmd.title}</span>
-                        <span className="text-[10px] font-mono font-medium text-[#736E65] uppercase">
+                        <span className="text-[10px] font-mono font-medium text-[#71717A] uppercase">
                           · {cmd.category}
                         </span>
                       </div>
                       {cmd.subtitle && (
-                        <div className="text-[11px] text-[#736E65] mt-0.5 line-clamp-1">
+                        <div className="text-[11px] text-[#A1A1AA] mt-0.5 line-clamp-1">
                           {cmd.subtitle}
                         </div>
                       )}
@@ -291,7 +301,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
                   <div className="flex items-center gap-1 shrink-0 ml-2">
                     {isSelected && (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-mono text-[#C83625] font-semibold bg-[#FFFFFF] px-2 py-0.5 rounded border border-[#F8CFC9]">
+                      <span className="inline-flex items-center gap-1 text-[10px] font-mono text-[#FF6E63] font-semibold bg-[#121216] px-2 py-0.5 rounded border border-[#FF2A1A]/40">
                         <span>Select</span>
                         <CornerDownLeft className="w-3 h-3" />
                       </span>
@@ -301,22 +311,22 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               );
             })
           ) : (
-            <div className="text-center py-10 text-xs text-[#736E65] space-y-1">
-              <Sparkles className="w-6 h-6 mx-auto text-[#A39E93]" />
-              <p className="font-semibold text-[#181716]">No matching commands found</p>
+            <div className="text-center py-10 text-xs text-[#71717A] space-y-1">
+              <Sparkles className="w-6 h-6 mx-auto text-[#52525B]" />
+              <p className="font-semibold text-white">No matching commands found</p>
               <p className="text-[11px]">Try searching for &quot;cockpit&quot;, &quot;statutes&quot;, &quot;sony&quot;, or &quot;nch&quot;</p>
             </div>
           )}
         </div>
 
         {/* Footer Shortcut Bar */}
-        <div className="p-3 bg-[#FAF9F7] border-t border-[#E5E2DC] flex items-center justify-between text-[11px] text-[#736E65] font-mono">
+        <div className="p-3 bg-[#18181D] border-t border-[#27272A] flex items-center justify-between text-[11px] text-[#71717A] font-mono">
           <div className="flex items-center gap-3">
             <span>↑↓ Navigate</span>
             <span>↵ Select</span>
             <span>ESC Close</span>
           </div>
-          <div className="flex items-center gap-1 text-[#C83625] font-semibold">
+          <div className="flex items-center gap-1 text-[#FF6E63] font-semibold">
             <span>FinePrint Local MCP</span>
           </div>
         </div>

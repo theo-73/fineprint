@@ -28,50 +28,50 @@ export const LandingHeroNetwork: React.FC = () => {
   const [hoveredNode, setHoveredNode] = useState<NetworkNode | null>(null);
 
   return (
-    <div className="relative w-full rounded-3xl bg-[#FFFFFF] border border-[#E5E2DC] shadow-xl overflow-hidden select-none p-4 sm:p-6 group">
+    <div className="relative w-full rounded-3xl bg-[#121216] border border-[#27272A] shadow-2xl shadow-black/80 overflow-hidden select-none p-4 sm:p-6 group">
       {/* Background Architectural Grid Lines */}
       <div 
-        className="absolute inset-0 pointer-events-none opacity-40"
+        className="absolute inset-0 pointer-events-none opacity-20"
         style={{
-          backgroundImage: 'radial-gradient(#E5E2DC 1.2px, transparent 1.2px)',
+          backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.25) 1.2px, transparent 1.2px)',
           backgroundSize: '24px 24px',
         }}
         aria-hidden="true"
       />
 
       {/* Header Pill */}
-      <div className="relative z-10 flex items-center justify-between pb-3 border-b border-[#E5E2DC] mb-2">
+      <div className="relative z-10 flex items-center justify-between pb-3 border-b border-[#27272A] mb-2">
         <div className="flex items-center gap-2">
           <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C83625] opacity-75" />
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#C83625]" />
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF2A1A] opacity-75" />
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#FF2A1A]" />
           </span>
-          <span className="text-xs font-mono font-bold text-[#181716] uppercase tracking-wider">
+          <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">
             Live Statutory Defense Constellation
           </span>
         </div>
-        <div className="text-[10px] font-mono text-[#736E65] bg-[#FAF9F7] px-2 py-0.5 rounded-full border border-[#E5E2DC]">
+        <div className="text-[10px] font-mono text-[#A1A1AA] bg-[#18181D] px-2 py-0.5 rounded-full border border-[#27272A]">
           Interactive Pipeline Mesh · 8 Validated Nodes
         </div>
       </div>
 
-      {/* SVG Interactive Constellation (Inspired by the poster image red constellation + APIx flight route) */}
+      {/* SVG Interactive Constellation in Neon Red & White */}
       <div className="relative w-full aspect-[16/7] min-h-[260px] sm:min-h-[300px]">
         <svg 
           viewBox="0 0 860 250" 
           className="w-full h-full overflow-visible"
           aria-label="Statutory Pipeline Constellation Diagram"
         >
-          {/* Subtle Ambient Red Core Glow */}
+          {/* Ambient Neon Core Glow */}
           <radialGradient id="vermilion-glow" cx="44%" cy="40%" r="50%">
-            <stop offset="0%" stopColor="#C83625" stopOpacity="0.18" />
-            <stop offset="70%" stopColor="#C83625" stopOpacity="0.03" />
-            <stop offset="100%" stopColor="#C83625" stopOpacity="0" />
+            <stop offset="0%" stopColor="#FF2A1A" stopOpacity="0.25" />
+            <stop offset="70%" stopColor="#FF2A1A" stopOpacity="0.04" />
+            <stop offset="100%" stopColor="#FF2A1A" stopOpacity="0" />
           </radialGradient>
           <rect x="0" y="0" width="860" height="250" fill="url(#vermilion-glow)" />
 
           {/* Hairline Mesh Connecting Lines */}
-          <g stroke="#E5E2DC" strokeWidth="1.5" strokeDasharray="3 3">
+          <g stroke="rgba(255, 255, 255, 0.15)" strokeWidth="1.5" strokeDasharray="3 3">
             <line x1="80" y1="110" x2="210" y2="70" />
             <line x1="210" y1="70" x2="370" y2="50" />
             <line x1="370" y1="50" x2="520" y2="80" />
@@ -84,8 +84,8 @@ export const LandingHeroNetwork: React.FC = () => {
             <line x1="210" y1="70" x2="440" y2="190" />
           </g>
 
-          {/* Animated Flowing Red Pulses */}
-          <g stroke="#C83625" strokeWidth="2.2" strokeLinecap="round">
+          {/* Animated Flowing Neon Red Pulses */}
+          <g stroke="#FF2A1A" strokeWidth="2.4" strokeLinecap="round" filter="drop-shadow(0 0 8px rgba(255, 42, 26, 0.7))">
             <line 
               x1="80" y1="110" x2="210" y2="70" 
               strokeDasharray="16 120"
@@ -131,7 +131,7 @@ export const LandingHeroNetwork: React.FC = () => {
                     cy={node.cy}
                     r={node.r + 7}
                     fill="none"
-                    stroke="#C83625"
+                    stroke="#FF2A1A"
                     strokeWidth="1.2"
                     strokeDasharray="4 4"
                     className="animate-spin"
@@ -144,10 +144,10 @@ export const LandingHeroNetwork: React.FC = () => {
                   cx={node.cx}
                   cy={node.cy}
                   r={isHovered ? node.r + 3 : node.r}
-                  fill={isHovered ? '#C83625' : '#FFFFFF'}
-                  stroke={isHovered ? '#B32E1F' : isMain ? '#C83625' : '#D4D0C7'}
+                  fill={isHovered ? '#FF2A1A' : '#18181D'}
+                  stroke={isHovered ? '#FFFFFF' : isMain ? '#FF2A1A' : '#3F3F46'}
                   strokeWidth={isMain ? '2.5' : '1.8'}
-                  filter="drop-shadow(0 2px 5px rgba(24, 23, 22, 0.08))"
+                  filter="drop-shadow(0 0 10px rgba(255, 42, 26, 0.4))"
                   className="transition-all duration-200"
                 />
 
@@ -156,7 +156,7 @@ export const LandingHeroNetwork: React.FC = () => {
                   cx={node.cx}
                   cy={node.cy}
                   r={isMain ? 4 : 3}
-                  fill={isHovered ? '#FFFFFF' : isMain ? '#C83625' : '#16A34A'}
+                  fill={isHovered ? '#FFFFFF' : isMain ? '#FF2A1A' : '#10B981'}
                 />
 
                 {/* Node Label Text */}
@@ -164,7 +164,7 @@ export const LandingHeroNetwork: React.FC = () => {
                   x={node.cx}
                   y={node.cy + node.r + 14}
                   textAnchor="middle"
-                  className="font-sans font-bold text-[11px] fill-[#181716] select-none pointer-events-none"
+                  className="font-sans font-bold text-[11px] fill-white select-none pointer-events-none"
                 >
                   {node.label}
                 </text>
@@ -172,7 +172,7 @@ export const LandingHeroNetwork: React.FC = () => {
                   x={node.cx}
                   y={node.cy + node.r + 25}
                   textAnchor="middle"
-                  className="font-mono text-[9px] fill-[#736E65] select-none pointer-events-none"
+                  className="font-mono text-[9px] fill-[#A1A1AA] select-none pointer-events-none"
                 >
                   {node.sublabel}
                 </text>
@@ -184,40 +184,40 @@ export const LandingHeroNetwork: React.FC = () => {
         {/* Hover Inspection Floating HUD Card */}
         {hoveredNode && (
           <div 
-            className="absolute top-2 right-2 p-3 rounded-2xl bg-[#FFFFFF]/95 backdrop-blur-md border border-[#C83625]/40 shadow-xl max-w-xs animate-enter z-20 text-xs"
+            className="absolute top-2 right-2 p-3 rounded-2xl bg-[#18181D]/95 backdrop-blur-md border border-[#FF2A1A]/50 shadow-2xl max-w-xs animate-enter z-20 text-xs"
             role="status"
           >
             <div className="flex items-center gap-2 mb-1">
-              <span className="w-2 h-2 rounded-full bg-[#C83625] animate-ping" />
-              <span className="font-bold text-[#181716] font-sans">{hoveredNode.label}</span>
-              <span className="text-[10px] font-mono uppercase bg-[#FDF4F2] text-[#C83625] px-1.5 py-0.2 rounded font-bold border border-[#F8CFC9]">
+              <span className="w-2 h-2 rounded-full bg-[#FF2A1A] animate-ping" />
+              <span className="font-bold text-white font-sans">{hoveredNode.label}</span>
+              <span className="text-[10px] font-mono uppercase bg-[#FF2A1A]/20 text-[#FF6E63] px-1.5 py-0.2 rounded font-bold border border-[#FF2A1A]/30">
                 {hoveredNode.status}
               </span>
             </div>
-            <p className="text-[11px] text-[#524E47] leading-relaxed">
-              Subsystem: <b className="font-mono text-[#181716]">{hoveredNode.sublabel}</b>. Deterministic JSON-RPC execution isolated within sandbox trust boundary.
+            <p className="text-[11px] text-[#D4D4D8] leading-relaxed">
+              Subsystem: <b className="font-mono text-white">{hoveredNode.sublabel}</b>. Deterministic JSON-RPC execution isolated within sandbox trust boundary.
             </p>
           </div>
         )}
       </div>
 
       {/* Bottom Architectural Legend Bar */}
-      <div className="pt-3 border-t border-[#E5E2DC] flex flex-wrap items-center justify-between gap-3 text-[11px] text-[#736E65] font-mono">
+      <div className="pt-3 border-t border-[#27272A] flex flex-wrap items-center justify-between gap-3 text-[11px] text-[#A1A1AA] font-mono">
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#16A34A]" />
+            <span className="w-2 h-2 rounded-full bg-[#10B981]" />
             <span>Verified Fact Stream</span>
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#C83625]" />
+            <span className="w-2 h-2 rounded-full bg-[#FF2A1A]" />
             <span>Statutory Codified Anchor</span>
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#2563EB]" />
+            <span className="w-2 h-2 rounded-full bg-[#3B82F6]" />
             <span>Rule 4(5) SLA Clock</span>
           </span>
         </div>
-        <div className="text-[#C83625] font-bold">
+        <div className="text-[#FF6E63] font-bold">
           Zero Citations Hallucinated (PyTest 100%)
         </div>
       </div>

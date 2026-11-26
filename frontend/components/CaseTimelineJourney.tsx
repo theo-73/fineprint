@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Shield, Volume2, Copy, Check, Clock, CheckCircle2, AlertTriangle, ArrowRight, Sparkles } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { SoundWaveVisualizer } from './SoundWaveVisualizer';
@@ -29,9 +29,9 @@ const CASE_STEPS: CaseStep[] = [
     counterPhrase: 'Notice is served under CPA 2019 Section 84: Manufacturing defects within implied warranty are the strict statutory liability of the manufacturer and seller.',
     audioSpeech: 'Notice is served under Consumer Protection Act 2019 Section 84. Manufacturing defects are the strict statutory liability of the manufacturer and seller.',
     artifactLabel: 'PHYSICAL FAILURE AUDIT',
-    stat1: { label: 'DEFECT TYPE', value: 'ANC Driver Failure', color: 'text-[#E11D48]' },
-    stat2: { label: 'ELAPSED', value: '28 Days Since Delivery', color: 'text-[#181716]' },
-    stat3: { label: 'CONSIDERATION', value: '₹24,990.00 Paid', color: 'text-[#C83625]' }
+    stat1: { label: 'DEFECT TYPE', value: 'ANC Driver Failure', color: 'text-[#F87171]' },
+    stat2: { label: 'ELAPSED', value: '28 Days Since Delivery', color: 'text-white' },
+    stat3: { label: 'CONSIDERATION', value: '₹24,990.00 Paid', color: 'text-[#FF2A1A]' }
   },
   {
     step: '02',
@@ -42,9 +42,9 @@ const CASE_STEPS: CaseStep[] = [
     counterPhrase: 'As per Rule 6(3) of Consumer Protection (E-Commerce) Rules 2020, contractual 7-day return policies are void against latent manufacturing defects.',
     audioSpeech: 'As per Rule 6 sub-rule 3 of Consumer Protection E-Commerce Rules 2020, contractual 7-day return policies are void against latent manufacturing defects.',
     artifactLabel: 'PLATFORM DEFLECTION INTERCEPTED',
-    stat1: { label: 'BOT CLAIM', value: '7-Day Window Expired', color: 'text-[#E11D48]' },
-    stat2: { label: 'SERVICE CENTER', value: '45 km Away', color: 'text-[#736E65]' },
-    stat3: { label: 'CONTRACT CLAUSE', value: 'Void Ab Initio', color: 'text-[#16A34A]' }
+    stat1: { label: 'BOT CLAIM', value: '7-Day Window Expired', color: 'text-[#F87171]' },
+    stat2: { label: 'SERVICE CENTER', value: '45 km Away', color: 'text-[#A1A1AA]' },
+    stat3: { label: 'CONTRACT CLAUSE', value: 'Void Ab Initio', color: 'text-[#34D399]' }
   },
   {
     step: '03',
@@ -55,9 +55,9 @@ const CASE_STEPS: CaseStep[] = [
     counterPhrase: 'Formal Demand: Immediate replacement or ₹24,990 refund with ₹10,000 mental agony damages within 48 hours, failing which NCDRC proceedings commence.',
     audioSpeech: 'Formal Demand: Immediate replacement or 24,990 rupee refund with 10,000 rupee damages within 48 hours, failing which NCDRC proceedings commence.',
     artifactLabel: 'ENFORCEABLE STATUTORY DOCKET',
-    stat1: { label: 'STATUTORY SECTION', value: 'CPA 2019 § 84', color: 'text-[#C83625]' },
-    stat2: { label: 'SLA WINDOW', value: 'Rule 4(5) 48 Hours', color: 'text-[#16A34A]' },
-    stat3: { label: 'TOTAL CLAIM', value: '₹44,990 Restitution', color: 'text-[#181716]' }
+    stat1: { label: 'STATUTORY SECTION', value: 'CPA 2019 § 84', color: 'text-[#FF2A1A]' },
+    stat2: { label: 'SLA WINDOW', value: 'Rule 4(5) 48 Hours', color: 'text-[#34D399]' },
+    stat3: { label: 'TOTAL CLAIM', value: '₹44,990 Restitution', color: 'text-white' }
   },
   {
     step: '04',
@@ -68,9 +68,9 @@ const CASE_STEPS: CaseStep[] = [
     counterPhrase: 'Case Resolved: Reverse pickup completed, full consideration ₹24,990 credited to original payment method.',
     audioSpeech: 'Case Resolved. Reverse pickup completed, full consideration 24,990 rupees credited to original payment method.',
     artifactLabel: 'RESTITUTION EXECUTED',
-    stat1: { label: 'RESOLUTION', value: 'Full Refund Credited', color: 'text-[#16A34A]' },
-    stat2: { label: 'TAT', value: '54 Hours Total', color: 'text-[#181716]' },
-    stat3: { label: 'SAVED', value: '₹24,990 Preserved', color: 'text-[#16A34A]' }
+    stat1: { label: 'RESOLUTION', value: 'Full Refund Credited', color: 'text-[#34D399]' },
+    stat2: { label: 'TAT', value: '54 Hours Total', color: 'text-white' },
+    stat3: { label: 'SAVED', value: '₹24,990 Preserved', color: 'text-[#34D399]' }
   }
 ];
 
@@ -110,29 +110,29 @@ export const CaseTimelineJourney: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div id="journey" className="space-y-6">
       {/* Header */}
-      <div className="text-center max-w-xl mx-auto space-y-2">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FAF9F7] border border-[#E5E2DC] text-[11px] font-mono font-bold text-[#C83625] uppercase tracking-wider">
+      <div className="text-center max-w-xl mx-auto space-y-2 select-none">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FF2A1A]/15 border border-[#FF2A1A]/30 text-[11px] font-mono font-bold text-[#FF6E63] uppercase tracking-wider">
           <Clock className="w-3.5 h-3.5" />
           <span>Case Lifecycle Narrative</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-[#181716] tracking-tight">
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
           A Real Consumer Dispute: From Glitch to Restitution
         </h2>
-        <p className="text-xs sm:text-sm text-[#736E65]">
+        <p className="text-xs sm:text-sm text-[#A1A1AA]">
           See how an ordinary buyer reclaimed ₹24,990 from Appario Retail when Sony and the platform tried to hide behind a 7-day policy.
         </p>
       </div>
 
       {/* Main Narrative Card */}
       <div 
-        className="max-w-4xl mx-auto bg-[#FFFFFF] border border-[#E5E2DC] rounded-3xl p-6 sm:p-8 shadow-xl shadow-[#181716]/5 space-y-6 select-none"
+        className="max-w-4xl mx-auto bg-[#121216] border border-[#27272A] rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/80 space-y-6 select-none"
         onMouseEnter={() => setIsAutoLooping(false)}
         onMouseLeave={() => setIsAutoLooping(true)}
       >
         {/* Step Indicator Pills */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 border-b border-[#E5E2DC] pb-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 border-b border-[#27272A] pb-4">
           {CASE_STEPS.map((s, idx) => {
             const isCurrent = activeStepIndex === idx;
             return (
@@ -142,20 +142,20 @@ export const CaseTimelineJourney: React.FC = () => {
                 className={cn(
                   "p-2.5 rounded-xl text-left transition-all border",
                   isCurrent
-                    ? "bg-[#FDF4F2] border-[#C83625] shadow-xs"
-                    : "bg-[#FAF9F7] border-[#E5E2DC] hover:border-[#D4D0C7]"
+                    ? "bg-[#18181D] border-[#FF2A1A] shadow-md shadow-[#FF2A1A]/20"
+                    : "bg-[#121216] border-[#27272A] hover:border-[#3F3F46]"
                 )}
               >
                 <div className="flex items-center justify-between text-[10px] font-mono mb-1">
                   <span className={cn(
                     "font-bold",
-                    isCurrent ? "text-[#C83625]" : "text-[#736E65]"
+                    isCurrent ? "text-[#FF2A1A]" : "text-[#71717A]"
                   )}>
                     STAGE {s.step}
                   </span>
-                  <span className="text-[#A39E93] text-[9px]">{s.time.split('·')[0].trim()}</span>
+                  <span className="text-[#52525B] text-[9px]">{s.time.split('·')[0].trim()}</span>
                 </div>
-                <div className="text-xs font-bold text-[#181716] truncate">
+                <div className="text-xs font-bold text-white truncate">
                   {s.badge}
                 </div>
               </button>
@@ -169,45 +169,45 @@ export const CaseTimelineJourney: React.FC = () => {
           {/* Left Narrative Text */}
           <div className="lg:col-span-7 space-y-4 text-left">
             <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full bg-[#FAF9F7] border border-[#E5E2DC] text-[10px] font-mono text-[#736E65]">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#18181D] border border-[#27272A] text-[10px] font-mono text-[#A1A1AA]">
                 {activeStep.time}
               </span>
-              <span className="px-2.5 py-0.5 rounded-full bg-[#FDF4F2] border border-[#F8CFC9] text-[#C83625] text-[10px] font-bold uppercase font-mono">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#FF2A1A]/20 border border-[#FF2A1A]/35 text-[#FF6E63] text-[10px] font-bold uppercase font-mono">
                 {activeStep.badge}
               </span>
             </div>
 
-            <h3 className="text-xl sm:text-2xl font-bold text-[#181716] tracking-tight">
+            <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
               {activeStep.title}
             </h3>
 
-            <p className="text-xs sm:text-sm text-[#524E47] leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#A1A1AA] leading-relaxed">
               {activeStep.description}
             </p>
 
             {/* Spoken Statutory Defense Box */}
-            <div className="p-3.5 rounded-2xl bg-[#FAF9F7] border border-[#E5E2DC] space-y-2">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-[#C83625] font-bold block">
+            <div className="p-3.5 rounded-2xl bg-[#18181D] border border-[#27272A] space-y-2">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#FF6E63] font-bold block">
                 Statutory Defense Citation:
               </span>
-              <p className="text-xs text-[#181716] italic leading-relaxed">
+              <p className="text-xs text-white italic leading-relaxed">
                 &ldquo;{activeStep.counterPhrase}&rdquo;
               </p>
 
-              {/* Spoken Audio & Copy Controls (Yātrā Inspired) */}
-              <div className="flex items-center gap-2 pt-1 border-t border-[#E5E2DC]">
+              {/* Spoken Audio & Copy Controls */}
+              <div className="flex items-center gap-2 pt-1 border-t border-[#27272A]">
                 <button
                   onClick={() => handleSpeak(activeStep.audioSpeech)}
-                  className="btn-press flex-1 inline-flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg bg-[#C83625] hover:bg-[#B32E1F] text-white font-semibold text-xs shadow-xs"
+                  className="btn-press flex-1 inline-flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg bg-[#FF2A1A] hover:bg-[#E01E10] text-white font-semibold text-xs shadow-md shadow-[#FF2A1A]/30"
                 >
                   <SoundWaveVisualizer isPlaying={isPlayingAudio} />
                   <span>{isPlayingAudio ? "Speaking Defense..." : "Play Spoken Defense"}</span>
                 </button>
                 <button
                   onClick={() => handleCopyPhrase(activeStep.counterPhrase)}
-                  className="btn-press px-3 py-1.5 rounded-lg border border-[#E5E2DC] bg-[#FFFFFF] hover:bg-[#FAF9F7] text-xs text-[#524E47] font-semibold flex items-center gap-1.5"
+                  className="btn-press px-3 py-1.5 rounded-lg border border-[#27272A] bg-[#18181D] hover:bg-[#202027] text-xs text-[#D4D4D8] font-semibold flex items-center gap-1.5"
                 >
-                  {copied ? <Check className="w-3.5 h-3.5 text-[#16A34A]" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copied ? <Check className="w-3.5 h-3.5 text-[#10B981]" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copied ? "Copied" : "Copy"}</span>
                 </button>
               </div>
@@ -215,14 +215,14 @@ export const CaseTimelineJourney: React.FC = () => {
           </div>
 
           {/* Right Live Artifact Telemetry Card */}
-          <div className="lg:col-span-5 p-5 rounded-2xl bg-[#FAF9F7] border border-[#E5E2DC] space-y-3.5 shadow-sm">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-[#736E65] font-bold block pb-1 border-b border-[#E5E2DC]">
+          <div className="lg:col-span-5 p-5 rounded-2xl bg-[#18181D] border border-[#27272A] space-y-3.5 shadow-sm">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-[#71717A] font-bold block pb-1 border-b border-[#27272A]">
               {activeStep.artifactLabel}
             </span>
 
             <div className="space-y-2.5">
-              <div className="p-2.5 rounded-xl bg-[#FFFFFF] border border-[#E5E2DC]">
-                <span className="text-[9px] uppercase font-mono text-[#736E65] block">
+              <div className="p-2.5 rounded-xl bg-[#121216] border border-[#27272A]">
+                <span className="text-[9px] uppercase font-mono text-[#71717A] block">
                   {activeStep.stat1.label}
                 </span>
                 <strong className={cn("text-xs font-bold block", activeStep.stat1.color)}>
@@ -230,8 +230,8 @@ export const CaseTimelineJourney: React.FC = () => {
                 </strong>
               </div>
 
-              <div className="p-2.5 rounded-xl bg-[#FFFFFF] border border-[#E5E2DC]">
-                <span className="text-[9px] uppercase font-mono text-[#736E65] block">
+              <div className="p-2.5 rounded-xl bg-[#121216] border border-[#27272A]">
+                <span className="text-[9px] uppercase font-mono text-[#71717A] block">
                   {activeStep.stat2.label}
                 </span>
                 <strong className={cn("text-xs font-bold block", activeStep.stat2.color)}>
@@ -239,8 +239,8 @@ export const CaseTimelineJourney: React.FC = () => {
                 </strong>
               </div>
 
-              <div className="p-2.5 rounded-xl bg-[#FFFFFF] border border-[#E5E2DC]">
-                <span className="text-[9px] uppercase font-mono text-[#736E65] block">
+              <div className="p-2.5 rounded-xl bg-[#121216] border border-[#27272A]">
+                <span className="text-[9px] uppercase font-mono text-[#71717A] block">
                   {activeStep.stat3.label}
                 </span>
                 <strong className={cn("text-xs font-bold block", activeStep.stat3.color)}>
@@ -249,7 +249,7 @@ export const CaseTimelineJourney: React.FC = () => {
               </div>
             </div>
 
-            <div className="pt-2 text-[10px] text-[#16A34A] font-semibold flex items-center gap-1.5">
+            <div className="pt-2 text-[10px] text-[#10B981] font-semibold flex items-center gap-1.5">
               <CheckCircle2 className="w-3.5 h-3.5" />
               <span>Ground-Truth Verification Passed</span>
             </div>

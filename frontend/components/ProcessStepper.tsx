@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Check, ArrowRight } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 interface ProcessStepperProps {
@@ -19,19 +19,19 @@ const PIPELINE_STEPS = [
 
 export const ProcessStepper: React.FC<ProcessStepperProps> = ({ currentStep }) => {
   return (
-    <section className="bg-[#FFFFFF] border border-[#E5E2DC] rounded-2xl p-4 md:p-5 shadow-sm" aria-label="Pipeline Architecture Stepper">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs text-[#736E65] mb-3 border-b border-[#E5E2DC] pb-2.5">
+    <section className="bg-[#121216] border border-[#27272A] rounded-2xl p-4 md:p-5 shadow-xl" aria-label="Pipeline Architecture Stepper">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs text-[#A1A1AA] mb-3 border-b border-[#27272A] pb-2.5">
         <div className="flex items-center gap-2">
-          <span className="font-semibold text-[#181716] tracking-wide text-xs">
+          <span className="font-semibold text-[#F4F4F6] tracking-wide text-xs">
             Deterministic 6-Stage Agent Pipeline
           </span>
-          <span className="text-[10px] text-[#C83625] font-mono bg-[#FDF4F2] px-2 py-0.5 rounded border border-[#F8CFC9]">
+          <span className="text-[10px] text-[#FF2A1A] font-mono bg-[#FF2A1A]/10 px-2 py-0.5 rounded border border-[#FF2A1A]/20">
             Architecture Pipeline
           </span>
         </div>
-        <div className="text-[11px] text-[#736E65] font-mono flex items-center gap-1.5">
+        <div className="text-[11px] text-[#A1A1AA] font-mono flex items-center gap-1.5">
           <span>Transport:</span>
-          <span className="text-[#16A34A] font-semibold">stdio / JSON-RPC</span>
+          <span className="text-[#10B981] font-semibold">stdio / JSON-RPC</span>
         </div>
       </div>
 
@@ -46,15 +46,15 @@ export const ProcessStepper: React.FC<ProcessStepperProps> = ({ currentStep }) =
               className={cn(
                 "p-3 rounded-xl border transition-all duration-200 relative overflow-hidden",
                 isActive
-                  ? "bg-[#FDF4F2] border-[#C83625] shadow-sm ring-1 ring-[#C83625]/30"
+                  ? "bg-[#FF2A1A]/10 border-[#FF2A1A] shadow-lg shadow-[#FF2A1A]/10 ring-1 ring-[#FF2A1A]/40"
                   : isPast
-                  ? "bg-[#FAF9F7] border-[#E5E2DC] text-[#181716]"
-                  : "bg-[#FAF9F7]/40 border-[#E5E2DC]/60 text-[#A39E93]"
+                  ? "bg-[#18181D] border-[#27272A] text-[#F4F4F6]"
+                  : "bg-[#18181D]/40 border-[#27272A]/50 text-[#71717A]"
               )}
             >
               {/* Active top accent indicator */}
               {isActive && (
-                <div className="absolute top-0 left-0 right-0 h-0.5 bg-[#C83625]" />
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-[#FF2A1A] shadow-[0_0_8px_#FF2A1A]" />
               )}
 
               <div className="flex items-center justify-between mb-1.5">
@@ -62,25 +62,25 @@ export const ProcessStepper: React.FC<ProcessStepperProps> = ({ currentStep }) =
                   className={cn(
                     "text-[10px] font-bold font-mono px-1.5 py-0.5 rounded transition-colors",
                     isActive
-                      ? "bg-[#C83625] text-white shadow-sm"
+                      ? "bg-[#FF2A1A] text-white shadow-sm"
                       : isPast
-                      ? "bg-[#E5E2DC] text-[#262422]"
-                      : "bg-[#EFECE7] text-[#A39E93]"
+                      ? "bg-[#27272A] text-[#F4F4F6]"
+                      : "bg-[#202025] text-[#71717A]"
                   )}
                 >
                   Step 0{step.num}
                 </span>
 
                 {isPast ? (
-                  <Check className="w-3.5 h-3.5 text-[#16A34A] flex-shrink-0" />
+                  <Check className="w-3.5 h-3.5 text-[#10B981] flex-shrink-0" />
                 ) : isActive ? (
-                  <div className="w-2 h-2 rounded-full bg-[#C83625] animate-ping flex-shrink-0" />
+                  <div className="w-2 h-2 rounded-full bg-[#FF2A1A] animate-ping flex-shrink-0" />
                 ) : null}
               </div>
 
-              <div className="font-bold text-xs text-[#181716] tracking-tight">{step.name}</div>
-              <div className="text-[11px] text-[#524E47] truncate mt-0.5">{step.label}</div>
-              <div className="text-[10px] text-[#736E65] font-mono mt-1 flex items-center justify-between">
+              <div className="font-bold text-xs text-[#F4F4F6] tracking-tight">{step.name}</div>
+              <div className="text-[11px] text-[#A1A1AA] truncate mt-0.5">{step.label}</div>
+              <div className="text-[10px] text-[#71717A] font-mono mt-1 flex items-center justify-between">
                 <span>{step.detail}</span>
               </div>
             </div>

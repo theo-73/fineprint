@@ -13,39 +13,39 @@ export function getStatutoryScoreTone(score: number) {
     return {
       label: 'Severe Statutory Liability',
       sublabel: 'Strict Product Liability (Sec 84 CPA 2019)',
-      hex: '#C83625',
-      badgeBg: 'bg-[#FDF4F2]',
-      badgeText: 'text-[#C83625]',
-      badgeBorder: 'border-[#F8CFC9]',
+      hex: '#FF2A1A',
+      badgeBg: 'bg-[#FF2A1A]/10',
+      badgeText: 'text-[#FF2A1A]',
+      badgeBorder: 'border-[#FF2A1A]/25',
     };
   }
   if (score >= 60) {
     return {
       label: 'Actionable Statutory Breach',
       sublabel: 'E-Commerce Rules Rule 6(3) Mandate',
-      hex: '#16A34A',
-      badgeBg: 'bg-[#F0FDF4]',
-      badgeText: 'text-[#166534]',
-      badgeBorder: 'border-[#BBF7D0]',
+      hex: '#10B981',
+      badgeBg: 'bg-[#10B981]/10',
+      badgeText: 'text-[#10B981]',
+      badgeBorder: 'border-[#10B981]/25',
     };
   }
   if (score >= 35) {
     return {
       label: 'Contractual Dispute',
       sublabel: 'Requires Formal 48h Escalation',
-      hex: '#2563EB',
-      badgeBg: 'bg-[#EFF6FF]',
-      badgeText: 'text-[#1D4ED8]',
-      badgeBorder: 'border-[#BFDBFE]',
+      hex: '#3B82F6',
+      badgeBg: 'bg-[#3B82F6]/10',
+      badgeText: 'text-[#60A5FA]',
+      badgeBorder: 'border-[#3B82F6]/25',
     };
   }
   return {
     label: 'Statutory Abstention',
     sublabel: 'Out-of-Scope / Non-Manufacturing Ground',
-    hex: '#D97706',
-    badgeBg: 'bg-[#FEFCE8]',
-    badgeText: 'text-[#854D0E]',
-    badgeBorder: 'border-[#FEF08A]',
+    hex: '#F59E0B',
+    badgeBg: 'bg-[#F59E0B]/10',
+    badgeText: 'text-[#FBBF24]',
+    badgeBorder: 'border-[#F59E0B]/25',
   };
 }
 
@@ -78,7 +78,7 @@ export const StatutoryRadarMeter: React.FC<StatutoryRadarMeterProps> = ({
         <div
           className="pointer-events-none absolute inset-0 rounded-full"
           style={{
-            background: `radial-gradient(ellipse 70% 90% at 50% 110%, ${hex}20, transparent 70%)`,
+            background: `radial-gradient(ellipse 70% 90% at 50% 110%, ${hex}30, transparent 70%)`,
           }}
           aria-hidden="true"
         />
@@ -95,7 +95,7 @@ export const StatutoryRadarMeter: React.FC<StatutoryRadarMeterProps> = ({
           <path
             d="M 10 65 A 55 55 0 0 1 110 65"
             fill="none"
-            stroke="#E5E2DC"
+            stroke="#27272A"
             strokeWidth="9"
             strokeLinecap="round"
           />
@@ -104,7 +104,7 @@ export const StatutoryRadarMeter: React.FC<StatutoryRadarMeterProps> = ({
           <path
             d="M 10 65 A 55 55 0 0 1 110 65"
             fill="none"
-            stroke="#D97706"
+            stroke="#F59E0B"
             strokeWidth="9"
             strokeLinecap="round"
             pathLength="100"
@@ -117,7 +117,7 @@ export const StatutoryRadarMeter: React.FC<StatutoryRadarMeterProps> = ({
           <path
             d="M 10 65 A 55 55 0 0 1 110 65"
             fill="none"
-            stroke="#2563EB"
+            stroke="#3B82F6"
             strokeWidth="9"
             strokeLinecap="round"
             pathLength="100"
@@ -130,7 +130,7 @@ export const StatutoryRadarMeter: React.FC<StatutoryRadarMeterProps> = ({
           <path
             d="M 10 65 A 55 55 0 0 1 110 65"
             fill="none"
-            stroke="#16A34A"
+            stroke="#10B981"
             strokeWidth="9"
             strokeLinecap="round"
             pathLength="100"
@@ -143,7 +143,7 @@ export const StatutoryRadarMeter: React.FC<StatutoryRadarMeterProps> = ({
           <path
             d="M 10 65 A 55 55 0 0 1 110 65"
             fill="none"
-            stroke="#C83625"
+            stroke="#FF2A1A"
             strokeWidth="9"
             strokeLinecap="round"
             pathLength="100"
@@ -162,13 +162,13 @@ export const StatutoryRadarMeter: React.FC<StatutoryRadarMeterProps> = ({
             strokeWidth="3.2"
             strokeLinecap="round"
             style={{
-              filter: `drop-shadow(0 0 4px ${hex}88)`,
+              filter: `drop-shadow(0 0 6px ${hex}AA)`,
               transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
             }}
             transform={`rotate(${angle} 60 65)`}
           />
           <circle cx="60" cy="65" r="5.5" fill={hex} />
-          <circle cx="60" cy="65" r="2.5" fill="#FFFFFF" />
+          <circle cx="60" cy="65" r="2.5" fill="#09090B" />
         </svg>
 
         {/* Center Numerical Score */}
@@ -179,7 +179,7 @@ export const StatutoryRadarMeter: React.FC<StatutoryRadarMeterProps> = ({
           >
             {score}
           </span>
-          <span className="text-[10px] font-mono font-bold text-[#736E65] ml-0.5">/100</span>
+          <span className="text-[10px] font-mono font-bold text-[#71717A] ml-0.5">/100</span>
         </div>
       </div>
 
@@ -190,7 +190,7 @@ export const StatutoryRadarMeter: React.FC<StatutoryRadarMeterProps> = ({
         >
           {tone.label}
         </span>
-        <div className="text-[10px] text-[#736E65] max-w-[140px] leading-tight">
+        <div className="text-[10px] text-[#A1A1AA] max-w-[140px] leading-tight">
           {tone.sublabel}
         </div>
       </div>

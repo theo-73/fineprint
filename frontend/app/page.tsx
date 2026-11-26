@@ -16,18 +16,20 @@ import { LandingView } from '../components/LandingView';
 import { CommandPalette } from '../components/CommandPalette';
 import { ClaimDossierModal } from '../components/ClaimDossierModal';
 import { ToastProvider, useToast } from '../components/ToastProvider';
+import { AuthUser } from '../components/AuthModal';
 import { 
   ExtractedOrder, CaseData, BenchmarkSummary, BenchmarkCase, 
   AuditLogItem, ChatMessage, MockReceipt 
 } from '../types';
 
 function FinePrintCockpitContent() {
-  const [activeTab, setActiveTab] = useState<TabType>('cockpit');
+  const [activeTab, setActiveTab] = useState<TabType>('overview');
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState<boolean>(false);
   const [dossierCase, setDossierCase] = useState<CaseData | null>(null);
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
 
   const { success, error, info } = useToast();
   
@@ -99,21 +101,20 @@ function FinePrintCockpitContent() {
     fetch('/api/cases')
       .then((r) => r.json())
       .then((data) => {
-        if (Array.isArray(data)) setCasesList(data);
+        if (data.cases) setCasesList(data.cases);
       })
       .catch(() => {});
   };
 
   const loadAuditLogs = (caseId: number) => {
-    fetch(`/api/cases/${caseId}/audit-logs`)
+    fetch(`/api/cases/${caseId}/audit`)
       .then((r) => r.json())
       .then((data) => {
-        if (data && Array.isArray(data.logs)) setAuditLogs(data.logs);
+        if (data.audit_logs) setAuditLogs(data.audit_logs);
       })
       .catch(() => {});
   };
 
-  // Dynamic Fact Extraction via receipt-mcp
   const handleSelectMockReceipt = async (receipt: MockReceipt) => {
     setErrorMsg(null);
     setLoading(true);
@@ -134,7 +135,7 @@ function FinePrintCockpitContent() {
         setUploadedFilePath(null);
         success('Verified Purchase Order Loaded', `${data.order.product_name} (${data.order.seller_name})`);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.warn('Fallback extraction:', err);
       setSelectedReceipt({
         order_id: receipt.id === 'gmail_msg_001' ? '402-8921473-9821401' : 'OD-2026-EXTRACTED',
@@ -152,111 +153,84 @@ function FinePrintCockpitContent() {
   };
 
   const handleFileUpload = async (file: File) => {
-    if (!file) return;
     if (!file.name.toLowerCase().endsWith('.pdf')) {
-      setErrorMsg('Please upload a valid PDF tax invoice or order confirmation document.');
-      error('Invalid File Type', 'Only official tax invoice PDFs are accepted.');
+      setErrorMsg('Please upload a valid invoice PDF file.');
+      error('Invalid File', 'Only PDF invoice files are accepted.');
       return;
     }
-
-    setErrorMsg(null);
     setUploading(true);
-    setCurrentStep(2);
-
+    setErrorMsg(null);
     try {
       const formData = new FormData();
       formData.append('file', file);
-
       const res = await fetch('/api/upload-invoice', {
         method: 'POST',
-        body: formData,
+        body: formData
       });
-
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.detail || 'Failed to parse invoice PDF.');
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.detail || 'Failed to upload invoice PDF.');
       }
-
       const data = await res.json();
-      if (data.extracted_order) {
-        setSelectedReceipt(data.extracted_order);
-        setUploadedFileName(data.filename || file.name);
-        setUploadedFilePath(data.file_path || null);
-        success('Tax Invoice Parsed', `Verified ${data.extracted_order.product_name} via receipt-mcp`);
-      }
-    } catch (err: any) {
-      console.error(err);
-      setErrorMsg(err.message || 'Error uploading and extracting invoice. Please check file format.');
-      error('Extraction Failed', err.message);
+      setUploadedFileName(data.filename);
+      setUploadedFilePath(data.file_path);
+      setSelectedReceipt(data.extracted_order);
+      success('Invoice Parsed with MCP', `Extracted ${data.extracted_order?.product_name || 'order details'}`);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Unknown error during upload';
+      setErrorMsg(msg);
+      error('Upload Failed', msg);
     } finally {
       setUploading(false);
     }
   };
 
   const handleRunEvaluation = async () => {
+    if (!selectedReceipt) {
+      setErrorMsg('Please select a receipt from your mailbox or upload an invoice PDF first.');
+      error('Receipt Missing', 'Fact extraction requires an invoice PDF or curated order.');
+      return;
+    }
     if (!problemDescription.trim()) {
       setErrorMsg('Please enter a description of the defect.');
-      error('Input Required', 'Please enter defect chronology before evaluating.');
+      error('Defect Missing', 'Please describe the defect symptoms.');
       return;
     }
 
-    setErrorMsg(null);
     setLoading(true);
-    setCurrentStep(3); // CLASSIFY
-
-    const step4Timer = setTimeout(() => setCurrentStep(4), 400); // DRAFT
-    const step5Timer = setTimeout(() => setCurrentStep(5), 800); // VALIDATE
+    setErrorMsg(null);
+    setCurrentStep(2);
 
     try {
-      const payload: any = {
+      const payload = {
         problem_description: problemDescription,
-        complainant_name: complainantName
+        extracted_order: selectedReceipt,
+        complainant_name: complainantName || 'Complainant',
+        invoice_pdf_path: uploadedFilePath
       };
 
-      if (uploadedFilePath) {
-        payload.invoice_pdf_path = uploadedFilePath;
-      }
-
-      if (selectedReceipt) {
-        payload.order_id = selectedReceipt.order_id;
-        payload.purchase_date = selectedReceipt.purchase_date;
-        payload.product_name = selectedReceipt.product_name;
-        payload.brand = selectedReceipt.brand;
-        payload.seller_name = selectedReceipt.seller_name;
-        payload.amount_inr = selectedReceipt.amount_inr;
-      }
-
-      const res = await fetch('/api/cases', {
+      const res = await fetch('/api/evaluate-claim', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
 
-      clearTimeout(step4Timer);
-      clearTimeout(step5Timer);
-
       if (!res.ok) {
-        const errJson = await res.json().catch(() => ({}));
-        throw new Error(errJson.detail || 'Failed to process claim through MCP pipeline.');
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.detail || 'Evaluation failed.');
       }
 
-      const data: CaseData = await res.json();
-      setActiveCase(data);
-      setCurrentStep(6); // OUTPUT
+      const caseData: CaseData = await res.json();
+      setActiveCase(caseData);
+      setCurrentStep(3);
       loadCases();
-      loadAuditLogs(data.id);
-
-      if (data.should_abstain) {
-        info('Statutory Abstention', 'Case falls outside statutory manufacturing liability.');
-      } else {
-        success('Statutory Claim Ready', `Notice reference ${data.claim_ref} compiled under CPA 2019`);
-      }
-    } catch (err: any) {
-      clearTimeout(step4Timer);
-      clearTimeout(step5Timer);
-      console.error(err);
-      setErrorMsg(err.message || 'An unexpected error occurred during evaluation.');
-      error('Pipeline Halt', err.message);
+      if (caseData.id) loadAuditLogs(caseData.id);
+      success('Statutory Claim Generated', `Enforceable notice compiled for ${caseData.product_name}`);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Error evaluating claim.';
+      setErrorMsg(msg);
+      error('Evaluation Failed', msg);
+      setCurrentStep(1);
     } finally {
       setLoading(false);
     }
@@ -264,34 +238,44 @@ function FinePrintCockpitContent() {
 
   const handleRunBenchmark = async () => {
     setBenchmarkLoading(true);
-    info('Executing Benchmark Suite', 'Evaluating 20 in-scope and 10 abstention cases...');
     try {
-      const res = await fetch('/api/benchmark/run', { method: 'POST' });
+      const res = await fetch('/api/benchmark');
+      if (!res.ok) throw new Error('Failed to load benchmark suite.');
       const data = await res.json();
       setBenchmarkSummary(data.summary);
-      setBenchmarkCases(data.cases);
-      success('Benchmark Complete', `Route Accuracy: ${data.summary.in_scope_route_accuracy_pct}% | Abstention: ${data.summary.abstention_rate_pct}%`);
-    } catch (err) {
-      console.error(err);
-      error('Benchmark Failed', 'Error running test suite.');
+      setBenchmarkCases(data.cases || []);
+      success('Benchmark Executed', '30 evaluation cases verified against CPA 2019.');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Benchmark error.';
+      error('Benchmark Failed', msg);
     } finally {
       setBenchmarkLoading(false);
     }
   };
 
-  const handleSendChat = async () => {
-    if (!chatInput.trim() || chatLoading) return;
-    const userMsg = chatInput.trim();
-    setChatInput('');
-    setChatMessages((prev) => [
-      ...prev,
-      {
-        id: `user-${Date.now()}`,
-        role: 'user',
-        text: userMsg,
-        timestamp: new Date().toISOString()
-      }
-    ]);
+  const handleOpenCaseFromChat = (caseId: number) => {
+    fetch(`/api/cases/${caseId}`)
+      .then((r) => r.json())
+      .then((caseItem: CaseData) => {
+        if (caseItem && caseItem.id) {
+          setActiveCase(caseItem);
+          setActiveTab('cockpit');
+          if (caseItem.id) loadAuditLogs(caseItem.id);
+        }
+      })
+      .catch(() => {
+        setActiveTab('cockpit');
+      });
+  };
+
+  const handleSendChatMessage = async (userMsg: string) => {
+    const userMessageObj: ChatMessage = {
+      id: `user-${Date.now()}`,
+      role: 'user',
+      text: userMsg,
+      timestamp: new Date().toISOString()
+    };
+    setChatMessages((prev) => [...prev, userMessageObj]);
     setChatLoading(true);
 
     try {
@@ -335,23 +319,6 @@ function FinePrintCockpitContent() {
     }
   };
 
-  const handleOpenCaseFromChat = (caseId: number) => {
-    const matched = casesList.find((c) => c.id === caseId);
-    if (matched) {
-      setActiveCase(matched);
-      setActiveTab('cockpit');
-      loadAuditLogs(caseId);
-    } else {
-      fetch(`/api/cases/${caseId}`)
-        .then((r) => r.json())
-        .then((c) => {
-          setActiveCase(c);
-          setActiveTab('cockpit');
-          loadAuditLogs(caseId);
-        });
-    }
-  };
-
   const copyToClipboard = (text: string, type: 'wa' | 'nch') => {
     navigator.clipboard.writeText(text);
     if (type === 'wa') {
@@ -365,19 +332,54 @@ function FinePrintCockpitContent() {
     }
   };
 
-  const handleTriggerCommandAction = (actionId: string) => {
-    if (actionId === 'nch') {
-      window.open('https://consumerhelpline.gov.in/', '_blank');
-      info('National Consumer Helpline', 'Opened consumerhelpline.gov.in (Toll-Free 1915)');
-    } else if (actionId === 'sla') {
-      setActiveTab('statutes');
-      info('Rule 4(5) Statutory SLA', 'Navigated to Codified Statutes Directory.');
-    }
-  };
+  // If on Landing Page ('overview'), render FULL SCREEN without sidebar or inner header
+  if (activeTab === 'overview') {
+    return (
+      <>
+        <LandingView
+          onNavigate={(tab) => {
+            setActiveTab(tab);
+            if (tab === 'benchmark' && !benchmarkSummary) handleRunBenchmark();
+            if (tab === 'vault') loadCases();
+          }}
+          user={currentUser}
+          onLoginSuccess={(user) => {
+            setCurrentUser(user);
+            success('Signed in as ' + user.name, user.role);
+          }}
+        />
 
+        {/* Global Command Palette */}
+        <CommandPalette
+          isOpen={isCommandPaletteOpen}
+          onClose={() => setIsCommandPaletteOpen(false)}
+          onNavigate={(tab) => {
+            setActiveTab(tab);
+            if (tab === 'benchmark' && !benchmarkSummary) handleRunBenchmark();
+            if (tab === 'vault') loadCases();
+          }}
+          onSelectSampleInvoice={(idx) => {
+            if (mockReceipts[idx]) {
+              handleSelectMockReceipt(mockReceipts[idx]);
+              setActiveTab('cockpit');
+            }
+          }}
+          onTriggerAction={(actionId) => {
+            if (actionId === 'nch') {
+              window.open('https://consumerhelpline.gov.in/', '_blank');
+            } else if (actionId === 'sla') {
+              setActiveTab('statutes');
+            }
+          }}
+        />
+      </>
+    );
+  }
+
+  // INNER APP VIEW: Render Sidebar on left + Header on top + Inner tool view
   return (
-    <div className="min-h-screen bg-[#F4F3F0] text-[#181716] flex flex-row font-sans selection:bg-[#C83625]/20 selection:text-[#181716] antialiased">
-      {/* Desktop Collapsible Sidebar (Inspired by yatra AppLayout) */}
+    <div className="min-h-screen bg-[#09090B] text-[#F4F4F6] flex flex-row font-sans selection:bg-[#FF2A1A]/30 selection:text-white antialiased">
+      {/* Desktop Collapsible Sidebar */}
       <Sidebar
         activeTab={activeTab}
         onTabChange={(tab) => {
@@ -393,18 +395,18 @@ function FinePrintCockpitContent() {
       {/* Mobile Drawer Overlay */}
       {mobileMenuOpen && (
         <div 
-          className="fixed inset-0 z-50 bg-[#181716]/60 backdrop-blur-sm md:hidden flex"
+          className="fixed inset-0 z-50 bg-[#09090B]/80 backdrop-blur-sm md:hidden flex"
           onClick={() => setMobileMenuOpen(false)}
         >
           <div 
-            className="w-72 bg-[#FFFFFF] h-full shadow-2xl flex flex-col p-4 animate-enter"
+            className="w-72 bg-[#121216] h-full shadow-2xl flex flex-col p-4 animate-enter border-r border-[#27272A]"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between pb-3 border-b border-[#E5E2DC]">
-              <span className="font-bold text-sm text-[#181716]">Navigation</span>
+            <div className="flex items-center justify-between pb-3 border-b border-[#27272A]">
+              <span className="font-bold text-sm text-white">Navigation</span>
               <button 
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-1 rounded-lg text-[#736E65] hover:text-[#181716]"
+                className="p-1 rounded-lg text-[#A1A1AA] hover:text-white"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -429,8 +431,8 @@ function FinePrintCockpitContent() {
                   }}
                   className={`w-full text-left p-3 rounded-xl text-xs font-semibold ${
                     activeTab === item.id 
-                      ? 'bg-[#FDF4F2] text-[#C83625] border border-[#F8CFC9]' 
-                      : 'text-[#524E47] hover:bg-[#FAF9F7]'
+                      ? 'bg-[#FF2A1A] text-white font-bold' 
+                      : 'text-[#A1A1AA] hover:bg-[#18181D] hover:text-white'
                   }`}
                 >
                   {item.label}
@@ -441,7 +443,7 @@ function FinePrintCockpitContent() {
         </div>
       )}
 
-      {/* Main Column */}
+      {/* Main Inner Workspace Column */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Header */}
         <Header
@@ -452,22 +454,23 @@ function FinePrintCockpitContent() {
             if (tab === 'vault') loadCases();
           }}
           caseCount={casesList.length}
+          user={currentUser}
           onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
           onToggleMobileMenu={() => setMobileMenuOpen(true)}
         />
 
-        {/* Main Content Area */}
+        {/* Workspace Body */}
         <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-8 space-y-6">
           {/* Global Error Banner */}
           {errorMsg && (
-            <div className="bg-[#FDF4F2] border border-[#F8CFC9] rounded-xl p-4 flex items-center justify-between gap-3 text-xs text-[#C83625] shadow-sm animate-enter">
+            <div className="bg-[#2A1215] border border-[#991B1B]/50 rounded-xl p-4 flex items-center justify-between gap-3 text-xs text-[#FCA5A5] shadow-sm animate-enter">
               <div className="flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 text-[#C83625] flex-shrink-0" />
+                <AlertCircle className="w-4 h-4 text-[#FF2A1A] flex-shrink-0" />
                 <span>{errorMsg}</span>
               </div>
               <button
                 onClick={() => setErrorMsg(null)}
-                className="text-[#C83625] hover:text-[#B32E1F] font-semibold text-[11px] px-2 py-0.5 rounded"
+                className="text-[#FF6E63] hover:text-white font-semibold text-[11px] px-2 py-0.5 rounded"
               >
                 Dismiss
               </button>
@@ -477,17 +480,6 @@ function FinePrintCockpitContent() {
           {/* Stepper only on Cockpit */}
           {activeTab === 'cockpit' && (
             <ProcessStepper currentStep={currentStep} />
-          )}
-
-          {/* TAB 0: OVERVIEW & SHOWCASE (Inspired by yatra Landing.jsx & APIx landing.html) */}
-          {activeTab === 'overview' && (
-            <LandingView
-              onNavigate={(tab) => {
-                setActiveTab(tab);
-                if (tab === 'benchmark' && !benchmarkSummary) handleRunBenchmark();
-                if (tab === 'vault') loadCases();
-              }}
-            />
           )}
 
           {/* TAB 1: COCKPIT */}
@@ -518,40 +510,34 @@ function FinePrintCockpitContent() {
                   copiedWA={copiedWA}
                   copiedNCH={copiedNCH}
                   onToggleAuditTrail={() => {
+                    if (!showAuditTrail && activeCase?.id) loadAuditLogs(activeCase.id);
                     setShowAuditTrail(!showAuditTrail);
-                    if (!showAuditTrail && activeCase) loadAuditLogs(activeCase.id);
                   }}
-                  onCopyWA={(t) => copyToClipboard(t, 'wa')}
-                  onCopyNCH={(t) => copyToClipboard(t, 'nch')}
-                  onInspectDossier={() => {
-                    if (activeCase) setDossierCase(activeCase);
-                  }}
+                  onCopyWhatsApp={(text) => copyToClipboard(text, 'wa')}
+                  onCopyNCH={(text) => copyToClipboard(text, 'nch')}
+                  onOpenDossier={(caseItem) => setDossierCase(caseItem)}
                 />
               </div>
             </div>
           )}
 
-          {/* TAB 2: AI ADVOCATE CHAT */}
+          {/* TAB 2: INTERACTIVE CHAT ADVOCATE */}
           {activeTab === 'chat' && (
             <ChatAdvocate
               messages={chatMessages}
-              chatInput={chatInput}
+              input={chatInput}
               loading={chatLoading}
               onInputChange={setChatInput}
-              onSendMessage={handleSendChat}
+              onSendMessage={handleSendChatMessage}
               onOpenCase={handleOpenCaseFromChat}
             />
           )}
 
-          {/* TAB 3: STATUTES & PRECEDENTS (NEW) */}
-          {activeTab === 'statutes' && (
-            <StatutesTab />
-          )}
+          {/* TAB 3: STATUTES & PRECEDENTS */}
+          {activeTab === 'statutes' && <StatutesTab />}
 
-          {/* TAB 4: PLATFORM INTEL RADAR (NEW) */}
-          {activeTab === 'intel' && (
-            <PlatformIntelTab />
-          )}
+          {/* TAB 4: PLATFORM INTEL RADAR */}
+          {activeTab === 'intel' && <PlatformIntelTab />}
 
           {/* TAB 5: 30-CASE BENCHMARK */}
           {activeTab === 'benchmark' && (
@@ -563,23 +549,30 @@ function FinePrintCockpitContent() {
             />
           )}
 
-          {/* TAB 6: SQLITE VAULT */}
+          {/* TAB 6: SQLITE PERSISTENT VAULT */}
           {activeTab === 'vault' && (
             <VaultTab
               cases={casesList}
               onSelectCase={(c) => {
-                setDossierCase(c);
+                setActiveCase(c);
+                setActiveTab('cockpit');
+                if (c.id) loadAuditLogs(c.id);
               }}
-              onRefresh={loadCases}
+              onOpenDossier={(c) => setDossierCase(c)}
             />
           )}
         </main>
-
-        {/* Footer */}
-        <footer className="border-t border-[#E5E2DC] py-4 px-6 text-center text-xs text-[#736E65] font-sans">
-          FinePrint Consumer Rights MCP Agent • Codified Statutory Defense under CPA 2019 & E-Commerce Rules 2020
-        </footer>
       </div>
+
+      {/* Case Dossier Modal */}
+      {dossierCase && (
+        <ClaimDossierModal
+          caseData={dossierCase}
+          onClose={() => setDossierCase(null)}
+          onCopyWhatsApp={(text) => copyToClipboard(text, 'wa')}
+          onCopyNCH={(text) => copyToClipboard(text, 'nch')}
+        />
+      )}
 
       {/* Global Command Palette */}
       <CommandPalette
@@ -590,25 +583,25 @@ function FinePrintCockpitContent() {
           if (tab === 'benchmark' && !benchmarkSummary) handleRunBenchmark();
           if (tab === 'vault') loadCases();
         }}
-        onSelectSampleCase={(idx) => {
+        onSelectSampleInvoice={(idx) => {
           if (mockReceipts[idx]) {
             handleSelectMockReceipt(mockReceipts[idx]);
+            setActiveTab('cockpit');
           }
         }}
-        onTriggerAction={handleTriggerCommandAction}
-      />
-
-      {/* Interactive Case Dossier Modal (Inspired by yatra ExpeditionDossierModal) */}
-      <ClaimDossierModal
-        activeCase={dossierCase}
-        auditLogs={auditLogs}
-        onClose={() => setDossierCase(null)}
+        onTriggerAction={(actionId) => {
+          if (actionId === 'nch') {
+            window.open('https://consumerhelpline.gov.in/', '_blank');
+          } else if (actionId === 'sla') {
+            setActiveTab('statutes');
+          }
+        }}
       />
     </div>
   );
 }
 
-export default function FinePrintCockpit() {
+export default function FinePrintApp() {
   return (
     <ToastProvider>
       <FinePrintCockpitContent />

@@ -73,26 +73,26 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             key={toast.id}
             role="status"
             className={cn(
-              "pointer-events-auto p-3.5 rounded-2xl border shadow-xl flex items-start gap-3 backdrop-blur-md transition-all duration-300 animate-enter",
-              toast.type === 'success' && "bg-[#FFFFFF]/95 border-[#BBF7D0] text-[#166534] shadow-[#16A34A]/10",
-              toast.type === 'error' && "bg-[#FFFFFF]/95 border-[#FECDD3] text-[#9F1239] shadow-[#E11D48]/10",
-              toast.type === 'info' && "bg-[#FFFFFF]/95 border-[#E5E2DC] text-[#181716] shadow-black/5"
+              "pointer-events-auto p-3.5 rounded-2xl border shadow-2xl flex items-start gap-3 backdrop-blur-xl transition-all duration-300 animate-enter",
+              toast.type === 'success' && "bg-[#121216]/95 border-[#10B981]/30 text-[#10B981] shadow-[#10B981]/10",
+              toast.type === 'error' && "bg-[#181012]/95 border-[#FF2A1A]/30 text-[#FF6E63] shadow-[#FF2A1A]/10",
+              toast.type === 'info' && "bg-[#121216]/95 border-[#27272A] text-[#F4F4F6] shadow-black/40"
             )}
           >
             <div className="shrink-0 mt-0.5">
-              {toast.type === 'success' && <CheckCircle2 className="w-4 h-4 text-[#16A34A]" />}
-              {toast.type === 'error' && <AlertCircle className="w-4 h-4 text-[#E11D48]" />}
-              {toast.type === 'info' && <Info className="w-4 h-4 text-[#C83625]" />}
+              {toast.type === 'success' && <CheckCircle2 className="w-4 h-4 text-[#10B981]" />}
+              {toast.type === 'error' && <AlertCircle className="w-4 h-4 text-[#FF2A1A]" />}
+              {toast.type === 'info' && <Info className="w-4 h-4 text-[#FF2A1A]" />}
             </div>
             <div className="flex-1 text-xs">
-              <div className="font-bold text-[#181716]">{toast.title}</div>
+              <div className="font-bold text-[#F4F4F6]">{toast.title}</div>
               {toast.description && (
-                <div className="text-[11px] text-[#736E65] mt-0.5 leading-relaxed">{toast.description}</div>
+                <div className="text-[11px] text-[#A1A1AA] mt-0.5 leading-relaxed">{toast.description}</div>
               )}
             </div>
             <button
               onClick={() => removeToast(toast.id)}
-              className="text-[#A39E93] hover:text-[#181716] p-1 rounded-lg hover:bg-[#FAF9F7] transition-colors"
+              className="text-[#71717A] hover:text-white p-1 rounded-lg hover:bg-[#18181D] transition-colors"
               aria-label="Dismiss toast"
             >
               <X className="w-3.5 h-3.5" />

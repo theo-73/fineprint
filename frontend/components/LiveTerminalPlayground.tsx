@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { Terminal, Play, CheckCircle2, Copy, Check, Sparkles, Shield, Cpu, RefreshCw } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -174,7 +174,7 @@ export const LiveTerminalPlayground: React.FC = () => {
 
   const activeTier = TIERS[activeTierIndex];
 
-  // 3D Perspective Tilt on Mouse Movement (APIx Inspired)
+  // 3D Perspective Tilt on Mouse Movement
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!stageRef.current) return;
     const rect = stageRef.current.getBoundingClientRect();
@@ -213,17 +213,17 @@ export const LiveTerminalPlayground: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div id="terminal" className="space-y-6">
       {/* Header */}
-      <div className="text-center max-w-xl mx-auto space-y-2">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FAF9F7] border border-[#E5E2DC] text-[11px] font-mono font-bold text-[#C83625] uppercase tracking-wider">
+      <div className="text-center max-w-xl mx-auto space-y-2 select-none">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FF2A1A]/15 border border-[#FF2A1A]/30 text-[11px] font-mono font-bold text-[#FF6E63] uppercase tracking-wider">
           <Terminal className="w-3.5 h-3.5" />
           <span>Interactive Stdio JSON-RPC Playground</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-[#181716] tracking-tight">
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
           Test FinePrint&apos;s MCP Execution Pipeline
         </h2>
-        <p className="text-xs sm:text-sm text-[#736E65]">
+        <p className="text-xs sm:text-sm text-[#A1A1AA]">
           Inspect live Model Context Protocol tool exchanges across all four deterministic execution tiers.
         </p>
       </div>
@@ -236,10 +236,10 @@ export const LiveTerminalPlayground: React.FC = () => {
         className="max-w-4xl mx-auto select-none"
         style={tiltStyle}
       >
-        <div className="bg-[#FFFFFF] border border-[#E5E2DC] rounded-2xl shadow-xl shadow-[#181716]/5 overflow-hidden transition-all duration-300 hover:border-[#C83625]/40">
+        <div className="bg-[#121216] border border-[#27272A] rounded-2xl shadow-2xl shadow-black/80 overflow-hidden transition-all duration-300 hover:border-[#FF2A1A]/60">
           
           {/* macOS Chrome Header */}
-          <div className="px-4 py-3 bg-[#FAF9F7] border-b border-[#E5E2DC] flex items-center justify-between gap-4">
+          <div className="px-4 py-3 bg-[#18181D] border-b border-[#27272A] flex items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-[#EF4444]" />
               <span className="w-3 h-3 rounded-full bg-[#F59E0B]" />
@@ -247,25 +247,25 @@ export const LiveTerminalPlayground: React.FC = () => {
             </div>
 
             {/* Simulated MCP URL Bar */}
-            <div className="flex-1 max-w-md bg-[#FFFFFF] border border-[#E5E2DC] rounded-md px-3 py-1 text-[11px] font-mono text-[#524E47] truncate flex items-center gap-2">
+            <div className="flex-1 max-w-md bg-[#121216] border border-[#27272A] rounded-md px-3 py-1 text-[11px] font-mono text-[#D4D4D8] truncate flex items-center gap-2">
               <span className="text-[#10B981] font-bold">●</span>
               <span>mcp://fineprint-engine/v1/{activeTier.method}</span>
             </div>
 
-            <div className="flex items-center gap-2 text-xs font-mono text-[#736E65]">
+            <div className="flex items-center gap-2 text-xs font-mono text-[#71717A]">
               <span className="hidden sm:inline">24ms stdio latency</span>
               <button
                 onClick={handleCopy}
-                className="p-1.5 rounded-md hover:bg-[#E5E2DC]/50 text-[#736E65] hover:text-[#181716] transition-colors"
+                className="p-1.5 rounded-md hover:bg-[#27272A] text-[#A1A1AA] hover:text-white transition-colors"
                 title="Copy JSON-RPC Response"
               >
-                {copied ? <Check className="w-3.5 h-3.5 text-[#16A34A]" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? <Check className="w-3.5 h-3.5 text-[#10B981]" /> : <Copy className="w-3.5 h-3.5" />}
               </button>
             </div>
           </div>
 
           {/* Tier Selection Tabs */}
-          <div className="flex items-center gap-1 px-4 pt-2 bg-[#FAF9F7]/60 border-b border-[#E5E2DC] overflow-x-auto">
+          <div className="flex items-center gap-1 px-4 pt-2 bg-[#18181D]/60 border-b border-[#27272A] overflow-x-auto">
             {TIERS.map((tier, idx) => (
               <button
                 key={tier.id}
@@ -273,13 +273,13 @@ export const LiveTerminalPlayground: React.FC = () => {
                 className={cn(
                   "px-3.5 py-2 text-xs font-semibold rounded-t-lg transition-all border-b-2 whitespace-nowrap flex items-center gap-1.5",
                   activeTierIndex === idx
-                    ? "border-[#C83625] text-[#C83625] bg-[#FFFFFF] font-bold shadow-xs"
-                    : "border-transparent text-[#736E65] hover:text-[#181716] hover:bg-[#FFFFFF]/50"
+                    ? "border-[#FF2A1A] text-[#FF6E63] bg-[#121216] font-bold shadow-xs"
+                    : "border-transparent text-[#71717A] hover:text-[#D4D4D8] hover:bg-[#18181D]"
                 )}
               >
                 <span className={cn(
                   "w-1.5 h-1.5 rounded-full",
-                  activeTierIndex === idx ? "bg-[#C83625]" : "bg-[#A39E93]"
+                  activeTierIndex === idx ? "bg-[#FF2A1A]" : "bg-[#52525B]"
                 )} />
                 <span>{tier.name}</span>
               </button>
@@ -287,20 +287,20 @@ export const LiveTerminalPlayground: React.FC = () => {
           </div>
 
           {/* Terminal Body */}
-          <div className="p-5 sm:p-6 font-mono text-xs space-y-4 bg-[#FFFFFF]">
+          <div className="p-5 sm:p-6 font-mono text-xs space-y-4 bg-[#121216]">
             
             {/* Command Trigger Bar */}
-            <div className="flex items-center justify-between pb-3 border-b border-[#E5E2DC] gap-4">
-              <div className="flex items-center gap-2 text-[#524E47]">
-                <span className="text-[#C83625] font-bold">$</span>
-                <span className="text-[#181716] font-bold">mcp-client --tool</span>
-                <span className="text-[#C83625]">{activeTier.method}</span>
+            <div className="flex items-center justify-between pb-3 border-b border-[#27272A] gap-4">
+              <div className="flex items-center gap-2 text-[#D4D4D8]">
+                <span className="text-[#FF2A1A] font-bold">$</span>
+                <span className="text-white font-bold">mcp-client --tool</span>
+                <span className="text-[#FF6E63]">{activeTier.method}</span>
               </div>
 
               <button
                 onClick={handleRunSimulation}
                 disabled={isRunning}
-                className="btn-press px-3.5 py-1.5 rounded-lg bg-[#C83625] hover:bg-[#B32E1F] text-white font-bold text-[11px] flex items-center gap-1.5 shadow-sm"
+                className="btn-press px-3.5 py-1.5 rounded-lg bg-[#FF2A1A] hover:bg-[#E01E10] text-white font-bold text-[11px] flex items-center gap-1.5 shadow-md shadow-[#FF2A1A]/30"
               >
                 <Play className={cn("w-3 h-3 fill-current", isRunning && "animate-spin")} />
                 <span>{isRunning ? "Invoking Stdio..." : "Execute Probe"}</span>
@@ -311,37 +311,37 @@ export const LiveTerminalPlayground: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
               
               {/* Left Code View */}
-              <div className="md:col-span-7 p-3.5 rounded-xl bg-[#FAF9F7] border border-[#E5E2DC] space-y-2 overflow-x-auto">
-                <div className="flex items-center justify-between text-[10px] text-[#736E65] border-b border-[#E5E2DC]/80 pb-1.5">
+              <div className="md:col-span-7 p-3.5 rounded-xl bg-[#09090B] border border-[#27272A] space-y-2 overflow-x-auto">
+                <div className="flex items-center justify-between text-[10px] text-[#71717A] border-b border-[#27272A] pb-1.5">
                   <span>PROTOCOL TELEMETRY</span>
                   <span className="text-[#10B981] font-bold">200 OK · {activeTier.response.result.latency_ms}ms</span>
                 </div>
-                <pre className="text-[11px] leading-relaxed text-[#181716]">
+                <pre className="text-[11px] leading-relaxed text-[#D4D4D8]">
                   {JSON.stringify(activeTier.response, null, 2)}
                 </pre>
               </div>
 
               {/* Right Output Summary Card */}
               <div className="md:col-span-5 space-y-3">
-                <div className="p-4 rounded-xl bg-[#FDF4F2] border border-[#F8CFC9] space-y-2">
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#C83625] font-bold block">
+                <div className="p-4 rounded-xl bg-[#18181D] border border-[#27272A] space-y-2">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#FF6E63] font-bold block">
                     {activeTier.summary.label}
                   </span>
-                  <div className="text-base font-bold text-[#181716] tracking-tight">
+                  <div className="text-base font-bold text-white tracking-tight">
                     {activeTier.summary.value}
                   </div>
-                  <p className="text-xs text-[#524E47] leading-relaxed">
+                  <p className="text-xs text-[#A1A1AA] leading-relaxed">
                     {activeTier.summary.detail}
                   </p>
-                  <div className="pt-2 border-t border-[#F8CFC9] flex items-center gap-1.5 text-[11px] text-[#16A34A] font-bold">
+                  <div className="pt-2 border-t border-[#27272A] flex items-center gap-1.5 text-[11px] text-[#10B981] font-bold">
                     <CheckCircle2 className="w-3.5 h-3.5" />
                     <span>Deterministic Output Verified</span>
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-[#FAF9F7] border border-[#E5E2DC] text-[11px] text-[#736E65] flex items-center justify-between">
+                <div className="p-3 rounded-xl bg-[#18181D] border border-[#27272A] text-[11px] text-[#A1A1AA] flex items-center justify-between">
                   <span>Transport Mode:</span>
-                  <strong className="text-[#181716] font-mono">stdio JSON-RPC 2.0</strong>
+                  <strong className="text-white font-mono">stdio JSON-RPC 2.0</strong>
                 </div>
               </div>
 
@@ -350,12 +350,12 @@ export const LiveTerminalPlayground: React.FC = () => {
           </div>
 
           {/* Footer Bar */}
-          <div className="px-5 py-2.5 bg-[#FAF9F7] border-t border-[#E5E2DC] flex flex-wrap items-center justify-between text-[11px] text-[#736E65]">
+          <div className="px-5 py-2.5 bg-[#18181D] border-t border-[#27272A] flex flex-wrap items-center justify-between text-[11px] text-[#71717A]">
             <span className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-[#10B981]" />
               <span>PyTest Suite: 6/6 tests passing (100% assertions green)</span>
             </span>
-            <span className="font-mono text-[#524E47]">RFC-9457 Strict JSON-RPC Adherence</span>
+            <span className="font-mono text-[#A1A1AA]">RFC-9457 Strict JSON-RPC Adherence</span>
           </div>
 
         </div>

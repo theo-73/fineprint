@@ -4,10 +4,11 @@ import React from 'react';
 import { 
   Scale, MessageSquare, BookOpen, BarChart3, 
   Cpu, Database, ChevronLeft, ChevronRight, 
-  Lock, Shield, Terminal, Activity, Sparkles 
+  Lock, Shield, Terminal, Activity, Sparkles, Layers 
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { TabType } from './Header';
+import { BrandMark } from './BrandMark';
 
 interface SidebarProps {
   activeTab: TabType;
@@ -41,7 +42,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       id: 'cockpit',
       label: 'Dispute Cockpit',
-      icon: <Scale className="w-4 h-4" />,
+      icon: <Layers className="w-4 h-4" />,
     },
     {
       id: 'chat',
@@ -78,83 +79,77 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <aside
       className={cn(
-        "hidden md:flex flex-col justify-between border-r border-[#E5E2DC] bg-[#FFFFFF] transition-all duration-300 z-30 sticky top-0 h-screen select-none",
+        "hidden md:flex flex-col justify-between border-r border-[#27272A] bg-[#121216] transition-all duration-300 z-30 sticky top-0 h-screen select-none",
         collapsed ? "w-20" : "w-64"
       )}
     >
       <div>
         {/* Brand Header */}
-        <div className="flex items-center justify-between p-4 border-b border-[#E5E2DC]">
+        <div className="flex items-center justify-between p-4 border-b border-[#27272A]">
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="w-10 h-10 rounded-xl bg-[#C83625] flex items-center justify-center shrink-0 shadow-md shadow-[#C83625]/20 border border-[#B32E1F]">
-              <Scale className="w-5 h-5 text-white" />
-            </div>
+            <BrandMark size={36} />
             {!collapsed && (
               <div className="truncate">
                 <div className="flex items-center gap-1.5">
-                  <span className="font-bold text-sm tracking-tight text-[#181716]">FinePrint</span>
-                  <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#FDF4F2] text-[#C83625] border border-[#F8CFC9] font-bold">
+                  <span className="font-bold text-sm tracking-tight text-white">Fine<span className="text-[#FF2A1A]">Print</span></span>
+                  <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#FF2A1A]/20 text-[#FF6E63] border border-[#FF2A1A]/30 font-bold">
                     CPA 2019
                   </span>
                 </div>
-                <div className="text-[10px] text-[#736E65] font-mono truncate">
+                <div className="text-[10px] text-[#A1A1AA] font-mono truncate">
                   Autonomous Rights Agent
                 </div>
               </div>
             )}
           </div>
-
           <button
             onClick={onToggleCollapse}
-            className="text-[#736E65] hover:text-[#181716] p-1.5 rounded-lg hover:bg-[#FAF9F7] transition-colors cursor-pointer"
-            title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            className="p-1.5 rounded-lg text-[#71717A] hover:text-white hover:bg-[#18181D] transition-colors shrink-0"
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
           </button>
         </div>
 
-        {/* Navigation Items with Emil Kowalski press mechanics */}
-        <nav className="p-3 space-y-1.5" aria-label="Sidebar Navigation">
+        {/* Navigation Items */}
+        <nav className="p-3 space-y-1">
           {navItems.map((item) => {
-            const active = activeTab === item.id;
+            const isActive = activeTab === item.id;
             return (
               <button
                 key={item.id}
                 onClick={() => onTabChange(item.id)}
                 className={cn(
-                  "btn-press w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all relative group text-left",
-                  active
-                    ? "bg-[#FDF4F2] text-[#C83625] border border-[#F8CFC9] font-bold shadow-xs"
-                    : "text-[#524E47] hover:text-[#181716] hover:bg-[#FAF9F7] border border-transparent"
+                  "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all relative group",
+                  isActive
+                    ? "bg-[#FF2A1A] text-white shadow-lg shadow-[#FF2A1A]/30 font-bold"
+                    : "text-[#A1A1AA] hover:text-white hover:bg-[#18181D]"
                 )}
                 title={collapsed ? item.label : undefined}
               >
-                {/* Left accent bar on active */}
-                {active && (
-                  <span className="absolute left-1 top-2.5 bottom-2.5 w-1 rounded-full bg-[#C83625] animate-pulse" />
+                {/* Active Indicator Pulse Bar */}
+                {isActive && (
+                  <span className="absolute -left-3 top-1/2 -translate-y-1/2 w-1.5 h-6 rounded-r-full bg-[#FFFFFF]" />
                 )}
-                <span
-                  className={cn(
-                    "shrink-0 transition-transform group-hover:scale-110",
-                    active ? "text-[#C83625]" : "text-[#736E65]"
-                  )}
-                >
+
+                <span className={cn(
+                  "shrink-0 transition-transform duration-200 group-hover:scale-110",
+                  isActive ? "text-white" : "text-[#71717A] group-hover:text-white"
+                )}>
                   {item.icon}
                 </span>
 
                 {!collapsed && (
-                  <div className="flex-1 flex items-center justify-between truncate">
+                  <div className="flex-1 flex items-center justify-between min-w-0">
                     <span className="truncate">{item.label}</span>
                     {item.badge && (
-                      <span
-                        className={cn(
-                          "text-[9px] font-mono px-1.5 py-0.5 rounded-full font-bold ml-1.5",
-                          active
-                            ? "bg-[#C83625] text-white"
-                            : "bg-[#FAF9F7] text-[#736E65] border border-[#E5E2DC]"
-                        )}
-                      >
+                      <span className={cn(
+                        "text-[9px] font-mono px-1.5 py-0.2 rounded font-bold ml-2",
+                        isActive
+                          ? "bg-white/20 text-white"
+                          : "bg-[#18181D] text-[#A1A1AA] border border-[#27272A]"
+                      )}>
                         {item.badge}
                       </span>
                     )}
@@ -166,43 +161,38 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </nav>
       </div>
 
-      {/* Trust Boundary Telemetry Card */}
-      <div className="p-3 border-t border-[#E5E2DC] space-y-2">
+      {/* Bottom Telemetry & Trust Boundary HUD */}
+      <div className="p-3 border-t border-[#27272A]">
         {!collapsed ? (
-          <div className="p-3 rounded-2xl bg-[#FAF9F7] border border-[#E5E2DC] text-[11px] space-y-2">
-            <div className="flex items-center justify-between font-mono font-bold text-[#166534]">
-              <span className="flex items-center gap-1.5">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#16A34A] opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#16A34A]" />
-                </span>
-                <span>MCP Trust Boundary</span>
+          <div className="p-3 rounded-xl bg-[#18181D] border border-[#27272A] space-y-2">
+            <div className="flex items-center justify-between text-[11px] font-mono">
+              <span className="flex items-center gap-1.5 text-[#D4D4D8]">
+                <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
+                <span className="font-semibold">MCP Trust Boundary</span>
               </span>
-              <span className="text-[10px] bg-[#F0FDF4] px-1.5 py-0.5 rounded border border-[#BBF7D0]">
+              <span className="text-[#10B981] font-bold text-[10px] bg-[#10B981]/15 px-1.5 py-0.2 rounded border border-[#10B981]/30">
                 Active
               </span>
             </div>
-
-            <div className="space-y-1 text-[10px] font-mono text-[#736E65]">
-              <div className="flex items-center justify-between">
+            
+            <div className="text-[10px] text-[#A1A1AA] font-mono space-y-1 leading-tight">
+              <div className="flex justify-between">
                 <span>receipt-mcp</span>
-                <span className="text-[#181716] font-semibold">stdio / sandbox</span>
+                <span className="text-white">stdio / sandbox</span>
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex justify-between">
                 <span>rules-mcp</span>
-                <span className="text-[#181716] font-semibold">isolated AST</span>
+                <span className="text-white">Isolated AST</span>
               </div>
-              <div className="flex items-center justify-between">
-                <span>fineprint.db</span>
-                <span className="text-[#181716] font-semibold">WAL local</span>
+              <div className="flex justify-between">
+                <span>fineprint-db</span>
+                <span className="text-white">WAL Level</span>
               </div>
             </div>
           </div>
         ) : (
-          <div className="flex justify-center" title="MCP Trust Boundary: Active stdio JSON-RPC">
-            <div className="w-8 h-8 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] flex items-center justify-center text-[#16A34A]">
-              <Activity className="w-4 h-4 animate-pulse" />
-            </div>
+          <div className="flex justify-center" title="MCP Trust Boundary: Active">
+            <span className="w-3 h-3 rounded-full bg-[#10B981] animate-pulse" />
           </div>
         )}
       </div>

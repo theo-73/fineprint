@@ -125,7 +125,7 @@ const STATUTES_DIRECTORY: StatuteItem[] = [
     statutoryText:
       'No person, including any platform, shall engage in any dark pattern practice, including false urgency, basket sneaking, confirm shaming, forced action, subscription traps, interface interference, bait and switch, and drip pricing.',
     legalSignificance:
-      'Protects consumers when e-commerce interfaces intentionally bury cancellation buttons, make return flows an infinite chatbot loop, or falsely display &quot;Only 1 item left in stock&quot; to push hurried non-refundable purchases.',
+      'Protects consumers when e-commerce interfaces intentionally bury cancellation buttons, make return flows an infinite chatbot loop, or falsely display "Only 1 item left in stock" to push hurried non-refundable purchases.',
     keyEnforcementPoints: [
       'Interface interference in return workflows is a punishable unfair trade practice',
       'Automated chatbot deflection without escalation violates CCPA standards',
@@ -198,27 +198,27 @@ export const StatutesTab: React.FC = () => {
   return (
     <div className="space-y-6 animate-enter">
       {/* Header Banner */}
-      <div className="bg-[#FFFFFF] border border-[#E5E2DC] rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
+      <div className="bg-[#121216] border border-[#27272A] rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xl">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-lg font-bold text-[#181716] flex items-center gap-2 tracking-tight">
-              <BookOpen className="w-5 h-5 text-[#C83625]" />
+            <h2 className="text-lg font-bold text-[#F4F4F6] flex items-center gap-2 tracking-tight">
+              <BookOpen className="w-5 h-5 text-[#FF2A1A]" />
               <span>Codified Consumer Law & Judicial Precedents Directory</span>
             </h2>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FDF4F2] text-[#C83625] border border-[#F8CFC9] font-bold">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FF2A1A]/10 text-[#FF2A1A] border border-[#FF2A1A]/20 font-bold">
               CPA 2019 Codified
             </span>
           </div>
-          <p className="text-xs text-[#736E65] mt-1 leading-relaxed">
-            The deterministic statutory rules codified into <code className="font-mono text-[#181716] bg-[#FAF9F7] px-1 py-0.5 rounded border border-[#E5E2DC]">rules-mcp</code> to evaluate product liability, mandatory SLAs, and zero-hallucination abstentions.
+          <p className="text-xs text-[#A1A1AA] mt-1 leading-relaxed">
+            The deterministic statutory rules codified into <code className="font-mono text-[#F4F4F6] bg-[#18181D] px-1.5 py-0.5 rounded border border-[#27272A]">rules-mcp</code> to evaluate product liability, mandatory SLAs, and zero-hallucination abstentions.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 self-start md:self-auto bg-[#FAF9F7] p-2.5 rounded-xl border border-[#E5E2DC]">
-          <Scale className="w-4 h-4 text-[#C83625]" />
+        <div className="flex items-center gap-2.5 self-start md:self-auto bg-[#18181D] p-2.5 rounded-xl border border-[#27272A]">
+          <Scale className="w-4 h-4 text-[#FF2A1A]" />
           <div className="text-xs">
-            <span className="text-[#736E65] block text-[10px] uppercase font-mono">Enforcement Body</span>
-            <span className="font-bold text-[#181716]">CCPA & NCDRC</span>
+            <span className="text-[#71717A] block text-[10px] uppercase font-mono">Enforcement Body</span>
+            <span className="font-bold text-[#F4F4F6]">CCPA & NCDRC</span>
           </div>
         </div>
       </div>
@@ -226,26 +226,26 @@ export const StatutesTab: React.FC = () => {
       {/* Filter and Search Bar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#736E65]" />
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#71717A]" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search statutes by section, keyword, or text..."
-            className="w-full bg-[#FFFFFF] border border-[#D4D0C7] rounded-xl pl-10 pr-4 py-2 text-xs text-[#181716] placeholder-[#A39E93] focus:outline-none focus:border-[#C83625] focus:ring-1 focus:ring-[#C83625] transition-colors"
+            className="w-full bg-[#121216] border border-[#27272A] rounded-xl pl-10 pr-4 py-2 text-xs text-[#F4F4F6] placeholder-[#71717A] focus:outline-none focus:border-[#FF2A1A] focus:ring-1 focus:ring-[#FF2A1A] transition-colors"
           />
         </div>
 
-        <div className="flex items-center gap-1 overflow-x-auto text-xs bg-[#FFFFFF] p-1 rounded-xl border border-[#E5E2DC] self-start sm:self-auto shadow-xs">
+        <div className="flex items-center gap-1 overflow-x-auto text-xs bg-[#121216] p-1 rounded-xl border border-[#27272A] self-start sm:self-auto shadow-xs">
           {(['ALL', 'Product Liability', 'E-Commerce Rules', 'Statutory Abstention', 'Dark Patterns'] as const).map((mode) => (
             <button
               key={mode}
               onClick={() => setFilter(mode)}
               className={cn(
-                "btn-press px-3 py-1 rounded-lg text-[11px] font-medium transition-colors whitespace-nowrap",
+                "btn-press px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors whitespace-nowrap",
                 filter === mode
-                  ? "bg-[#C83625] text-white font-semibold shadow-sm"
-                  : "text-[#736E65] hover:text-[#181716]"
+                  ? "bg-[#FF2A1A] text-white font-semibold shadow-md shadow-[#FF2A1A]/20"
+                  : "text-[#A1A1AA] hover:text-white hover:bg-[#18181D]"
               )}
             >
               {mode}
@@ -259,56 +259,56 @@ export const StatutesTab: React.FC = () => {
         {filteredStatutes.map((item) => (
           <div
             key={item.id}
-            className="bg-[#FFFFFF] border border-[#E5E2DC] rounded-2xl p-5 space-y-3.5 shadow-sm hover:border-[#C83625]/40 transition-all flex flex-col justify-between"
+            className="bg-[#121216] border border-[#27272A] rounded-2xl p-5 space-y-3.5 shadow-xl hover:border-[#FF2A1A]/40 transition-all flex flex-col justify-between"
           >
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FAF9F7] text-[#736E65] border border-[#E5E2DC] font-semibold">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#18181D] text-[#A1A1AA] border border-[#27272A] font-semibold">
                   {item.act}
                 </span>
                 <span
                   className={cn(
                     "text-[10px] font-mono px-2 py-0.5 rounded-full font-bold",
-                    item.category === 'Product Liability' && "bg-[#FDF4F2] text-[#C83625] border border-[#F8CFC9]",
-                    item.category === 'E-Commerce Rules' && "bg-[#F0FDF4] text-[#166534] border border-[#BBF7D0]",
-                    item.category === 'Statutory Abstention' && "bg-[#FEFCE8] text-[#854D0E] border border-[#FEF08A]",
-                    item.category === 'Dark Patterns' && "bg-[#EFF6FF] text-[#1D4ED8] border border-[#BFDBFE]"
+                    item.category === 'Product Liability' && "bg-[#FF2A1A]/10 text-[#FF2A1A] border border-[#FF2A1A]/20",
+                    item.category === 'E-Commerce Rules' && "bg-[#10B981]/10 text-[#10B981] border border-[#10B981]/20",
+                    item.category === 'Statutory Abstention' && "bg-[#F59E0B]/10 text-[#FBBF24] border border-[#F59E0B]/20",
+                    item.category === 'Dark Patterns' && "bg-[#3B82F6]/10 text-[#60A5FA] border border-[#3B82F6]/20"
                   )}
                 >
                   {item.section}
                 </span>
               </div>
 
-              <h3 className="text-sm font-bold text-[#181716] leading-snug">{item.title}</h3>
+              <h3 className="text-sm font-bold text-[#F4F4F6] leading-snug">{item.title}</h3>
 
-              <div className="p-3 rounded-xl bg-[#FAF9F7] border border-[#E5E2DC] text-[11px] text-[#262422] font-mono leading-relaxed italic">
+              <div className="p-3 rounded-xl bg-[#18181D] border border-[#27272A] text-[11px] text-[#D4D4D8] font-mono leading-relaxed italic">
                 &ldquo;{item.statutoryText}&rdquo;
               </div>
 
-              <p className="text-xs text-[#524E47] leading-relaxed">
+              <p className="text-xs text-[#A1A1AA] leading-relaxed">
                 {item.legalSignificance}
               </p>
 
               <div className="space-y-1.5 pt-1">
-                <div className="text-[11px] font-semibold text-[#181716]">Enforcement Principles:</div>
+                <div className="text-[11px] font-semibold text-[#F4F4F6]">Enforcement Principles:</div>
                 {item.keyEnforcementPoints.map((pt, pIdx) => (
-                  <div key={pIdx} className="flex items-start gap-2 text-xs text-[#262422]">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#16A34A] shrink-0 mt-0.5" />
+                  <div key={pIdx} className="flex items-start gap-2 text-xs text-[#D4D4D8]">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981] shrink-0 mt-0.5" />
                     <span className="text-[11px]">{pt}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="pt-3 border-t border-[#E5E2DC] flex items-center justify-between text-[11px]">
-              <span className="text-[#736E65] font-mono">
+            <div className="pt-3 border-t border-[#27272A] flex items-center justify-between text-[11px]">
+              <span className="text-[#71717A] font-mono">
                 Matched in {item.benchmarkCasesMatched} benchmark test cases
               </span>
               <button
                 onClick={() => handleCopyCitation(`${item.act} - ${item.section}: ${item.title}`, item.id)}
-                className="btn-press flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#FAF9F7] hover:bg-[#FDF4F2] text-[#C83625] border border-[#E5E2DC] hover:border-[#F8CFC9] transition-colors font-medium"
+                className="btn-press flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#18181D] hover:bg-[#FF2A1A]/15 text-[#FF6E63] border border-[#27272A] hover:border-[#FF2A1A]/30 transition-colors font-medium text-xs"
               >
-                {copiedId === item.id ? <Check className="w-3.5 h-3.5 text-[#16A34A]" /> : <Copy className="w-3.5 h-3.5" />}
+                {copiedId === item.id ? <Check className="w-3.5 h-3.5 text-[#10B981]" /> : <Copy className="w-3.5 h-3.5" />}
                 <span>{copiedId === item.id ? 'Copied' : 'Copy Citation'}</span>
               </button>
             </div>
@@ -317,43 +317,43 @@ export const StatutesTab: React.FC = () => {
       </div>
 
       {/* Judicial Precedents Section */}
-      <div className="bg-[#FFFFFF] border border-[#E5E2DC] rounded-2xl p-6 space-y-4 shadow-sm">
-        <div className="flex items-center justify-between pb-3 border-b border-[#E5E2DC]">
+      <div className="bg-[#121216] border border-[#27272A] rounded-2xl p-6 space-y-4 shadow-xl">
+        <div className="flex items-center justify-between pb-3 border-b border-[#27272A]">
           <div className="flex items-center gap-2">
-            <Scale className="w-5 h-5 text-[#C83625]" />
-            <h3 className="text-sm font-bold text-[#181716] uppercase tracking-wider font-mono">
+            <Scale className="w-5 h-5 text-[#FF2A1A]" />
+            <h3 className="text-sm font-bold text-[#F4F4F6] uppercase tracking-wider font-mono">
               Binding Consumer Court Precedents (NCDRC & Supreme Court)
             </h3>
           </div>
-          <span className="text-xs text-[#736E65] font-mono">Legal Authorities</span>
+          <span className="text-xs text-[#71717A] font-mono">Legal Authorities</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {PRECEDENTS_DIRECTORY.map((prec) => (
             <div
               key={prec.id}
-              className="p-4 rounded-xl bg-[#FAF9F7] border border-[#E5E2DC] space-y-2.5 flex flex-col justify-between"
+              className="p-4 rounded-xl bg-[#18181D] border border-[#27272A] space-y-2.5 flex flex-col justify-between"
             >
               <div className="space-y-1.5">
-                <div className="flex items-center justify-between text-[10px] font-mono text-[#736E65]">
+                <div className="flex items-center justify-between text-[10px] font-mono text-[#71717A]">
                   <span>{prec.forum}</span>
-                  <span className="font-bold text-[#C83625]">{prec.year}</span>
+                  <span className="font-bold text-[#FF2A1A]">{prec.year}</span>
                 </div>
-                <h4 className="text-xs font-bold text-[#181716] leading-snug">{prec.caseTitle}</h4>
-                <div className="text-[11px] font-mono text-[#C83625] bg-[#FFFFFF] px-2 py-0.5 rounded border border-[#E5E2DC] inline-block">
+                <h4 className="text-xs font-bold text-[#F4F4F6] leading-snug">{prec.caseTitle}</h4>
+                <div className="text-[11px] font-mono text-[#FF6E63] bg-[#121216] px-2 py-0.5 rounded border border-[#27272A] inline-block">
                   {prec.citation}
                 </div>
-                <div className="text-[11px] font-semibold text-[#181716] mt-1">{prec.subject}</div>
-                <p className="text-[11px] text-[#524E47] leading-relaxed">
-                  <b>Ratio:</b> {prec.ratioDecidendi}
+                <div className="text-[11px] font-semibold text-[#D4D4D8] mt-1">{prec.subject}</div>
+                <p className="text-[11px] text-[#A1A1AA] leading-relaxed">
+                  <b className="text-[#F4F4F6]">Ratio:</b> {prec.ratioDecidendi}
                 </p>
               </div>
 
-              <div className="pt-2 border-t border-[#E5E2DC] flex items-center justify-between text-[10px] font-mono text-[#736E65]">
-                <span>{prec.statutoryGround}</span>
+              <div className="pt-2 border-t border-[#27272A] flex items-center justify-between text-[10px] font-mono text-[#71717A]">
+                <span className="truncate pr-2">{prec.statutoryGround}</span>
                 <button
                   onClick={() => handleCopyCitation(`${prec.caseTitle} (${prec.citation})`, prec.id)}
-                  className="btn-press text-[#C83625] hover:text-[#B32E1F] font-semibold flex items-center gap-1"
+                  className="btn-press text-[#FF2A1A] hover:text-[#FF6E63] font-semibold flex items-center gap-1 shrink-0"
                 >
                   <Copy className="w-3 h-3" />
                   <span>Cite</span>

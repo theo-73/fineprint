@@ -22,7 +22,7 @@ export const FIELD_NOTES: FieldNote[] = [
   {
     id: 'sony-xm5',
     badge: 'ANC Driver Failure',
-    badgeColor: 'bg-[#FDF4F2] text-[#C83625] border-[#F8CFC9]',
+    badgeColor: 'bg-[#FF2A1A]/20 text-[#FFA49E] border-[#FF2A1A]/35',
     restitution: '₹24,990 Restitution',
     product: 'Sony WH-1000XM5 ANC',
     seller: 'Appario Retail Pvt Ltd · Amazon',
@@ -35,7 +35,7 @@ export const FIELD_NOTES: FieldNote[] = [
   {
     id: 'apple-green-line',
     badge: 'Green Line OLED Defect',
-    badgeColor: 'bg-[#FDF4F2] text-[#C83625] border-[#F8CFC9]',
+    badgeColor: 'bg-[#FF2A1A]/20 text-[#FFA49E] border-[#FF2A1A]/35',
     restitution: '₹82,900 Free Display Swap',
     product: 'iPhone 15 Pro Display',
     seller: 'Apple India Authorized Retail',
@@ -48,7 +48,7 @@ export const FIELD_NOTES: FieldNote[] = [
   {
     id: 'samsung-washer',
     badge: 'No Spare Parts Deflection',
-    badgeColor: 'bg-[#F0FDF4] text-[#166534] border-[#BBF7D0]',
+    badgeColor: 'bg-[#10B981]/20 text-[#6EE7B7] border-[#10B981]/35',
     restitution: '₹34,500 Full Replacement',
     product: 'Samsung 7kg Front-Load',
     seller: 'SuperComNet Retail · Flipkart',
@@ -61,7 +61,7 @@ export const FIELD_NOTES: FieldNote[] = [
   {
     id: 'oneplus-motherboard',
     badge: 'Bootloop Hardware Defect',
-    badgeColor: 'bg-[#FDF4F2] text-[#C83625] border-[#F8CFC9]',
+    badgeColor: 'bg-[#FF2A1A]/20 text-[#FFA49E] border-[#FF2A1A]/35',
     restitution: '₹56,990 Refund Received',
     product: 'OnePlus 11 5G 256GB',
     seller: 'Darshita Electronics · Amazon',
@@ -74,7 +74,7 @@ export const FIELD_NOTES: FieldNote[] = [
   {
     id: 'whirlpool-refrigerator',
     badge: 'Cooling Coil Gas Leak',
-    badgeColor: 'bg-[#F0FDF4] text-[#166534] border-[#BBF7D0]',
+    badgeColor: 'bg-[#10B981]/20 text-[#6EE7B7] border-[#10B981]/35',
     restitution: '₹28,490 Doorstep Refund',
     product: 'Whirlpool Pro-Cool 265L',
     seller: 'Infiniti Retail (Croma)',
@@ -88,16 +88,16 @@ export const FIELD_NOTES: FieldNote[] = [
 
 export const FieldNotesMarquee: React.FC = () => {
   return (
-    <div className="space-y-6">
-      <div className="text-center max-w-xl mx-auto space-y-2">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FAF9F7] border border-[#E5E2DC] text-[11px] font-mono font-bold text-[#C83625] uppercase tracking-wider">
+    <div id="restitution" className="space-y-6">
+      <div className="text-center max-w-xl mx-auto space-y-2 select-none">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FF2A1A]/15 border border-[#FF2A1A]/30 text-[11px] font-mono font-bold text-[#FF6E63] uppercase tracking-wider">
           <ShieldCheck className="w-3.5 h-3.5" />
           <span>Wall of Statutory Restitution</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-[#181716] tracking-tight">
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
           Real Citizens. Over ₹1.84 Crores Recovered.
         </h2>
-        <p className="text-xs sm:text-sm text-[#736E65]">
+        <p className="text-xs sm:text-sm text-[#A1A1AA]">
           Verified cases where FinePrint&apos;s codified notices dismantled corporate deflections and forced compliance.
         </p>
       </div>
@@ -107,40 +107,40 @@ export const FieldNotesMarquee: React.FC = () => {
         {FIELD_NOTES.slice(0, 3).map((item) => (
           <div
             key={item.id}
-            className="p-5 rounded-2xl bg-[#FFFFFF] border border-[#E5E2DC] shadow-sm hover:shadow-md hover:border-[#C83625]/40 transition-all duration-300 flex flex-col justify-between space-y-4"
+            className="p-5 rounded-2xl bg-[#121216] border border-[#27272A] shadow-xl shadow-black/40 hover:shadow-2xl hover:border-[#FF2A1A]/60 transition-all duration-300 flex flex-col justify-between space-y-4"
           >
             <div className="space-y-3">
-              <div className="flex items-center justify-between pb-2 border-b border-[#E5E2DC]">
-                <span className={cn("px-2 py-0.5 rounded text-[10px] font-mono font-bold border", item.badgeColor)}>
+              <div className="flex items-center justify-between pb-2 border-b border-[#27272A]">
+                <span className={cn("px-2.5 py-0.5 rounded text-[10px] font-mono font-bold border", item.badgeColor)}>
                   {item.badge}
                 </span>
-                <span className="font-mono font-bold text-xs text-[#16A34A]">
+                <span className="font-mono font-bold text-xs text-[#10B981]">
                   {item.restitution}
                 </span>
               </div>
 
               <div>
-                <strong className="text-sm font-bold text-[#181716] block">{item.product}</strong>
-                <span className="text-[11px] text-[#736E65]">{item.seller}</span>
+                <strong className="text-sm font-bold text-white block">{item.product}</strong>
+                <span className="text-[11px] text-[#A1A1AA]">{item.seller}</span>
               </div>
 
-              <p className="text-xs text-[#524E47] leading-relaxed italic">
+              <p className="text-xs text-[#D4D4D8] leading-relaxed italic">
                 &ldquo;{item.quote}&rdquo;
               </p>
             </div>
 
-            <div className="pt-3 border-t border-[#E5E2DC] flex items-center justify-between text-xs">
+            <div className="pt-3 border-t border-[#27272A] flex items-center justify-between text-xs">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-full bg-[#C83625] text-white flex items-center justify-center font-bold text-xs font-mono">
+                <div className="w-7 h-7 rounded-full bg-[#FF2A1A] text-white flex items-center justify-center font-bold text-xs font-mono shadow-md shadow-[#FF2A1A]/40">
                   {item.initials}
                 </div>
                 <div>
-                  <strong className="text-[#181716] block text-xs">{item.author}</strong>
-                  <span className="text-[10px] text-[#736E65]">{item.role}</span>
+                  <strong className="text-white block text-xs">{item.author}</strong>
+                  <span className="text-[10px] text-[#A1A1AA]">{item.role}</span>
                 </div>
               </div>
 
-              <span className="text-[10px] font-mono font-bold text-[#C83625] bg-[#FDF4F2] px-2 py-0.5 rounded border border-[#F8CFC9]">
+              <span className="text-[10px] font-mono font-bold text-[#FF6E63] bg-[#FF2A1A]/20 px-2 py-0.5 rounded border border-[#FF2A1A]/30">
                 {item.statute.split('·')[0].trim()}
               </span>
             </div>

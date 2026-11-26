@@ -52,16 +52,16 @@ export const FaqAccordion: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="text-center max-w-xl mx-auto space-y-2">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FAF9F7] border border-[#E5E2DC] text-[11px] font-mono font-bold text-[#C83625] uppercase tracking-wider">
+    <div id="faq" className="space-y-6">
+      <div className="text-center max-w-xl mx-auto space-y-2 select-none">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FF2A1A]/15 border border-[#FF2A1A]/30 text-[11px] font-mono font-bold text-[#FF6E63] uppercase tracking-wider">
           <HelpCircle className="w-3.5 h-3.5" />
           <span>Statutory & Technical FAQ</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-[#181716] tracking-tight">
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
           Frequently Asked Questions
         </h2>
-        <p className="text-xs sm:text-sm text-[#736E65]">
+        <p className="text-xs sm:text-sm text-[#A1A1AA]">
           Clear, authoritative answers on your statutory rights and how FinePrint enforces them.
         </p>
       </div>
@@ -72,26 +72,26 @@ export const FaqAccordion: React.FC = () => {
           return (
             <div
               key={faq.id}
-              className="bg-[#FFFFFF] border border-[#E5E2DC] rounded-2xl overflow-hidden shadow-xs transition-all duration-200 hover:border-[#C83625]/40"
+              className="bg-[#121216] border border-[#27272A] rounded-2xl overflow-hidden shadow-md transition-all duration-200 hover:border-[#FF2A1A]/60"
             >
               <button
                 onClick={() => toggleFaq(faq.id)}
-                className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 font-semibold text-xs sm:text-sm text-[#181716] hover:text-[#C83625] transition-colors"
+                className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 font-semibold text-xs sm:text-sm text-white hover:text-[#FF6E63] transition-colors"
               >
                 <span>{faq.question}</span>
                 <ChevronDown className={cn(
-                  "w-4 h-4 shrink-0 transition-transform duration-300 text-[#736E65]",
-                  isOpen && "rotate-180 text-[#C83625]"
+                  "w-4 h-4 shrink-0 transition-transform duration-300 text-[#71717A]",
+                  isOpen && "rotate-180 text-[#FF2A1A]"
                 )} />
               </button>
 
               {isOpen && (
-                <div className="px-4 pb-4 sm:px-5 sm:pb-5 text-xs text-[#524E47] space-y-3 border-t border-[#E5E2DC]/60 pt-3 animate-enter">
+                <div className="px-4 pb-4 sm:px-5 sm:pb-5 text-xs text-[#D4D4D8] space-y-3 border-t border-[#27272A] pt-3 animate-enter">
                   <p className="leading-relaxed">
                     {faq.answer}
                   </p>
                   <div className="flex items-center gap-2 pt-1">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#C83625] bg-[#FDF4F2] px-2.5 py-0.5 rounded border border-[#F8CFC9]">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#FF6E63] bg-[#FF2A1A]/15 px-2.5 py-0.5 rounded border border-[#FF2A1A]/30">
                       Statutory Basis: {faq.statute}
                     </span>
                   </div>

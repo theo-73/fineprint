@@ -51,49 +51,49 @@ const BENCHMARKS: MetricRow[] = [
 
 export const TechnicalBenchmarks: React.FC = () => {
   return (
-    <div className="space-y-6">
-      <div className="text-center max-w-xl mx-auto space-y-2">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FAF9F7] border border-[#E5E2DC] text-[11px] font-mono font-bold text-[#C83625] uppercase tracking-wider">
+    <div id="benchmarks" className="space-y-6">
+      <div className="text-center max-w-xl mx-auto space-y-2 select-none">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FF2A1A]/15 border border-[#FF2A1A]/30 text-[11px] font-mono font-bold text-[#FF6E63] uppercase tracking-wider">
           <BarChart3 className="w-3.5 h-3.5" />
           <span>Technical Verification & Benchmarks</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-[#181716] tracking-tight">
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
           Empirical Performance Standards
         </h2>
-        <p className="text-xs sm:text-sm text-[#736E65]">
+        <p className="text-xs sm:text-sm text-[#A1A1AA]">
           How FinePrint&apos;s deterministic MCP architecture compares against generic LLMs and manual legal proceedings.
         </p>
       </div>
 
       {/* Benchmark Table */}
-      <div className="max-w-4xl mx-auto bg-[#FFFFFF] border border-[#E5E2DC] rounded-2xl shadow-sm overflow-hidden select-none">
+      <div className="max-w-4xl mx-auto bg-[#121216] border border-[#27272A] rounded-2xl shadow-xl overflow-hidden select-none">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-[#FAF9F7] border-b border-[#E5E2DC] text-[11px] font-mono text-[#736E65] uppercase">
+            <thead className="bg-[#18181D] border-b border-[#27272A] text-[11px] font-mono text-[#A1A1AA] uppercase">
               <tr>
                 <th className="py-3 px-4 font-bold">Metric / Capability</th>
-                <th className="py-3 px-4 font-bold text-[#C83625]">FinePrint MCP</th>
-                <th className="py-3 px-4 font-bold text-[#736E65]">Generic LLM</th>
-                <th className="py-3 px-4 font-bold text-[#736E65]">Manual Drafting</th>
+                <th className="py-3 px-4 font-bold text-[#FF2A1A]">FinePrint MCP</th>
+                <th className="py-3 px-4 font-bold text-[#71717A]">Generic LLM</th>
+                <th className="py-3 px-4 font-bold text-[#71717A]">Manual Drafting</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E5E2DC]">
+            <tbody className="divide-y divide-[#27272A]">
               {BENCHMARKS.map((row) => (
-                <tr key={row.metric} className="hover:bg-[#FAF9F7]/50 transition-colors">
+                <tr key={row.metric} className="hover:bg-[#18181D]/60 transition-colors">
                   <td className="py-3.5 px-4">
-                    <strong className="text-[#181716] block">{row.metric}</strong>
-                    <span className="text-[10px] text-[#A39E93] font-mono">{row.verifiedBy}</span>
+                    <strong className="text-white block">{row.metric}</strong>
+                    <span className="text-[10px] text-[#71717A] font-mono">{row.verifiedBy}</span>
                   </td>
-                  <td className="py-3.5 px-4 font-mono font-bold text-[#C83625] bg-[#FDF4F2]/30">
+                  <td className="py-3.5 px-4 font-mono font-bold text-[#FF6E63] bg-[#FF2A1A]/10">
                     <div className="flex items-center gap-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#16A34A]" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" />
                       <span>{row.fineprint}</span>
                     </div>
                   </td>
-                  <td className="py-3.5 px-4 font-mono text-[#736E65]">
+                  <td className="py-3.5 px-4 font-mono text-[#A1A1AA]">
                     {row.genericLlm}
                   </td>
-                  <td className="py-3.5 px-4 font-mono text-[#736E65]">
+                  <td className="py-3.5 px-4 font-mono text-[#A1A1AA]">
                     {row.humanAdvocate}
                   </td>
                 </tr>

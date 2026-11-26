@@ -1,20 +1,22 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Database, RefreshCw, Search, ArrowRight, Download, FileText, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { Database, RefreshCw, Search, ArrowRight, Download, FileText, CheckCircle2, AlertTriangle, Layers } from 'lucide-react';
 import { CaseData } from '../types';
 import { cn, formatINR, formatDate } from '../lib/utils';
 
 interface VaultTabProps {
   cases: CaseData[];
   onSelectCase: (c: CaseData) => void;
-  onRefresh: () => void;
+  onRefresh?: () => void;
+  onOpenDossier?: (c: CaseData) => void;
 }
 
 export const VaultTab: React.FC<VaultTabProps> = ({
   cases,
   onSelectCase,
   onRefresh,
+  onOpenDossier,
 }) => {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'READY' | 'ABSTAINED'>('ALL');
@@ -33,47 +35,49 @@ export const VaultTab: React.FC<VaultTabProps> = ({
   });
 
   return (
-    <div className="bg-[#FFFFFF] border border-[#E5E2DC] rounded-2xl p-6 md:p-7 space-y-6 shadow-sm animate-enter">
+    <div className="bg-[#121216] border border-[#27272A] rounded-2xl p-6 md:p-7 space-y-6 shadow-xl animate-enter">
       {/* Header & Controls */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#E5E2DC]">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#27272A]">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-base font-bold text-[#181716] flex items-center gap-2 tracking-tight">
-              <Database className="w-5 h-5 text-[#C83625]" />
+            <h2 className="text-base font-bold text-[#F4F4F6] flex items-center gap-2 tracking-tight">
+              <Database className="w-5 h-5 text-[#FF2A1A]" />
               <span>SQLite Local Case Vault</span>
             </h2>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FDF4F2] text-[#C83625] border border-[#F8CFC9]">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FF2A1A]/10 text-[#FF2A1A] border border-[#FF2A1A]/20">
               fineprint.db
             </span>
           </div>
-          <p className="text-xs text-[#736E65] mt-0.5">
+          <p className="text-xs text-[#A1A1AA] mt-0.5">
             Local persistent trust store for claim dockets, PDF notices, and audit event logs
           </p>
         </div>
 
-        <button
-          onClick={onRefresh}
-          className="btn-press text-xs bg-[#FAF9F7] hover:bg-[#F5F3EF] px-3.5 py-2 rounded-xl text-[#181716] border border-[#E5E2DC] flex items-center gap-2 self-start md:self-auto font-medium shadow-sm transition-all"
-        >
-          <RefreshCw className="w-3.5 h-3.5" />
-          <span>Refresh Vault</span>
-        </button>
+        {onRefresh && (
+          <button
+            onClick={onRefresh}
+            className="btn-press text-xs bg-[#18181D] hover:bg-[#202027] px-3.5 py-2 rounded-xl text-[#F4F4F6] border border-[#27272A] flex items-center gap-2 self-start md:self-auto font-medium shadow-sm transition-all"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+            <span>Refresh Vault</span>
+          </button>
+        )}
       </div>
 
       {/* Filter and Search Bar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#736E65]" />
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#71717A]" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by product, order ID, seller, or claim ref..."
-            className="w-full bg-[#FAF9F7] border border-[#D4D0C7] rounded-xl pl-10 pr-4 py-2 text-xs text-[#181716] placeholder-[#A39E93] focus:outline-none focus:border-[#C83625] focus:ring-1 focus:ring-[#C83625] transition-colors"
+            className="w-full bg-[#18181D] border border-[#27272A] rounded-xl pl-10 pr-4 py-2 text-xs text-[#F4F4F6] placeholder-[#71717A] focus:outline-none focus:border-[#FF2A1A] focus:ring-1 focus:ring-[#FF2A1A] transition-colors"
           />
         </div>
 
-        <div className="flex items-center gap-1 bg-[#FAF9F7] p-1 rounded-xl border border-[#E5E2DC] text-xs self-start sm:self-auto">
+        <div className="flex items-center gap-1 bg-[#18181D] p-1 rounded-xl border border-[#27272A] text-xs self-start sm:self-auto">
           {(['ALL', 'READY', 'ABSTAINED'] as const).map((status) => (
             <button
               key={status}
@@ -81,8 +85,8 @@ export const VaultTab: React.FC<VaultTabProps> = ({
               className={cn(
                 "btn-press px-3 py-1 rounded-lg text-[11px] font-medium transition-colors",
                 statusFilter === status
-                  ? "bg-[#C83625] text-white font-semibold shadow-sm"
-                  : "text-[#736E65] hover:text-[#181716]"
+                  ? "bg-[#FF2A1A] text-white font-semibold shadow-md shadow-[#FF2A1A]/20"
+                  : "text-[#A1A1AA] hover:text-white"
               )}
             >
               {status}
@@ -98,40 +102,54 @@ export const VaultTab: React.FC<VaultTabProps> = ({
             <div
               key={c.id}
               onClick={() => onSelectCase(c)}
-              className="interactive-card p-4 rounded-xl bg-[#FAF9F7] hover:bg-[#FDF4F2] border border-[#E5E2DC] hover:border-[#C83625]/60 cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 group transition-all shadow-sm"
+              className="interactive-card p-4 rounded-xl bg-[#18181D] hover:bg-[#202027] border border-[#27272A] hover:border-[#FF2A1A]/50 cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 group transition-all shadow-md"
               role="button"
               tabIndex={0}
             >
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs text-[#C83625] font-bold">{c.claim_ref}</span>
+                  <span className="font-mono text-xs text-[#FF2A1A] font-bold">{c.claim_ref}</span>
                   <span
                     className={cn(
                       "text-[10px] font-mono px-2 py-0.5 rounded font-semibold",
                       c.status === 'READY'
-                        ? "bg-[#F0FDF4] text-[#166534] border border-[#BBF7D0]"
-                        : "bg-[#FEFCE8] text-[#854D0E] border border-[#FEF08A]"
+                        ? "bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/30"
+                        : "bg-[#F59E0B]/15 text-[#FBBF24] border border-[#F59E0B]/30"
                     )}
                   >
                     {c.status}
                   </span>
-                  <span className="text-[11px] text-[#736E65] font-mono">
+                  <span className="text-[11px] text-[#71717A] font-mono">
                     Order: {c.order_id || 'N/A'}
                   </span>
                 </div>
-                <div className="text-sm font-bold text-[#181716] group-hover:text-[#C83625] transition-colors">
+                <div className="text-sm font-bold text-[#F4F4F6] group-hover:text-[#FF6E63] transition-colors">
                   {c.product_name}
                 </div>
-                <div className="text-xs text-[#524E47]">
-                  Route: <span className="font-mono text-[#181716] font-medium">{c.primary_route}</span> | Consideration:{" "}
-                  <b className="text-[#C83625] font-semibold tabular-nums">{formatINR(c.amount_inr)}</b>
+                <div className="text-xs text-[#A1A1AA]">
+                  Route: <span className="font-mono text-[#F4F4F6] font-medium">{c.primary_route}</span> | Consideration:{" "}
+                  <b className="text-[#FF2A1A] font-semibold tabular-nums">{formatINR(c.amount_inr)}</b>
                 </div>
               </div>
 
               <div className="flex items-center gap-3 self-end md:self-auto flex-shrink-0">
-                <span className="text-xs text-[#736E65] font-mono tabular-nums">
+                <span className="text-xs text-[#71717A] font-mono tabular-nums">
                   {formatDate(c.created_at)}
                 </span>
+
+                {onOpenDossier && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onOpenDossier(c);
+                    }}
+                    className="btn-press p-2 rounded-lg bg-[#FF2A1A]/10 hover:bg-[#FF2A1A]/20 text-[#FF6E63] border border-[#FF2A1A]/25 text-xs flex items-center gap-1.5 transition-colors font-medium"
+                    title="Open Case Dossier"
+                  >
+                    <Layers className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Dossier</span>
+                  </button>
+                )}
 
                 {c.pdf_download_url && (
                   <a
@@ -139,7 +157,7 @@ export const VaultTab: React.FC<VaultTabProps> = ({
                     target="_blank"
                     rel="noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="btn-press p-2 rounded-lg bg-[#FDF4F2] hover:bg-[#F8CFC9] text-[#C83625] border border-[#F8CFC9] text-xs flex items-center gap-1.5 transition-colors font-medium"
+                    className="btn-press p-2 rounded-lg bg-[#121216] hover:bg-[#202027] text-[#FF2A1A] border border-[#27272A] text-xs flex items-center gap-1.5 transition-colors font-medium"
                     title="Download Notice PDF"
                   >
                     <Download className="w-3.5 h-3.5" />
@@ -147,7 +165,7 @@ export const VaultTab: React.FC<VaultTabProps> = ({
                   </a>
                 )}
 
-                <div className="w-8 h-8 rounded-lg bg-[#FFFFFF] border border-[#E5E2DC] flex items-center justify-center text-[#736E65] group-hover:text-white group-hover:bg-[#C83625] group-hover:border-[#C83625] transition-colors">
+                <div className="w-8 h-8 rounded-lg bg-[#121216] border border-[#27272A] flex items-center justify-center text-[#71717A] group-hover:text-white group-hover:bg-[#FF2A1A] group-hover:border-[#FF2A1A] transition-colors">
                   <ArrowRight className="w-4 h-4" />
                 </div>
               </div>
@@ -155,8 +173,8 @@ export const VaultTab: React.FC<VaultTabProps> = ({
           ))}
         </div>
       ) : (
-        <div className="text-center py-12 text-[#736E65] text-xs space-y-2">
-          <Database className="w-8 h-8 mx-auto text-[#A39E93]" />
+        <div className="text-center py-12 text-[#71717A] text-xs space-y-2">
+          <Database className="w-8 h-8 mx-auto text-[#3F3F46]" />
           <p>No cases found matching your search or filter.</p>
         </div>
       )}
