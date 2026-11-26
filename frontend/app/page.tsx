@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { AlertCircle, X } from 'lucide-react';
 import { Header, TabType } from '../components/Header';
 import { Sidebar } from '../components/Sidebar';
@@ -73,35 +73,17 @@ function FinePrintCockpitContent() {
   const [copiedWA, setCopiedWA] = useState<boolean>(false);
   const [copiedNCH, setCopiedNCH] = useState<boolean>(false);
 
-  // Initial Load: Mailbox & Cases
-  useEffect(() => {
-    fetch('/api/mock-mailbox')
+  const loadAuditLogs = useCallback((caseId: number) => {
+    fetch(`/api/cases/${caseId}/audit-logs`)
       .then((r) => r.json())
       .then((data) => {
-        if (data.receipts && data.receipts.length > 0) {
-          setMockReceipts(data.receipts);
-          // Auto-select the first curated receipt (Sony WH-1000XM5) on load
-          handleSelectMockReceipt(data.receipts[0]);
-        }
+        if (data && data.logs) setAuditLogs(data.logs);
+        else if (data && data.audit_logs) setAuditLogs(data.audit_logs);
       })
       .catch(() => {});
-
-    loadCases();
   }, []);
 
-  // Global Keyboard Shortcut: Ctrl+K / Cmd+K
-  useEffect(() => {
-    const handleGlobalKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
-        setIsCommandPaletteOpen((prev) => !prev);
-      }
-    };
-    window.addEventListener('keydown', handleGlobalKeyDown);
-    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
-  }, []);
-
-  const loadCases = () => {
+  const loadCases = useCallback(() => {
     fetch('/api/cases')
       .then((r) => r.json())
       .then((data) => {
@@ -119,19 +101,9 @@ function FinePrintCockpitContent() {
         }
       })
       .catch(() => {});
-  };
+  }, [loadAuditLogs]);
 
-  const loadAuditLogs = (caseId: number) => {
-    fetch(`/api/cases/${caseId}/audit-logs`)
-      .then((r) => r.json())
-      .then((data) => {
-        if (data && data.logs) setAuditLogs(data.logs);
-        else if (data && data.audit_logs) setAuditLogs(data.audit_logs);
-      })
-      .catch(() => {});
-  };
-
-  const handleSelectMockReceipt = async (receipt: MockReceipt) => {
+  const handleSelectMockReceipt = useCallback(async (receipt: MockReceipt) => {
     setErrorMsg(null);
     setLoading(true);
     setCurrentStep(2);
@@ -149,14 +121,55 @@ function FinePrintCockpitContent() {
         setSelectedReceipt(data.order);
         setUploadedFileName(null);
         setUploadedFilePath(null);
-        if (data.order.product_name?.toLowerCase().includes('sony') || receipt.subject.toLowerCase().includes('sony')) {
-          setProblemDescription('The right ear cup of my Sony WH-1000XM5 headphones stopped outputting audio after 35 days. Amazon return window closed on day 7, and customer care refused replacement citing contractual return window.');
-        } else if (data.order.product_name?.toLowerCase().includes('samsung') || receipt.subject.toLowerCase().includes('samsung')) {
-          setProblemDescription('The Samsung S24 Ultra display has a persistent green vertical line on the screen right out of the box (Dead on Arrival). Croma store refused replacement citing 24-hour return policy.');
-        } else if (data.order.product_name?.toLowerCase().includes('macbook') || receipt.subject.toLowerCase().includes('macbook')) {
-          setProblemDescription('The MacBook Air M3 motherboard failed within the 12-month express manufacturer warranty period. Reliance Digital and Apple service centre refused free repair claiming lack of parts.');
+        
+        let defectText = '';
+        const name = (data.order.product_name || receipt.subject || '').toLowerCase();
+        if (name.includes('sony')) {
+          defectText = 'The right ear cup of my Sony WH-1000XM5 headphones stopped outputting audio after 35 days. Amazon return window closed on day 7, and customer care refused replacement citing contractual return window.';
+        } else if (name.includes('samsung')) {
+          defectText = 'The Samsung S24 Ultra display has a persistent green vertical line on the screen right out of the box (Dead on Arrival). Croma store refused replacement citing 24-hour return policy.';
+        } else if (name.includes('macbook')) {
+          defectText = 'The MacBook Air M3 motherboard failed within the 12-month express manufacturer warranty period. Reliance Digital and Apple service centre refused free repair claiming lack of parts.';
+        } else if (name.includes('boat')) {
+          defectText = 'The left speaker and Bluetooth connectivity of my boAt Rockerz 450 failed within 30 days of delivery. Amazon rejected return citing 7-day policy.';
+        } else if (name.includes('ipad')) {
+          defectText = 'The iPad Air M2 screen touch digitizer became non-responsive after 20 days. Croma rejected replacement citing standard return window expired.';
+        } else if (name.includes('lg') || name.includes('tv')) {
+          defectText = 'The LG 43 Inch 4K Smart TV developed vertical screen banding within 40 days. Reliance Digital denied replacement citing 7-day exchange window.';
+        } else {
+          defectText = `The ${data.order.product_name} developed an unprovoked hardware defect during ordinary usage within warranty. Seller ${data.order.seller_name} rejected return citing contractual policy window.`;
         }
+        setProblemDescription(defectText);
         success('Verified Purchase Order Loaded', `${data.order.product_name} (${data.order.seller_name})`);
+
+        // Synchronize activeCase immediately so right panel reflects the selected purchase facts
+        try {
+          const evalRes = await fetch('/api/evaluate-claim', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              problem_description: defectText,
+              extracted_order: data.order,
+              order_id: data.order.order_id,
+              product_name: data.order.product_name,
+              brand: data.order.brand,
+              seller_name: data.order.seller_name,
+              amount_inr: data.order.amount_inr,
+              purchase_date: data.order.purchase_date,
+              marketplace: data.order.marketplace,
+              complainant_name: complainantName || 'Tejas K',
+            })
+          });
+          if (evalRes.ok) {
+            const compiledCase: CaseData = await evalRes.json();
+            setActiveCase(compiledCase);
+            setCurrentStep(6);
+            loadCases();
+            if (compiledCase.id) loadAuditLogs(compiledCase.id);
+          }
+        } catch (e) {
+          console.warn('Auto eval sync warning:', e);
+        }
       }
     } catch (err: unknown) {
       console.warn('Fallback extraction:', err);
@@ -173,7 +186,23 @@ function FinePrintCockpitContent() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [complainantName, info, loadAuditLogs, loadCases, success]);
+
+  // Initial Load: Mailbox & Cases
+  useEffect(() => {
+    fetch('/api/mock-mailbox')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.receipts && data.receipts.length > 0) {
+          setMockReceipts(data.receipts);
+          // Auto-select the first curated receipt (Sony WH-1000XM5) on load
+          handleSelectMockReceipt(data.receipts[0]);
+        }
+      })
+      .catch(() => {});
+
+    loadCases();
+  }, [handleSelectMockReceipt, loadCases]);
 
   const handleFileUpload = async (file: File) => {
     if (!file.name.toLowerCase().endsWith('.pdf')) {
@@ -199,6 +228,38 @@ function FinePrintCockpitContent() {
       setUploadedFilePath(data.file_path);
       setSelectedReceipt(data.extracted_order);
       success('Invoice Parsed with MCP', `Extracted ${data.extracted_order?.product_name || 'order details'}`);
+
+      // Immediately synchronize activeCase with the uploaded PDF facts
+      if (data.extracted_order) {
+        try {
+          const evalRes = await fetch('/api/evaluate-claim', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              problem_description: problemDescription,
+              extracted_order: data.extracted_order,
+              order_id: data.extracted_order.order_id,
+              product_name: data.extracted_order.product_name,
+              brand: data.extracted_order.brand,
+              seller_name: data.extracted_order.seller_name,
+              amount_inr: data.extracted_order.amount_inr,
+              purchase_date: data.extracted_order.purchase_date,
+              marketplace: data.extracted_order.marketplace,
+              complainant_name: complainantName || 'Tejas K',
+              invoice_pdf_path: data.file_path,
+            })
+          });
+          if (evalRes.ok) {
+            const compiledCase: CaseData = await evalRes.json();
+            setActiveCase(compiledCase);
+            setCurrentStep(6);
+            loadCases();
+            if (compiledCase.id) loadAuditLogs(compiledCase.id);
+          }
+        } catch (e) {
+          console.warn('Auto eval upload sync warning:', e);
+        }
+      }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Unknown error during upload';
       setErrorMsg(msg);
@@ -451,10 +512,11 @@ function FinePrintCockpitContent() {
     }
   };
 
-  // If on Landing Page ('overview'), render FULL SCREEN without sidebar or inner header
-  if (activeTab === 'overview') {
-    return (
-      <>
+  // Preserved dual surface view: Landing Showcase and Cockpit Workspace remain mounted
+  return (
+    <>
+      {/* Landing Showcase View - Hidden when in Inner App Mode */}
+      <div className={activeTab === 'overview' ? 'block' : 'hidden'}>
         <LandingView
           onNavigate={(tab) => {
             setActiveTab(tab);
@@ -468,35 +530,10 @@ function FinePrintCockpitContent() {
           }}
           onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
         />
+      </div>
 
-        {/* Global Command Palette */}
-        <CommandPalette
-          isOpen={isCommandPaletteOpen}
-          onClose={() => setIsCommandPaletteOpen(false)}
-          onNavigate={(tab) => {
-            setActiveTab(tab);
-            if (tab === 'benchmark' && !benchmarkSummary) handleRunBenchmark();
-            if (tab === 'vault') loadCases();
-          }}
-          onSelectSampleInvoice={(idx) => {
-            handleSelectSampleAndEvaluate(idx);
-            setActiveTab('cockpit');
-          }}
-          onTriggerAction={(actionId) => {
-            if (actionId === 'nch') {
-              window.open('https://consumerhelpline.gov.in/', '_blank');
-            } else if (actionId === 'sla') {
-              setActiveTab('statutes');
-            }
-          }}
-        />
-      </>
-    );
-  }
-
-  // INNER APP VIEW: Render Sidebar on left + Header on top + Inner tool view
-  return (
-    <div className="min-h-screen bg-[#09090B] text-[#F4F4F6] flex flex-row font-sans selection:bg-[#FF2A1A]/30 selection:text-white antialiased">
+      {/* INNER APP VIEW: Render Sidebar on left + Header on top + Inner tool view */}
+      <div className={activeTab === 'overview' ? 'hidden' : 'min-h-screen bg-[#09090B] text-[#F4F4F6] flex flex-row font-sans selection:bg-[#FF2A1A]/30 selection:text-white antialiased'}>
       {/* Desktop Collapsible Sidebar */}
       <Sidebar
         activeTab={activeTab}
@@ -724,7 +761,8 @@ function FinePrintCockpitContent() {
           }
         }}
       />
-    </div>
+      </div>
+    </>
   );
 }
 

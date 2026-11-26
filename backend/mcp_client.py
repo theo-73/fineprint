@@ -7,10 +7,14 @@ over real stdio / JSON-RPC subprocess transports.
 import os
 import sys
 import json
+import logging
 import asyncio
 from typing import Dict, Any, List, Optional
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
+
+logger = logging.getLogger("fineprint.mcp_client")
+MCP_CALL_TIMEOUT_SECONDS = 15.0
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 RULES_SERVER_PATH = os.path.join(ROOT_DIR, "mcp_servers", "rules_mcp", "server.py")
@@ -21,7 +25,7 @@ async def call_mcp_tool_async(
     tool_name: str,
     tool_arguments: Dict[str, Any]
 ) -> Any:
-    """Invokes a tool on an MCP server process over standard input/output (stdio JSON-RPC)."""
+    """Invokes a tool on an MCP server process over standard input/output (stdio JSON-RPC) with strict timeouts."""
     env = os.environ.copy()
     env["PYTHONPATH"] = ROOT_DIR
     params = StdioServerParameters(
@@ -29,18 +33,27 @@ async def call_mcp_tool_async(
         args=[server_script],
         env=env
     )
-    async with stdio_client(params) as (read, write):
-        async with ClientSession(read, write) as session:
-            await session.initialize()
-            result = await session.call_tool(tool_name, tool_arguments)
-            # Result is a CallToolResult containing content blocks
-            if result.content:
-                text_content = result.content[0].text
-                try:
-                    return json.loads(text_content)
-                except Exception:
-                    return text_content
-            return None
+    try:
+        async with stdio_client(params) as (read, write):
+            async with ClientSession(read, write) as session:
+                await asyncio.wait_for(session.initialize(), timeout=5.0)
+                result = await asyncio.wait_for(
+                    session.call_tool(tool_name, tool_arguments),
+                    timeout=MCP_CALL_TIMEOUT_SECONDS
+                )
+                if result.content:
+                    text_content = result.content[0].text
+                    try:
+                        return json.loads(text_content)
+                    except Exception:
+                        return text_content
+                return None
+    except asyncio.TimeoutError:
+        logger.error(f"MCP tool call '{tool_name}' timed out after {MCP_CALL_TIMEOUT_SECONDS}s on {server_script}")
+        raise TimeoutError(f"MCP server timed out executing '{tool_name}'")
+    except Exception as e:
+        logger.warning(f"MCP stdio transport exception on {tool_name}: {str(e)}")
+        raise
 
 def call_mcp_tool_sync(
     server_script: str,
@@ -66,8 +79,8 @@ class FinePrintMCPClient:
                 "extract_order_from_text",
                 {"raw_text": raw_text}
             )
-        except Exception:
-            # Fallback to in-process execution if stdio process spawn is restricted
+        except Exception as e:
+            logger.warning(f"Stdio MCP failed for extract_order_from_text ({e}). Using in-process fallback.")
             from mcp_servers.receipt_mcp.extractor import OrderExtractor
             order = OrderExtractor.extract_order_from_text(raw_text)
             return order.model_dump()
@@ -81,7 +94,8 @@ class FinePrintMCPClient:
                 "parse_invoice_pdf",
                 {"pdf_path": pdf_path}
             )
-        except Exception:
+        except Exception as e:
+            logger.warning(f"Stdio MCP failed for parse_invoice_pdf ({e}). Using in-process fallback.")
             from mcp_servers.receipt_mcp.pdf_parser import PDFInvoiceParser
             order = PDFInvoiceParser.parse_invoice(pdf_path)
             return order.model_dump()

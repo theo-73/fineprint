@@ -142,6 +142,8 @@ def get_evidence_by_case(case_id: int) -> List[Dict[str, Any]]:
 
 def insert_case(case_data: Dict[str, Any]) -> int:
     claim_ref = case_data.get("claim_ref", f"FP-IN-{datetime.now().strftime('%Y%m%d%H%M%S')}")
+    created_at = case_data.get("created_at") or datetime.now().isoformat()
+    case_data["created_at"] = created_at
     citations_json = json.dumps(case_data.get("statutory_citations", []))
     errors_json = json.dumps(case_data.get("validation_errors", []))
     warnings_json = json.dumps(case_data.get("validation_warnings", []))
@@ -158,7 +160,7 @@ def insert_case(case_data: Dict[str, Any]) -> int:
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             claim_ref,
-            datetime.now().isoformat(),
+            created_at,
             case_data.get("status", "READY"),
             case_data.get("order_id"),
             case_data.get("purchase_date"),
@@ -226,6 +228,7 @@ def list_cases() -> List[Dict[str, Any]]:
             d["validation_warnings"] = json.loads(d["validation_warnings"] or "[]")
             d["should_abstain"] = bool(d["should_abstain"])
             d["validation_passed"] = bool(d["validation_passed"])
+            d["evidence"] = get_evidence_by_case(d["id"])
             results.append(d)
         return results
 

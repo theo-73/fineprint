@@ -39,6 +39,7 @@ class CaseResponse(BaseModel):
     validation_errors: List[str]
     validation_warnings: List[str]
     evidence_checklist: List[str] = Field(default_factory=list)
+    evidence: List[Dict[str, Any]] = Field(default_factory=list, description="Attached invoice and packet document records")
     whatsapp_text: Optional[str] = None
     nch_text: Optional[str] = None
     pdf_download_url: Optional[str] = None

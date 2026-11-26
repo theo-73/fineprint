@@ -12,9 +12,21 @@ $ROOT_DIR = $PSScriptRoot
 $VENV_PYTHON = Join-Path $ROOT_DIR ".venv\Scripts\python.exe"
 $FRONTEND_DIR = Join-Path $ROOT_DIR "frontend"
 
-Write-Host "`n[1/3] Checking Environment..." -ForegroundColor Green
+Write-Host "`n[1/3] Checking Environment & Ports..." -ForegroundColor Green
 if (-Not (Test-Path $VENV_PYTHON)) {
     Write-Error "Virtual environment not found at $VENV_PYTHON. Run 'uv venv' or setup python venv."
+}
+
+# Pre-flight port collision verification
+$busyPorts = @()
+foreach ($port in @(8000, 3000)) {
+    $conn = Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue
+    if ($conn) {
+        $busyPorts += $port
+    }
+}
+if ($busyPorts.Count -gt 0) {
+    Write-Warning "Port collision detected! The following ports are already occupied: $($busyPorts -join ', '). Existing processes may prevent servers from binding."
 }
 
 Write-Host "[2/3] Launching FastAPI Backend on http://127.0.0.1:8000..." -ForegroundColor Green

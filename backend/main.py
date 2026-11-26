@@ -29,15 +29,21 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Enable CORS for local Next.js frontend
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
+# Enable CORS dynamically for local Next.js frontend and configured environments
+raw_cors = os.getenv("CORS_ORIGINS", "")
+if raw_cors:
+    allowed_origins = [origin.strip() for origin in raw_cors.split(",") if origin.strip()]
+else:
+    allowed_origins = [
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         "http://localhost:8000",
         "http://127.0.0.1:8000",
-    ],
+    ]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -294,11 +300,12 @@ def create_case(req: EvaluateClaimRequest):
         raise HTTPException(status_code=500, detail=f"Claim pipeline failed: {str(e)}")
 
     pdf_download_url = f"/api/cases/{case_record['id']}/download-pdf" if case_record.get("packet_pdf_path") else None
+    evidence_records = get_evidence_by_case(case_record["id"])
 
     return CaseResponse(
         id=case_record["id"],
         claim_ref=case_record["claim_ref"],
-        created_at=datetime_now_iso(),
+        created_at=case_record.get("created_at") or datetime_now_iso(),
         status=case_record["status"],
         order_id=case_record["order_id"],
         purchase_date=case_record["purchase_date"],
@@ -315,6 +322,7 @@ def create_case(req: EvaluateClaimRequest):
         validation_errors=case_record["validation_errors"],
         validation_warnings=case_record["validation_warnings"],
         evidence_checklist=case_record.get("evidence_checklist", []),
+        evidence=evidence_records,
         whatsapp_text=case_record.get("whatsapp_text"),
         nch_text=case_record.get("nch_text"),
         pdf_download_url=pdf_download_url
@@ -355,6 +363,7 @@ def get_all_cases():
                 "Defect Documentation Log",
                 "Notice Reference Sent (48h Mandate)"
             ]),
+            evidence=c.get("evidence", []),
             whatsapp_text=c.get("whatsapp_text"),
             nch_text=c.get("nch_text"),
             pdf_download_url=pdf_url

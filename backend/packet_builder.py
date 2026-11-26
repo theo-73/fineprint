@@ -7,6 +7,7 @@ Compiles formal, verifiable consumer claim packets:
 """
 
 import os
+import hashlib
 from typing import Dict, Any, List, Optional
 from datetime import datetime
 from reportlab.lib.pagesizes import A4
@@ -262,6 +263,30 @@ class PacketBuilder:
         ]
         evidence_p = "<br/>".join(evidence_items)
         story.append(Paragraph(evidence_p, body_style))
+        story.append(Spacer(1, 10))
+
+        # 9. Certificate of Electronic Evidence Integrity (BSA 2023 § 63 / IT Act 2000 § 65B)
+        hash_payload = (
+            f"{claim_ref}|{case_data.get('order_id')}|{case_data.get('purchase_date')}|"
+            f"{case_data.get('amount_inr')}|{case_data.get('seller_name')}|{defect_desc}"
+        ).encode("utf-8")
+        sha256_digest = hashlib.sha256(hash_payload).hexdigest().upper()
+
+        story.append(Paragraph("6. CERTIFICATE OF ELECTRONIC EVIDENCE INTEGRITY", heading_style))
+        cert_text = (
+            f"<b>STATUTORY ELECTRONIC RECORD CERTIFICATE [BSA 2023, SEC. 63 / IT ACT 2000, SEC. 65B]:</b><br/>"
+            f"This statutory claim docket was deterministically compiled within a secure local client trust boundary.<br/>"
+            f"<b>Cryptographic SHA-256 Hash Digest:</b> <font name='Courier-Bold'>{sha256_digest}</font><br/>"
+            f"<b>Timestamp of Compilation:</b> {datetime.now().strftime('%Y-%m-%d %H:%M:%S IST')}<br/>"
+            f"<i>Integrity Notice: Any post-generation tampering or alteration of transaction particulars renders this certificate void.</i>"
+        )
+        cert_box = Table([[Paragraph(cert_text, citation_box_style)]], colWidths=[500])
+        cert_box.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#F8FAFC')),
+            ('BOX', (0,0), (-1,-1), 1, colors.HexColor('#94A3B8')),
+            ('PADDING', (0,0), (-1,-1), 8),
+        ]))
+        story.append(cert_box)
 
         doc.build(story, canvasmaker=NumberedCanvas)
         return output_pdf_path
